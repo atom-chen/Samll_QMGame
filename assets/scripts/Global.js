@@ -10,8 +10,8 @@ window.Global = {
     name:null,          //昵称
     sex:null,           //性别
     avatarUrl:null,     //头像url
-    gold:null,          //金币
-    diamond:null,       //钻石
+    gold:0,             //金币
+    diamond:0,          //钻石
     userlvl:null,       //段位
     playcount:null,     //总玩次数
     wincount:null,      //赢次数
@@ -395,7 +395,7 @@ window.Global = {
 
     GetJumpInfo(callback) {
         var self = this;
-        this.Get("https://wx.zaohegame.com/game/jumpapp?appid=wx039e71b55cba9869", (obj) => {
+        this.Get("https://wx.zaohegame.com/game/jumpapp?appid=wxfa819a83fa221978", (obj) => {
             if (obj.state == 1) {
                 this.jumpappObject = obj.result;
                 var self = this;

@@ -39,16 +39,14 @@ cc.Class({
         
         if (CC_WECHATGAME) {
             Global.Login();
+            Global.Getinfo();
+            Global.GetJumpInfo();
             this.loadRemoteAssets();
         }
     },
  
     start () {
-        // this.progressBar.node.active = false;
-        // this.loadtext.node.active =false;
-        // this.text.node.active =false;
-        // this.startBtn.node.active =true;
-        // this.enabled = false;
+        
     },
  
  
