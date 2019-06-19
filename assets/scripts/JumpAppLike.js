@@ -28,6 +28,7 @@ cc.Class({
     // onLoad () {},
 
     start () {
+        Global.showBanner();
         let randindex = [];
         for (let i = 0;Global.jumpappObject && i < Global.jumpappObject.length ;i++)
         {

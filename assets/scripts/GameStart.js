@@ -48,8 +48,25 @@ cc.Class({
                     });
                 }
             }
+           // 。。。的转发效果
+            wx.showShareMenu();
+
+            wx.onShareAppMessage(function (res) {
+                return {
+                    title: '是否敢来一战',
+                    imageUrl: Global.shareimg,
+                    success(res) {
+                        console.log("yes");
+                    },
+                    fail(res) {
+                        console.log("failed");
+                    },
+                };
+            });
         }
     },
-
+    onShowAppMsg(){
+        Global.TiaoZhanFriend();
+    }
     // update (dt) {},
 });
