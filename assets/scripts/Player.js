@@ -83,7 +83,7 @@ cc.Class({
         // this.Herohp.progress = this.curhp/this.maxhp;
         // //this.Heroname.string = Global.name;
 
-        // this.player = this.node.getChildByName("playerImg");
+        this.hero = this.node.getChildByName("hero");
 
         // this.NodePool = cc.find("Canvas/GameController").getComponent("GameItemManager");
         
@@ -130,7 +130,7 @@ cc.Class({
             var r = Math.atan2(this.Rocker.dir.y,this.Rocker.dir.x);
             var degree = r * 180/(Math.PI);
             degree = 360 - degree + 90;
-            this.node.rotation = degree;
+            this.hero.rotation = degree;
         //}  
      },
     //  onCollisionEnter: function (other, self) {

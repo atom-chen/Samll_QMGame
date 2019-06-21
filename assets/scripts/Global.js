@@ -13,18 +13,14 @@ window.Global = {
     gold:0,             //金币
     diamond:0,          //钻石
     userlvl:null,       //段位
-    playcount:null,     //总玩次数
-    wincount:null,      //赢次数
-    losecount:null,     //输次数
-    bestkill:null,      //最高击杀
     score:null,         //积分
-    heroid:null,        //专属英雄id
     SeaonLvl:null,      //段位信息
     duntext:null,       //当前段位信息
-    defhid:null,        //当前英雄
     userkey:null,       //玩家ID
     is_sign:false,      //今天是否签到
-    ticket:null,        //游戏入场消耗根据段位设置。结算页面需要用到
+    hp:1600,            //血量
+    attack:600,         //攻击力
+    heroLv:1,           //等级
 
 
     prefab_icon: null,
@@ -116,13 +112,7 @@ window.Global = {
             this.gold = res.result.gold;
             this.diamond= res.result.diamonds;
             this.userlvl = res.result.userlvl;
-            this.playcount = res.result.playcount;
-            this.wincount = res.result.wincount;
-            this.losecount = res.result.losecount;
-            this.bestkill = res.result.bestkill;
             this.score = res.result.score;
-            this.heroid = res.result.heroid;
-            this.defhid = res.result.defhid;
             this.userkey = res.result.userkey;
             Global.GetSeaonLvl((res)=>{
                 Global.SeaonLvl = res.result.list;
@@ -195,14 +185,7 @@ window.Global = {
         }
         this.Post("Qmeng/BuySkill",data,callback);
     },
-    //修改当前英雄
-    SetDefaultHeros(heroid,callback){
-        let data = {
-            sessionId:this.sessionId,
-            hid:heroid,
-        }
-        this.Post("Qmeng/SetDefaultHeros",data,callback);
-    },
+    
     //获取签到信息
     GetUserSignInfo(callback){
         let data = {
@@ -236,14 +219,7 @@ window.Global = {
         }
         this.Post("game/GetZhuanPanLog",data,callback);
     },
-    //增加英雄试玩次数
-    SetTrialHeros(heroid,callback){
-        let data = {
-            sessionId:this.sessionId,
-            hid:heroid,
-        }
-        this.Post("Qmeng/SetTrialHeros",data,callback);
-    },
+    
     //游戏结算
     GameSettle(heroid,kill,rank,callback){
         let data = {

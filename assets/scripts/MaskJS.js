@@ -33,56 +33,36 @@ cc.Class({
         this.time=0;
         this.speed = 0;
         this.scheduleOnce(function() {
-            let tip = cc.instantiate(this.tip_prefab);
-            if (tip) {
-                cc.find("Canvas").addChild(tip);
-                let src = tip.getComponent(require("TipShow"));
-                if (src) {
-                    src.label.string = "海水还有10s后扩大笼罩范围";
-                }
-            }
-            this.time = 20;
+            this.ShowTips();
+            this.time = 30;
             this.speed = 100;
-        }, 10);
+        }, 50);
         this.scheduleOnce(function() {
             this.is_suodu= true;
             console.log("一次缩毒");
-        }, 20);
+        }, 60);
         this.scheduleOnce(function() {
-            let tip = cc.instantiate(this.tip_prefab);
-            if (tip) {
-                cc.find("Canvas").addChild(tip);
-                let src = tip.getComponent(require("TipShow"));
-                if (src) {
-                    src.label.string = "海水还有10s后扩大笼罩范围";
-                }
-            }
-            this.time = 20;
+            this.ShowTips();
+            this.time = 50;
             this.speed = 80;
-        }, 80);
+        }, 130);
         this.scheduleOnce(function() {
             this.is_suodu= true;
             console.log("2次缩毒");
-        }, 90);
-        this.scheduleOnce(function() {
-            let tip = cc.instantiate(this.tip_prefab);
-            if (tip) {
-                cc.find("Canvas").addChild(tip);
-                let src = tip.getComponent(require("TipShow"));
-                if (src) {
-                    src.label.string = "海水还有10s后扩大笼罩范围";
-                }
-            }
-            this.time = 15;
-            this.speed = 100;
-        }, 150);
-        this.scheduleOnce(function() {
-            this.is_suodu= true;
-            console.log("最后一次缩毒");
-        }, 160);
+        }, 140);
+        
     },
-
-     update (dt) {
+    ShowTips(){
+        let tip = cc.instantiate(this.tip_prefab);
+        if (tip) {
+            cc.find("Canvas").addChild(tip);
+            let src = tip.getComponent(require("TipShow"));
+            if (src) {
+                src.label.string = "海水还有10s后扩大笼罩范围";
+            }
+        }
+    },
+    update (dt) {
          if(Global.is_end){
              return;
          }
