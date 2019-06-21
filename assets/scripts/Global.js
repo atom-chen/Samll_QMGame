@@ -112,7 +112,7 @@ window.Global = {
         let parme = {
             sessionId:this.sessionId
         }
-        this.Post("gun/getuserinfo",parme,(res)=>{
+        this.Post("Qmeng/getuserinfo",parme,(res)=>{
             this.gold = res.result.gold;
             this.diamond= res.result.diamonds;
             this.userlvl = res.result.userlvl;
@@ -132,32 +132,32 @@ window.Global = {
     },
     //获取段位信息
     GetSeaonLvl(callback){
-        this.Post("gun/GetSeaonLvl",null,callback);
+        this.Post("Qmeng/GetSeaonLvl",null,callback);
     },
     //获取所有英雄信息
     GetAllHeros(callback){
-        this.Post("gun/GetAllHeros",null,callback);
+        this.Post("Qmeng/GetAllHeros",null,callback);
     },
     //获取玩家身上的英雄信息
     GetUserHeros(callback){
         let parme = {
             sessionId:this.sessionId
         }
-        this.Post("gun/GetUserHeros",parme,callback);
+        this.Post("Qmeng/GetUserHeros",parme,callback);
     },
     //获取高手榜的信息
     GetAllRank(callback){
         let parme = {
             sessionId:this.sessionId
         }
-        this.Post("gun/GetAllRank",parme,callback);
+        this.Post("Qmeng/GetAllRank",parme,callback);
     },
     //获取玩家赛季信息
     GetUserSeaon(callback){
         let parme = {
             sessionId:this.sessionId
         }
-        this.Post("gun/GetUserSeaon",parme,callback);
+        this.Post("Qmeng/GetUserSeaon",parme,callback);
     },
     //数值变化请求
     UserChange(type,app,remark,change,callback){
@@ -168,7 +168,7 @@ window.Global = {
             remark:remark,  //说明
             change :change,  //数量
         }
-        this.Post("gun/UserChange",data,callback);
+        this.Post("Qmeng/UserChange",data,callback);
     },
     //购买英雄
     BuyHeros(id,callback){
@@ -176,7 +176,7 @@ window.Global = {
             sessionId:this.sessionId,
             hid:id,
         }
-        this.Post("gun/BuyHeros",data,callback);
+        this.Post("Qmeng/BuyHeros",data,callback);
     },
     //获取任务
     GetMission(callback){
@@ -193,7 +193,7 @@ window.Global = {
             hid:heroid,
             skill:skill,
         }
-        this.Post("gun/BuySkill",data,callback);
+        this.Post("Qmeng/BuySkill",data,callback);
     },
     //修改当前英雄
     SetDefaultHeros(heroid,callback){
@@ -201,7 +201,7 @@ window.Global = {
             sessionId:this.sessionId,
             hid:heroid,
         }
-        this.Post("gun/SetDefaultHeros",data,callback);
+        this.Post("Qmeng/SetDefaultHeros",data,callback);
     },
     //获取签到信息
     GetUserSignInfo(callback){
@@ -242,7 +242,7 @@ window.Global = {
             sessionId:this.sessionId,
             hid:heroid,
         }
-        this.Post("gun/SetTrialHeros",data,callback);
+        this.Post("Qmeng/SetTrialHeros",data,callback);
     },
     //游戏结算
     GameSettle(heroid,kill,rank,callback){
@@ -252,7 +252,7 @@ window.Global = {
             kill:kill,
             rank:rank,
         }
-        this.Post("gun/GameSettle",data,callback);
+        this.Post("Qmeng/GameSettle",data,callback);
     },
     //登陆
     Login(){
@@ -322,6 +322,7 @@ window.Global = {
                                 Global.avatarUrl = res.userInfo.avatarUrl; //用户头像图片 url
                                 Global.sex = res.userInfo.gender;   //用户性别
                                 button.destroy();
+                                Global.GetUesrInfo();
                             }else {
                                 console.log("用户拒绝授权:", res);
                             }

@@ -20,6 +20,10 @@ cc.Class({
             default:null,
             type:cc.Node,
         },
+        skill1_mask:{
+            default:null,
+            type:cc.Sprite,
+        },
     },
 
    
@@ -27,9 +31,12 @@ cc.Class({
     // onLoad () {},
 
     start () {
-        this.Max_r = 49;
+        this.Max_r = 29;
+        this.cd=4;
+        this.is_Cd = false;
         this.dir = cc.v2(0,0);
         this.Rocker.on(cc.Node.EventType.TOUCH_START,function(e){
+      
             this.target.active = true;
             var w_pos = e.getLocation();
             var pos = this.node.convertToNodeSpaceAR(w_pos);
@@ -42,9 +49,11 @@ cc.Class({
                 pos.y = this.Max_r * pos.y / len;
             }
             this.Rocker.setPosition(pos);
+            
         },this);
    
         this.Rocker.on(cc.Node.EventType.TOUCH_MOVE,function(e){
+            
             var w_pos = e.getLocation();
             var pos = this.node.convertToNodeSpaceAR(w_pos);
 
@@ -57,9 +66,11 @@ cc.Class({
                 pos.y = this.Max_r * pos.y / len;
             }
             this.Rocker.setPosition(pos);
+            
         },this);
    
         this.Rocker.on(cc.Node.EventType.TOUCH_END,function(e){
+            
             var r = Math.atan2(this.dir.y,this.dir.x);
             var degree = r * 180/(Math.PI);
             degree = 360 - degree + 90;
@@ -72,12 +83,16 @@ cc.Class({
             }
             // TODO 开炮
             this.target.active = false;
+            //cd
+            this.is_Cd = true;
 
             this.Rocker.setPosition(cc.v2(0,0));
             this.dir = cc.v2(0, 0);
+            
         },this);
    
         this.Rocker.on(cc.Node.EventType.TOUCH_CANCEL,function(e){
+
             var r = Math.atan2(this.dir.y,this.dir.x);
             var degree = r * 180/(Math.PI);
             degree = 360 - degree + 90;
@@ -89,13 +104,27 @@ cc.Class({
                 
             }
             // TODO 开炮
-            console.log(this.target.rotation);
             this.target.active = false;
+            //cd
+            this.is_Cd = true;
             
             this.Rocker.setPosition(cc.v2(0,0));
             this.dir = cc.v2(0, 0);
+            
         },this);
     },
 
-    // update (dt) {},
+    update (dt) {
+        if(this.is_Cd){
+            //显示技能遮罩
+            if(this.skill1_mask.fillRange >= 0){
+                //this.skill1_mask.node.active = true;
+                this.skill1_mask.fillRange -= (dt/this.cd);
+            }else{
+                this.is_Cd = false;
+                //this.skill1_mask.node.active = false;
+                this.skill1_mask.fillRange =1;
+            }
+        }
+    },
 });

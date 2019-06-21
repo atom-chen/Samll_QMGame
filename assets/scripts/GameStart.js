@@ -16,6 +16,9 @@ cc.Class({
         userImg:cc.Sprite,
         duantext:cc.Label,
         duanImg:cc.Sprite,
+        text:cc.Label,
+        content:cc.Node,
+        hook:cc.Node,
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -41,7 +44,7 @@ cc.Class({
             for(let i =0;i<Global.SeaonLvl.length;i++){
                 if(Global.userlvl == Global.SeaonLvl[i].id){
                     Global.duntext = Global.SeaonLvl[i].name;
-                    self.duantext.string = Global.duntext;
+                    self.SmallDuanWei();
                     let url = Global.SeaonLvl[i].id+'.png';
                     cc.loader.loadRes(url, cc.SpriteFrame, function (err, spriteFrame) {
                         self.duanImg.spriteFrame = spriteFrame;
@@ -67,6 +70,83 @@ cc.Class({
     },
     onShowAppMsg(){
         Global.TiaoZhanFriend();
-    }
+    },
+    onPlayBtn(){
+        let self = this;
+        cc.find("Canvas/PiPeiView").active = true;
+        //2s显示匹配成功
+        this.scheduleOnce(function() {
+            self.text.string = "匹配成功";
+            self.content.active = false;
+            self.hook.active =true;
+            cc.director.loadScene("Game.fire");
+        }, 2)
+    },
+    SmallDuanWei(){
+        //设置星星
+        switch(Global.userlvl){
+            case 1:
+               this.ComputeStar(100);
+                break;
+            case 2:
+                this.ComputeStar(150);
+                break;
+            case 3:
+                this.ComputeStar(200);
+                break;
+            case 4:
+                this.ComputeStar(350);
+                break;
+            case 5:
+                this.ComputeStar(500);
+                break;
+            case 6:
+                this.ComputeStar(700);
+                break;
+            case 7:
+                this.ComputeStar(1000);
+                break;
+            case 8:
+                this.ComputeStar(1500);
+                break;
+            default:
+                break;
+        }
+    },
+    //计算星星段位不同每颗星星的积分不同
+    ComputeStar(jifen){
+        for(let i =0;i<Global.SeaonLvl.length;i++){
+            if(Global.userlvl == Global.SeaonLvl[i].id){
+                var score=0;
+                if(Global.userlvl==1){
+                    score = (Global.score -Global.SeaonLvl[i].minscore)/jifen;
+                }else{
+                    score = (Global.score -Global.SeaonLvl[i].minscore +1)/jifen;
+                }
+                this.ChangeStarText(Math.floor(score))
+               
+
+            }
+        }
+    },
+    ChangeStarText(num){
+        let self = this;
+        switch(num){
+            case 0:
+                self.duantext.string = Global.duntext+"III";
+                break;
+            case 1:
+                self.duantext.string = Global.duntext+"II";
+                break;
+            case 2:
+                self.duantext.string = Global.duntext+"I";
+                break;
+            case 3:
+                self.duantext.string = Global.duntext+"I";
+                break;
+            default:
+                break;
+        }
+    },
     // update (dt) {},
 });

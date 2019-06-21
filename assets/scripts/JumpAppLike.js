@@ -34,7 +34,7 @@ cc.Class({
         {
             randindex.push(i);
         }
-        
+        //打乱顺序
         for (let i = 0;i < randindex.length; i++)
         {
             let randid = Math.floor((Math.random()*randindex.length));

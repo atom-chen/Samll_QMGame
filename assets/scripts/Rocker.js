@@ -16,21 +16,9 @@ cc.Class({
             default:null,
             type:cc.Node,
         },
-        skill1:{
-            default:null,
-            type:cc.Node,
-        },
-        skill1_mask:{
-            default:null,
-            type:cc.Sprite,
-        },
         player:{
             default:null,
             type:cc.Node,
-        },
-        bullet:{
-            default:null,
-            type:cc.Prefab,
         },
     },
 
@@ -40,8 +28,6 @@ cc.Class({
 
     start () {
         this.Max_r = 49;
-        this.skillCd = 4;
-        this.is_Cd = false;
         this.Rocker.x = 0;
         this.Rocker.y = 0;
         this.dir = cc.v2(0,0);
@@ -90,18 +76,5 @@ cc.Class({
        
     },
     
-    update (dt) {
-        //如果技能没进入cd return
-        // if(this.is_Cd){
-        //     //显示技能遮罩
-        //     if(this.skill1_mask.fillRange >= 0){
-        //         //this.skill1_mask.node.active = true;
-        //         this.skill1_mask.fillRange -= (dt/this.skillCd);
-        //     }else{
-        //         this.is_Cd = false;
-        //         //this.skill1_mask.node.active = false;
-        //         this.skill1_mask.fillRange =1;
-        //     }
-        // }
-    },
+    //update (dt) {},
 });
