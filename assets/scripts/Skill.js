@@ -28,6 +28,10 @@ cc.Class({
             default:null,
             type:cc.Prefab,
         },
+        bullte:{
+            default:null,
+            type:cc.Node,
+        }
     },
 
    
@@ -40,6 +44,8 @@ cc.Class({
         this.is_Cd = false;
         this.dir = cc.v2(0,0);
         var line = this.target.getChildByName("line");
+        var player = cc.find("Canvas/player");
+        var p = this.bullte.getChildByName("p");
         this.Rocker.on(cc.Node.EventType.TOUCH_START,function(e){
             if(!this.is_Cd){
                 line.active = true;
@@ -71,6 +77,7 @@ cc.Class({
                     pos.y = this.Max_r * pos.y / len;
                 }
                 this.Rocker.setPosition(pos);
+                this.bullte.position = player.position;
             }
             
         },this);
@@ -80,11 +87,14 @@ cc.Class({
                 // TODO 开炮
                 line.active = false;
                 var skillbullet = cc.instantiate(this.skill_bullet);
+                this.bullte.position = player.position;
+                p.getChildByName("pos").rotation = this.target.rotation;
+                p.scaleX = player.getChildByName("hero").scaleX;
                 let data = {
                     width:line.width,
                 }
                 skillbullet.getComponent("Bullet").init(data);
-                this.target.addChild(skillbullet);
+                p.getChildByName("pos").addChild(skillbullet);
                 //cd
                 this.is_Cd = true;
     
@@ -101,11 +111,14 @@ cc.Class({
                 // TODO 开炮
                 line.active = false;
                 var skillbullet = cc.instantiate(this.skill_bullet);
+                this.bullte.position = player.position;
+                p.getChildByName("pos").rotation = this.target.rotation;
+                p.scaleX = player.getChildByName("hero").scaleX;
                 let data = {
                     width:line.width,
                 }
                 skillbullet.getComponent("Bullet").init(data);
-                this.target.addChild(skillbullet);
+                p.getChildByName("pos").addChild(skillbullet);
                 //cd
                 this.is_Cd = true;
                 
