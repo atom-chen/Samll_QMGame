@@ -23,7 +23,7 @@ cc.Class({
     // onLoad () {},
 
     start () {
-
+        this.player = cc.find("Canvas/player/hero");
     },
 
      update (dt) {
@@ -34,6 +34,11 @@ cc.Class({
          var r = Math.atan2(this.Rocker.dir.y,this.Rocker.dir.x);
          var degree = r * 180/(Math.PI);
         //  degree = 360 - degree + 90;
-         this.node.rotation = -degree;
+        if(this.player.scaleX==-1){
+            this.node.rotation = degree+180;
+        }else{
+            this.node.rotation = -degree;
+        }
+        //this.node.rotation = -degree;
      },
 });

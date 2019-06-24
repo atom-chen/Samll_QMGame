@@ -65,7 +65,7 @@ cc.Class({
         this.xishu = 6;                 //升级系数
         this.crit = 0.01;               //暴击率
         this.attack = Global.attack;    //攻击力
-        this.speed=300;                 //初始速度
+        this.speed=100;                 //初始速度
         this.addspeed = 100;            //加速度
         this.killsnumber = 0;
         // this.isDun = false;         //是否有护盾
@@ -170,8 +170,11 @@ cc.Class({
                 }, 3);
             }else if(other.node.name == "item_stonePrefab"){
                 // 石头------------------------------------------------------------
-                //玩家不能穿过
+                
                 this.stonepos = other.node.position;
+            }else if(other.node.name == "item_grassPrefab"){
+                // 草------------------------------------------------------------
+                this.node.opacity = 127.5;
             }else{
                 // 宝珠------------------------------------------------------------ 
                 //other.node.destroy();
@@ -196,6 +199,8 @@ cc.Class({
     onCollisionExit: function (other, self) {
         if(other.node.name == "item_stonePrefab"){
             this.stonepos = null;
+        }else if(other.node.name == "item_grassPrefab"){
+            this.node.opacity = 255;
         }
     },
     // HeroDead(){

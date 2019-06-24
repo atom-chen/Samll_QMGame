@@ -35,6 +35,7 @@ cc.Class({
        
 
         this.Rocker.on(cc.Node.EventType.TOUCH_START,function(e){
+            this.player.getComponent(cc.Animation).play('heromove');
             var w_pos = e.getLocation();
             var pos = this.node.convertToNodeSpaceAR(w_pos);
             var len = pos.mag();//获取向量长度
@@ -46,6 +47,17 @@ cc.Class({
                 pos.y = this.Max_r * pos.y / len;
             }
             this.Rocker.setPosition(pos);
+
+            var r = Math.atan2(this.dir.y,this.dir.x);
+            var degree = r * 180/(Math.PI);
+            degree = 360 - degree + 90;
+            //(0~180)抢朝向是正的(180~360)抢换个方向
+            var rotationnum = Math.abs(degree)%360;
+            if(rotationnum>=0&&rotationnum<=180){
+                this.player.scaleX  = Math.abs(this.player.scaleX);
+            }else{
+                this.player.scaleX  = this.player.scaleX *-1;
+            }
         },this);
    
         this.Rocker.on(cc.Node.EventType.TOUCH_MOVE,function(e){
@@ -61,14 +73,26 @@ cc.Class({
                 pos.y = this.Max_r * pos.y / len;
             }
             this.Rocker.setPosition(pos);
+            var r = Math.atan2(this.dir.y,this.dir.x);
+            var degree = r * 180/(Math.PI);
+            degree = 360 - degree + 90;
+            //(0~180)抢朝向是正的(180~360)抢换个方向
+            var rotationnum = Math.abs(degree)%360;
+            if(rotationnum>=0&&rotationnum<=180){
+                this.player.scaleX  = Math.abs(this.player.scaleX);
+            }else if(rotationnum>180&&rotationnum<360){
+                this.player.scaleX  = Math.abs(this.player.scaleX) *-1;
+            }
         },this);
    
         this.Rocker.on(cc.Node.EventType.TOUCH_END,function(e){
-           this.Rocker.setPosition(cc.v2(0,0));
-           this.dir = cc.v2(0, 0);
+            this.player.getComponent(cc.Animation).stop('heromove');
+            this.Rocker.setPosition(cc.v2(0,0));
+            this.dir = cc.v2(0, 0);
         },this);
    
         this.Rocker.on(cc.Node.EventType.TOUCH_CANCEL,function(e){
+            this.player.getComponent(cc.Animation).stop('heromove');
             this.Rocker.setPosition(cc.v2(0,0));
             this.dir = cc.v2(0, 0);
         },this);

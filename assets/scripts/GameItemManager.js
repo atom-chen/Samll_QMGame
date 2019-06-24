@@ -23,14 +23,18 @@ cc.Class({
         stonePrefab:{
             default:null,
             type:cc.Prefab,
-        }
+        },
+        grassPrefab:{
+            default:null,
+            type:cc.Prefab,
+        },
     },
 
     onLoad () {
         this.GemPool = new cc.NodePool();
         this.ItemPool = new cc.NodePool();
         for(var i=0;i<100;i++){
-            var str = Math.round(Math.random()*4);
+            var str = Math.round(Math.random()*3);
             var item =  cc.instantiate(this.gemPrefab[str]);
             this.GemPool.put(item);
         }
@@ -62,6 +66,7 @@ cc.Class({
         }
         for(let i =0;i<=12;i++){
             this.CreateStone();
+            this.CreateGrass();
         }
     },
     
@@ -76,6 +81,15 @@ cc.Class({
         var ran = Math.round(Math.random()*(this.stonePos.length-1));
         let pos = this.stonePos[ran];
         let item = cc.instantiate(this.stonePrefab);
+        item.x = pos.x;
+        item.y = pos.y;
+        this.node.addChild(item);
+    },
+    //创建石头
+    CreateGrass(){
+        var ran = Math.round(Math.random()*(this.arrPos.length-1));
+        let pos = this.arrPos[ran];
+        let item = cc.instantiate(this.grassPrefab);
         item.x = pos.x;
         item.y = pos.y;
         this.node.addChild(item);
@@ -102,7 +116,7 @@ cc.Class({
         if (this.GemPool.size() > 0) { // 通过 size 接口判断对象池中是否有空闲的对象
             item = this.GemPool.get();
         } else { // 如果没有空闲对象，也就是对象池中备用对象不够时，我们就用 cc.instantiate 重新创建
-            item = cc.instantiate(this.gemPrefab[Math.round(Math.random()*4)]);
+            item = cc.instantiate(this.gemPrefab[Math.round(Math.random()*3)]);
         }
         item.x = x;
         item.y = y;
