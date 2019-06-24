@@ -35,6 +35,10 @@ cc.Class({
             default: null,
             type: cc.ProgressBar,
         },
+        lvUp:{
+            default:null,
+            type:cc.Animation,
+        }
         // lvUp: {
         //     default: null,
         //     type: cc.Node,
@@ -77,7 +81,7 @@ cc.Class({
         // //this.Heroname.string = Global.name;
 
         //需要旋转的人物图形
-        this.hero = this.node.getChildByName("hero");
+        //this.hero = this.node.getChildByName("NewNode");
 
         this.NodePool = cc.find("Canvas/gamebg").getComponent("GameItemManager");
         this.stonepos = null;       //石头的位置
@@ -133,10 +137,10 @@ cc.Class({
             this.node.y += sy;
         
             //方向计算
-            var r = Math.atan2(this.Rocker.dir.y,this.Rocker.dir.x);
-            var degree = r * 180/(Math.PI);
-            degree = 360 - degree + 90;
-            this.hero.rotation = degree;
+            // var r = Math.atan2(this.Rocker.dir.y,this.Rocker.dir.x);
+            // var degree = r * 180/(Math.PI);
+            // degree = 360 - degree + 90;
+            // this.hero.rotation = degree;
             
         //}  
      },
@@ -150,7 +154,11 @@ cc.Class({
             }else if(other.node.name == "item_hpPrefab"){
                 this.NodePool.onItemKilled(other.node);
                 if(this.curhp < this.maxhp){
-                    this.curhp +=1;
+                    if(this.curhp +100>this.maxhp){
+                        this.curhp =this.maxhp;
+                    }else{
+                        this.curhp +=100;
+                    }
                     this.Herohp.progress = this.curhp/this.maxhp;
                     this.player.getChildByName("addHp").getComponent(cc.Animation).play('AddHp');
                 }
@@ -178,7 +186,7 @@ cc.Class({
                         this.curhp +=300;
                         this.Herohp.progress = this.curhp/this.maxhp;
                     }
-                    //this.HeroLvUp();
+                    this.HeroLvUp();
                 }
                 this.Herolv.string = this.lv;
                 this.Heroexp.fillRange = this.expnum /this.exp*-1;
@@ -246,13 +254,7 @@ cc.Class({
 
     //     }
     // },
-    // HeroLvUp(){
-    //     this.lvUp.active = true;
-    //     this.Herolv.string = this.lv;
-    //     this.Rocker.skillCd -=0.18;
-    //     this.lvUp.runAction(cc.sequence(cc.delayTime(0.5), cc.fadeOut(1.0), cc.callFunc(()=>{
-    //         this.lvUp.opacity = 255;
-    //         this.lvUp.active = false;
-    //     },this)));
-    // },
+    HeroLvUp(){
+        this.lvUp.play('LvUp');
+    },
 });

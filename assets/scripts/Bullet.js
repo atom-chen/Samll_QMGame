@@ -20,49 +20,25 @@ cc.Class({
     // onLoad () {},
 
     start () {
-        this.time = 1;
-        this.col = true;
-        this.speed = 400;
-        
-        this.schedule(function(){
-            this.node.getComponent(cc.Animation).play('skill_boom');
-        },0,0,this.time);
+        this.player =  cc.find("Canvas/player").getComponent("Player");
     },
-    init(){
-        
+    init(data){
+        this.width = data.width;
+        var action = cc.moveTo(0.5, 240, 0);
+        this.node.runAction(cc.sequence(action,cc.callFunc(()=>{
+            this.node.destroy();
+        },this)));
     },
     update (dt) {
-        if(this.col){
-            if(this.time>0){
-                this.time-=dt;
-                this.node.x += this.dirVec.x*dt*this.speed ;
-                this.node.y += this.dirVec.y*dt*this.speed ;
-            }else{
-                this.time =0;
-                this.col = false;
-                //this.node.getComponent(cc.Animation).play('skill_boom');
-            }
-            var top = this.player.map.height / 2;
-            var bottom = -top;
-            var left = - this.player.map.width / 2;
-            var right = -left;
-            var outScreen = this.node.x < left || this.node.x > right || this.node.y < bottom || this.node.y > top;
-            if (outScreen) {
-                this.node.destroy();
-            }
-        }
+        
     },
     onBoomDestroy(){
         this.node.destroy();
     },
     onCollisionEnter: function (other, self) {
-        if(other.node.group == "enemy"&&this.col&&other.getComponent("EnemyManager").trigger.behit){
-            this.col = false;
-            this.node.getComponent(cc.Animation).play('skill_boom');
-            other.getComponent("EnemyManager").EnemyDamage(1);
-            other.getComponent("EnemyManager").killername = this.player.Heroname.string;
-            other.getComponent("EnemyManager").killsuuid = this.player.gameuuid;
-            this.player.damage +=1;//造成伤害+1
+        if(other.node.group == "gem"&&other.node.name == "item_stonePrefab"){
+            this.node.stopAllActions();
+            this.node.getComponent(cc.Animation).play('bullet');
         }
     },
 });

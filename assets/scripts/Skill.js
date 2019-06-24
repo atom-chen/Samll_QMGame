@@ -24,6 +24,10 @@ cc.Class({
             default:null,
             type:cc.Sprite,
         },
+        skill_bullet:{
+            default:null,
+            type:cc.Prefab,
+        },
     },
 
    
@@ -35,9 +39,10 @@ cc.Class({
         this.cd=4;
         this.is_Cd = false;
         this.dir = cc.v2(0,0);
+        var line = this.target.getChildByName("line");
         this.Rocker.on(cc.Node.EventType.TOUCH_START,function(e){
       
-            this.target.active = true;
+            line.active = true;
             var w_pos = e.getLocation();
             var pos = this.node.convertToNodeSpaceAR(w_pos);
             var len = pos.mag();//获取向量长度
@@ -82,13 +87,21 @@ cc.Class({
                 
             }
             // TODO 开炮
-            this.target.active = false;
+            line.active = false;
+            var skillbullet = cc.instantiate(this.skill_bullet);
+            let data = {
+                width:line.width,
+            }
+            skillbullet.getComponent("Bullet").init(data);
+            this.target.addChild(skillbullet);
             //cd
             this.is_Cd = true;
 
             this.Rocker.setPosition(cc.v2(0,0));
             this.dir = cc.v2(0, 0);
-            
+            this.scheduleOnce(function() {
+                this.target.rotation = 0;
+            }, 0.5);
         },this);
    
         this.Rocker.on(cc.Node.EventType.TOUCH_CANCEL,function(e){
@@ -104,12 +117,21 @@ cc.Class({
                 
             }
             // TODO 开炮
-            this.target.active = false;
+            line.active = false;
+            var skillbullet = cc.instantiate(this.skill_bullet);
+            let data = {
+                width:line.width,
+            }
+            skillbullet.getComponent("Bullet").init(data);
+            this.target.addChild(skillbullet);
             //cd
             this.is_Cd = true;
             
             this.Rocker.setPosition(cc.v2(0,0));
             this.dir = cc.v2(0, 0);
+            this.scheduleOnce(function() {
+                this.target.rotation = 0;
+            }, 0.5);
             
         },this);
     },
@@ -118,11 +140,9 @@ cc.Class({
         if(this.is_Cd){
             //显示技能遮罩
             if(this.skill1_mask.fillRange >= 0){
-                //this.skill1_mask.node.active = true;
                 this.skill1_mask.fillRange -= (dt/this.cd);
             }else{
                 this.is_Cd = false;
-                //this.skill1_mask.node.active = false;
                 this.skill1_mask.fillRange =1;
             }
         }

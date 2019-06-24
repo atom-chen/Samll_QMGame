@@ -27,6 +27,12 @@ cc.Class({
 
     start () {
         let self = this;
+        Global.GetUserHeros((res)=>{
+            if(res.state ==1){
+                Global.hp = res.result[0].Health;
+                Global.attack = res.result[0].Damage;
+            }
+        })
         if (CC_WECHATGAME) {
             if(Global.is_Again){
                 cc.find("Canvas/DOYouLikeView").active =true;

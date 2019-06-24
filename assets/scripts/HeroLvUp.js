@@ -19,6 +19,10 @@ cc.Class({
         attack:cc.Label,
         addattack:cc.Label,
         nlnum:cc.Label,
+        btn:cc.Button,
+        videobtn:cc.Button,
+        videoimg:cc.Node,
+        videolabel:cc.Node,
         tip_prefab:cc.Prefab,
     },
 
@@ -27,6 +31,9 @@ cc.Class({
     // onLoad () {},
 
     start () {
+        this.GetUserHeros();
+    },
+    GetUserHeros(){
         let self = this;
         Global.GetUserHeros((res)=>{
             if(res.state ==1){
@@ -37,31 +44,50 @@ cc.Class({
                 this.addattack.string = "+"+(2*(res.result[0].Lvl)-1).toString();
                 this.nlnum.string = res.result[0].costdimo.toString();
                 if(res.result[0].canvideo){
-                    this.btn_goldnum.string = "视频升级";
-                    var url = "video_icon";
-                    cc.loader.loadRes(url, cc.SpriteFrame, function (err, spriteFrame) {
-                        self.btn_img.spriteFrame = spriteFrame;
-                    });
+                    this.videobtn.node.active = true;
                 }else{
                     this.btn_goldnum.string = "x"+res.result[0].costgold+" 升级";
+                }
+                if(this.daycount<=0){
+                    //按钮致灰，修改图片和文字颜色
+                    this.videobtn.interactable = false;
+                    this.videoimg.color = this.btn.disabledColor;
+                    this.videolabel.color = this.btn.disabledColor;
                 }
                 this.costgold = res.result[0].costgold;
                 this.costdimo = res.result[0].costdimo;
                 this.isvideo = res.result[0].canvideo;
+                Global.hp = res.result[0].Health;
+                Global.attack = res.result[0].Damage;
             }
         });
     },
     BuyHerosLvl(){
-        // if(Global.gold<this.costgold){
-        //     this.ShowTip("金币余额不足，请参与游戏~");
-        // }else if(Global.diamond<this.costdimo){
-        //     this.ShowTip("拥有能量不足，请参与游戏~");
-        // }else if(Global.gold>this.costgold&&Global.diamond>this.costdimo){
-
-        // }
+        if(Global.gold<this.costgold){
+            this.ShowTip("金币余额不足，请参与游戏~");
+        }else if(Global.diamond<this.costdimo){
+            this.ShowTip("拥有能量不足，请参与游戏~");
+        }else if(Global.gold>this.costgold&&Global.diamond>this.costdimo){
+            Global.BuyHerosLvl(this.isvideo,(res)=>{
+                if(res.state ==1){
+                    this.GetUserHeros();
+                    Global.gold = res.result.gold;
+                    Global.diamond = res.result.diamonds;
+                    this.ShowTip("升级成功");
+                    cc.game.emit('UserChang');
+                }
+            });
+        }
+    },
+    VideoBuyHerosLvl(){
+        this.ShowTip("观看视频成功");
         Global.BuyHerosLvl(this.isvideo,(res)=>{
             if(res.state ==1){
-                console.log("6666");
+                this.GetUserHeros();
+                Global.gold = res.result.gold;
+                Global.diamond = res.result.diamonds;
+                this.ShowTip("升级成功");
+                cc.game.emit('UserChang');
             }
         });
     },
