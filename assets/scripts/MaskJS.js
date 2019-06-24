@@ -36,30 +36,31 @@ cc.Class({
             this.ShowTips();
             this.time = 30;
             this.speed = 100;
-        }, 50);
-        this.scheduleOnce(function() {
             this.is_suodu= true;
-            console.log("一次缩毒");
         }, 60);
+        // this.scheduleOnce(function() {
+           
+        //     console.log("一次缩毒");
+        // }, 60);
         this.scheduleOnce(function() {
             this.ShowTips();
             this.time = 50;
             this.speed = 80;
-        }, 130);
-        this.scheduleOnce(function() {
             this.is_suodu= true;
-            console.log("2次缩毒");
-        }, 140);
+        }, 120);
+        // this.scheduleOnce(function() {
+            
+        //     console.log("2次缩毒");
+        // }, 140);
         
     },
     ShowTips(){
         let tip = cc.instantiate(this.tip_prefab);
         if (tip) {
             cc.find("Canvas").addChild(tip);
-            let src = tip.getComponent(require("TipShow"));
-            if (src) {
-                src.label.string = "海水还有10s后扩大笼罩范围";
-            }
+            tip.runAction(cc.sequence(cc.blink(5, 5),cc.callFunc(()=>{
+                tip.destroy();
+            },this)));
         }
     },
     update (dt) {

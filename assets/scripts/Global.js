@@ -192,7 +192,7 @@ window.Global = {
             sessionId:this.sessionId,
             appid:this.appid,
         }
-        this.Post("game/GetUserSignInfo",data,callback);
+        this.Post("Qmeng/GetSginInfo",data,callback);
     },
     //签到
     UserSign(type,callback){
@@ -201,7 +201,7 @@ window.Global = {
             appid:this.appid,
             type:type,
         }
-        this.Post("game/UserSign",data,callback);
+        this.Post("Qmeng/UserSign",data,callback);
     },
     //转盘抽奖结果
     RunZhuanPan(callback){
@@ -229,6 +229,14 @@ window.Global = {
             rank:rank,
         }
         this.Post("Qmeng/GameSettle",data,callback);
+    },
+    //升级技能
+    BuyHerosLvl(isvideo,callback){
+        let data = {
+            sessionId:this.sessionId,
+            isvideo:isvideo,
+        }
+        this.Post("QMeng/BuyHerosLvl",data,callback);
     },
     //登陆
     Login(){

@@ -12,10 +12,7 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
-        tip_prefab:{
-            default:null,
-            type:cc.Prefab,
-        }
+        
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -52,16 +49,6 @@ cc.Class({
         
         cc.find("Canvas/"+customEventData).destroy();
         
-    },
-    ShowTip(text){
-        let tip = cc.instantiate(this.tip_prefab);
-        if (tip) {
-            this.node.addChild(tip);
-            let src = tip.getComponent(require("TipShow"));
-            if (src) {
-                src.label.string = text;
-            }
-        }
     },
     OnFengxiang(){
         Global.TiaoZhanFriend();

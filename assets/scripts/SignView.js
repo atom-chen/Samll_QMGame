@@ -19,6 +19,7 @@ cc.Class({
         showappBtn:cc.Node,
         receivePrefab:cc.Prefab,
         tip_prefab:cc.Prefab,
+        isSign_img:cc.Node,
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -41,7 +42,7 @@ cc.Class({
         var self = this;
         Global.GetUserSignInfo((res)=>{
             if(res.state == 1){
-                if(res.result.istoday!=0||res.result.isvideo!=0){
+                if(res.result.istoday){
                     self.text.string = res.result.days;
                     //TODO 已经签到图片改变
                     var imgurl = "text_xuanyao";
@@ -50,8 +51,13 @@ cc.Class({
                     });
                     self.videoBtn.active = false;
                     self.showappBtn.active = true;
-                }else if(res.result.istoday ==0||res.result.isvideo==0){
+                    self.isSign_img.active = true;
+                }else{
                     var day = res.result.days-1;
+                    if(day<0){
+                        day = 0;
+                        res.result.days=1;
+                    }
                     self.text.string = day;
                     var ran =  Math.round(Math.random()*6)+6;
                     this.num = ran * Math.ceil(res.result.days/7);

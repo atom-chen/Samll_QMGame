@@ -12,7 +12,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "item_stonePrefab",
+    "_name": "duquantips",
     "_objFlags": 0,
     "_parent": null,
     "_children": [],
@@ -21,26 +21,23 @@
     "_components": [
       {
         "__id__": 2
-      },
-      {
-        "__id__": 3
       }
     ],
     "_prefab": {
-      "__id__": 4
+      "__id__": 3
     },
     "_opacity": 255,
     "_color": {
       "__type__": "cc.Color",
-      "r": 255,
-      "g": 255,
-      "b": 255,
+      "r": 181,
+      "g": 25,
+      "b": 25,
       "a": 255
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 68,
-      "height": 60
+      "width": 360,
+      "height": 80
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -49,14 +46,14 @@
     },
     "_position": {
       "__type__": "cc.Vec3",
-      "x": 80,
-      "y": 0,
+      "x": 0,
+      "y": 123,
       "z": 0
     },
     "_scale": {
       "__type__": "cc.Vec3",
-      "x": 1,
-      "y": 1,
+      "x": 0.25,
+      "y": 0.25,
       "z": 1
     },
     "_rotationX": 0,
@@ -70,56 +67,32 @@
     },
     "_skewX": 0,
     "_skewY": 0,
-    "groupIndex": 5,
+    "groupIndex": 1,
     "_id": ""
   },
   {
-    "__type__": "cc.Sprite",
+    "__type__": "cc.Label",
     "_name": "",
     "_objFlags": 0,
     "node": {
       "__id__": 1
     },
     "_enabled": true,
-    "_spriteFrame": {
-      "__uuid__": "737c304d-a821-426e-91cc-6639831762e1"
-    },
-    "_type": 0,
-    "_sizeMode": 0,
-    "_fillType": 0,
-    "_fillCenter": {
-      "__type__": "cc.Vec2",
-      "x": 0,
-      "y": 0
-    },
-    "_fillStart": 0,
-    "_fillRange": 0,
-    "_isTrimmedMode": true,
-    "_state": 0,
-    "_atlas": null,
-    "_srcBlendFactor": 770,
-    "_dstBlendFactor": 771,
-    "_id": ""
-  },
-  {
-    "__type__": "cc.BoxCollider",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 1
-    },
-    "_enabled": true,
-    "tag": 0,
-    "_offset": {
-      "__type__": "cc.Vec2",
-      "x": 0,
-      "y": 0
-    },
-    "_size": {
-      "__type__": "cc.Size",
-      "width": 68,
-      "height": 60
-    },
+    "_useOriginalSize": false,
+    "_string": "毒圈正在蔓延",
+    "_N$string": "毒圈正在蔓延",
+    "_fontSize": 60,
+    "_lineHeight": 80,
+    "_enableWrapText": true,
+    "_N$file": null,
+    "_isSystemFontUsed": true,
+    "_spacingX": 0,
+    "_batchAsBitmap": false,
+    "_N$horizontalAlign": 1,
+    "_N$verticalAlign": 1,
+    "_N$fontFamily": "Arial",
+    "_N$overflow": 0,
+    "_N$cacheMode": 0,
     "_id": ""
   },
   {
@@ -128,9 +101,9 @@
       "__id__": 1
     },
     "asset": {
-      "__uuid__": "f3d6a59a-b515-49ca-aad2-1e91640538b4"
+      "__uuid__": "64f32985-022c-44f0-9926-71ded964244f"
     },
-    "fileId": "1b1WYBBVpKaoKbzsK5m7fG",
+    "fileId": "b14aDHE4RAeIb8m+Z9mr+r",
     "sync": false
   }
 ]

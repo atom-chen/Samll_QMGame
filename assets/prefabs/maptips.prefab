@@ -108,7 +108,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 216,
+      "width": 237,
       "height": 37
     },
     "_anchorPoint": {
@@ -209,8 +209,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 19,
-      "height": 17
+      "width": 30,
+      "height": 18
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -255,7 +255,7 @@
       "__uuid__": "360f9b27-8e67-406d-940d-a60efc68ecdf"
     },
     "_type": 0,
-    "_sizeMode": 1,
+    "_sizeMode": 0,
     "_fillType": 0,
     "_fillCenter": {
       "__type__": "cc.Vec2",
@@ -310,7 +310,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 605.39,
+      "width": 576,
       "height": 60
     },
     "_anchorPoint": {
@@ -353,8 +353,8 @@
     },
     "_enabled": true,
     "_useOriginalSize": false,
-    "_string": "永夜还有10s后扩大笼罩范围",
-    "_N$string": "永夜还有10s后扩大笼罩范围",
+    "_string": "胜利条件：生存到游戏最后",
+    "_N$string": "胜利条件：生存到游戏最后",
     "_fontSize": 48,
     "_lineHeight": 60,
     "_enableWrapText": true,
