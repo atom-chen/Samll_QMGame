@@ -24,7 +24,7 @@ cc.Class({
     },
     init(data){
         this.width = data.width;
-        var action = cc.moveTo(5, 240, 0);
+        var action = cc.moveTo(0.5, 240, 0);
         this.node.runAction(cc.sequence(action,cc.callFunc(()=>{
             this.node.destroy();
         },this)));

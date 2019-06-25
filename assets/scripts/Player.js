@@ -38,6 +38,10 @@ cc.Class({
         lvUp:{
             default:null,
             type:cc.Animation,
+        },
+        addhp:{
+            default:null,
+            type:cc.Animation,
         }
         // lvUp: {
         //     default: null,
@@ -68,8 +72,8 @@ cc.Class({
         this.speed=100;                 //初始速度
         this.addspeed = 100;            //加速度
         this.killsnumber = 0;
-        // this.isDun = false;         //是否有护盾
-        // this.is_chidu = false;      //是否吃毒
+        this.isDun = false;         //是否有护盾
+        this.is_chidu = false;      //是否吃毒
         // this.behit = false;         //是否被攻击（被攻击是不能移动）
         // this.wudi = false;          //是否无敌
         // this.time = 3;
@@ -78,11 +82,9 @@ cc.Class({
         this.Herolv.string = this.lv;
         this.Heroexp.fillRange =0;
         this.Herohp.progress = this.curhp/this.maxhp;
-        // //this.Heroname.string = Global.name;
+        //this.Heroname.string = Global.name;
 
-        //需要旋转的人物图形
-        //this.hero = this.node.getChildByName("NewNode");
-
+        this.player = this.node.getChildByName("hero");
         this.NodePool = cc.find("Canvas/gamebg").getComponent("GameItemManager");
         this.stonepos = null;       //石头的位置
     },
@@ -136,11 +138,7 @@ cc.Class({
             this.node.x += sx;
             this.node.y += sy;
         
-            //方向计算
-            // var r = Math.atan2(this.Rocker.dir.y,this.Rocker.dir.x);
-            // var degree = r * 180/(Math.PI);
-            // degree = 360 - degree + 90;
-            // this.hero.rotation = degree;
+            
             
         //}  
      },
@@ -160,7 +158,7 @@ cc.Class({
                         this.curhp +=100;
                     }
                     this.Herohp.progress = this.curhp/this.maxhp;
-                    this.player.getChildByName("addHp").getComponent(cc.Animation).play('AddHp');
+                    this.addhp.play('AddHp');
                 }
             }else if(other.node.name == "item_xiePrefab"){
                 this.NodePool.onItemKilled(other.node);
@@ -186,8 +184,13 @@ cc.Class({
                     this.expnum =0;
                     this.crit += 0.04;
                     if(this.curhp < this.maxhp){
-                        this.curhp +=300;
+                        if(this.curhp +100>this.maxhp){
+                            this.curhp =this.maxhp;
+                        }else{
+                            this.curhp +=100;
+                        }
                         this.Herohp.progress = this.curhp/this.maxhp;
+                        this.addhp.play('AddHp');
                     }
                     this.HeroLvUp();
                 }
