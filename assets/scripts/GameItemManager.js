@@ -71,7 +71,7 @@ cc.Class({
     },
     
     SetUpGem(pos){
-        var ran = Math.round(Math.random()*10)+10;
+        var ran = Math.round(Math.random()*12)+12;
         for(let i=0;i<ran;i++){
             this.CreateGem(pos);
         }

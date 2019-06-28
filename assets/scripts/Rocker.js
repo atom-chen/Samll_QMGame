@@ -55,8 +55,8 @@ cc.Class({
             var rotationnum = Math.abs(degree)%360;
             if(rotationnum>=0&&rotationnum<=180){
                 this.player.scaleX  = Math.abs(this.player.scaleX);
-            }else{
-                this.player.scaleX  = this.player.scaleX *-1;
+            }else if(rotationnum>180&&rotationnum<360){
+                this.player.scaleX  = Math.abs(this.player.scaleX) *-1;
             }
         },this);
    

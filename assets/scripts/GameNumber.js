@@ -28,12 +28,11 @@ cc.Class({
 
     start () {
         //注册监听事件
-        cc.game.on('change',function (people){
-             this.people.string = people+"/36";
-             this.dienumber.string = 0;
+        this.peoplenum = Global.enemynumber+1;
+        cc.game.on('change',function (num){
+             this.people.string = (this.peoplenum-num).toString()+"/"+this.peoplenum;
+             this.dienumber.string = cc.find("Canvas/player").getComponent("Player").killsnumber.toString();
         },this);
-        //初始化
-        cc.game.emit('change',36);
     },
     // update (dt) {},
     onDestroy(){

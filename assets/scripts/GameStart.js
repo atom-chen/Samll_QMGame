@@ -129,9 +129,7 @@ cc.Class({
                 }else{
                     score = (Global.score -Global.SeaonLvl[i].minscore +1)/jifen;
                 }
-                this.ChangeStarText(Math.floor(score))
-               
-
+                this.ChangeStarText(Math.floor(score));
             }
         }
     },

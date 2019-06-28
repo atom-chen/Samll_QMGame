@@ -51,8 +51,11 @@ cc.Class({
                 if(this.daycount<=0){
                     //按钮致灰，修改图片和文字颜色
                     this.videobtn.interactable = false;
-                    this.videoimg.color = this.btn.disabledColor;
-                    this.videolabel.color = this.btn.disabledColor;
+                    this.videoimg.color = this.videobtn.disabledColor;
+                    this.videolabel.color = this.videobtn.disabledColor;
+                    this.btn.interactable = false;
+                    this.btn_img.node.color = this.btn.disabledColor;
+                    this.btn_goldnum.node.color = this.btn.disabledColor;
                 }
                 this.costgold = res.result[0].costgold;
                 this.costdimo = res.result[0].costdimo;
@@ -64,9 +67,9 @@ cc.Class({
     },
     BuyHerosLvl(){
         if(Global.gold<this.costgold){
-            this.ShowTip("金币余额不足，请参与游戏~");
+            this.ShowTip("金币余额不足，请参与游戏获得~");
         }else if(Global.diamond<this.costdimo){
-            this.ShowTip("拥有能量不足，请参与游戏~");
+            this.ShowTip("拥有能量不足，请参与游戏获得~");
         }else if(Global.gold>this.costgold&&Global.diamond>this.costdimo){
             Global.BuyHerosLvl(this.isvideo,(res)=>{
                 if(res.state ==1){
@@ -80,16 +83,20 @@ cc.Class({
         }
     },
     VideoBuyHerosLvl(){
-        this.ShowTip("观看视频成功");
-        Global.BuyHerosLvl(this.isvideo,(res)=>{
-            if(res.state ==1){
-                this.GetUserHeros();
-                Global.gold = res.result.gold;
-                Global.diamond = res.result.diamonds;
-                this.ShowTip("升级成功");
-                cc.game.emit('UserChang');
-            }
-        });
+        if(Global.diamond<this.costdimo){
+            this.ShowTip("拥有能量不足，请参与游戏获得~");
+        }else{
+            //this.ShowTip("观看视频成功");
+            Global.BuyHerosLvl(this.isvideo,(res)=>{
+                if(res.state ==1){
+                    this.GetUserHeros();
+                    Global.gold = res.result.gold;
+                    Global.diamond = res.result.diamonds;
+                    this.ShowTip("升级成功");
+                    cc.game.emit('UserChang');
+                }
+            });
+        }
     },
     ShowTip(text){
         let tip = cc.instantiate(this.tip_prefab);

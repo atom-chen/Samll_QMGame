@@ -21,11 +21,19 @@ cc.Class({
 
     start () {
         this.player =  cc.find("Canvas/player").getComponent("Player");
+        this.controller = cc.find("Canvas/gamebg").getComponent("BulletController");
     },
     init(data){
+        this.attack = data.attack;  //攻击力
+        this.hit = data.hit;        //命中率
+        this.crit = data.crit;      //暴击率
+        this.id = data.uuid;        //id(用来辨别是否打中自己)
         this.width = data.width;
-        var action = cc.moveTo(0.5, 240, 0);
+        this.killname = data.killname;
+        //子弹位移
+        var action = cc.moveTo(0.5, this.width, 0);
         this.node.runAction(cc.sequence(action,cc.callFunc(()=>{
+            //this.controller.onBulletKilled(this.node);
             this.node.destroy();
         },this)));
     },
@@ -39,6 +47,45 @@ cc.Class({
         if(other.node.group == "gem"&&other.node.name == "item_stonePrefab"){
             this.node.stopAllActions();
             this.node.getComponent(cc.Animation).play('bullet');
+        }else if(other.node.group == "enemy"&&other.getComponent("EnemyPrefab").trigger.behit){
+            if(other.getComponent("EnemyPrefab").gameuuid!=this.id){
+                //命中率
+                var ranhit = Math.random();
+                if(ranhit<=this.hit){
+                    this.node.stopAllActions();
+                    this.node.getComponent(cc.Animation).play('bullet');
+                    other.getComponent("EnemyPrefab").killername = this.killname;
+                    //调用受伤方法
+                    //暴击率
+                    var rancrit = Math.random();
+                    if(rancrit<=this.crit){
+                        //TODO 暴击特效，伤害翻倍
+                        other.getComponent("EnemyPrefab").HeroDamage(this.attack*2);
+                        other.getComponent("EnemyPrefab").ShowBoomImg();
+                    }else{
+                        other.getComponent("EnemyPrefab").HeroDamage(this.attack);
+                    }
+                }
+            }
+        }else if(other.node.group == "Player"&&!other.getComponent("Player").behit){
+            if(other.getComponent("Player").gameuuid!=this.id){
+                //命中率
+                var ranhit = Math.random();
+                if(ranhit<=this.hit){
+                    this.node.stopAllActions();
+                    this.node.getComponent(cc.Animation).play('bullet');
+                    //调用受伤方法
+                    //暴击率
+                    var rancrit = Math.random();
+                    if(rancrit<=this.crit){
+                        //TODO 暴击特效，伤害翻倍
+                        other.getComponent("Player").HeroDamage(this.attack*2);
+                        other.getComponent("Player").ShowBoomImg();
+                    }else{
+                        other.getComponent("Player").HeroDamage(this.attack);
+                    }
+                }
+            }
         }
     },
 });

@@ -35,24 +35,15 @@ cc.Class({
         this.scheduleOnce(function() {
             this.ShowTips();
             this.time = 30;
-            this.speed = 100;
+            this.speed = 50;
             this.is_suodu= true;
         }, 60);
-        // this.scheduleOnce(function() {
-           
-        //     console.log("一次缩毒");
-        // }, 60);
         this.scheduleOnce(function() {
             this.ShowTips();
             this.time = 50;
             this.speed = 80;
             this.is_suodu= true;
-        }, 120);
-        // this.scheduleOnce(function() {
-            
-        //     console.log("2次缩毒");
-        // }, 140);
-        
+        }, 150);
     },
     ShowTips(){
         let tip = cc.instantiate(this.tip_prefab);
@@ -65,9 +56,10 @@ cc.Class({
     },
     update (dt) {
          if(Global.is_end){
+             this.unscheduleAllCallbacks();
              return;
          }
-         if(this.node.width<=0){
+         if(this.node.height<=0){
             Global.is_end = true;
             this.scheduleOnce(function() {
                 cc.find("Canvas/GameOverView").active = true;
@@ -80,7 +72,9 @@ cc.Class({
          if(this.time>=0){
             this.node.width -= dt*this.speed;
             this.node.height -= dt*this.speed;
-            this.node.getComponent(cc.CircleCollider).radius = this.node.width/2;
+            //this.node.getComponent(cc.CircleCollider).radius = this.node.width/2;
+            this.node.getComponent(cc.BoxCollider).size.width = this.node.width;
+            this.node.getComponent(cc.BoxCollider).size.height = this.node.height;
             this.time -=dt;
          }else{
             this.is_suodu = false;
@@ -89,26 +83,26 @@ cc.Class({
      },
      //开始触发
      onCollisionEnter: function (other, self) {
-        if(other.node.group == "player"){
+        if(other.node.group == "Player"){
             other.getComponent("Player").is_chidu = false;
         }else if(other.node.group == "enemy"){
-            other.getComponent("EnemyManager").is_chidu = false;
+            other.getComponent("EnemyPrefab").is_chidu = false;
         }
     },
     //持续触发
     onCollisionStay: function (other, self) {
-        if(other.node.group == "player"){
+        if(other.node.group == "Player"){
             other.getComponent("Player").is_chidu = false;
         }else if(other.node.group == "enemy"){
-            other.getComponent("EnemyManager").is_chidu = false;
+            other.getComponent("EnemyPrefab").is_chidu = false;
         }
     },
     //触发结束
     onCollisionExit: function (other, self) {
-        if(other.node.group == "player"){
+        if(other.node.group == "Player"){
             other.getComponent("Player").is_chidu = true;
         }else if(other.node.group == "enemy"){
-            other.getComponent("EnemyManager").is_chidu = true;
+            other.getComponent("EnemyPrefab").is_chidu = true;
         }
     },
 });

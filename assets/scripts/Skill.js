@@ -40,7 +40,7 @@ cc.Class({
 
     start () {
         this.Max_r = 53;
-        this.cd=4;
+        this.cd=2;
         this.is_Cd = false;
         this.dir = cc.v2(0,0);
         var line = this.target.getChildByName("line");
@@ -48,6 +48,8 @@ cc.Class({
         var p = this.bullte.getChildByName("p");
         this.Rocker.on(cc.Node.EventType.TOUCH_START,function(e){
             if(!this.is_Cd){
+                //当按住技能是移动速度变慢(发送监听)
+                cc.game.emit('useskill',1);
                 line.active = true;
                 var w_pos = e.getLocation();
                 var pos = this.node.convertToNodeSpaceAR(w_pos);
@@ -66,6 +68,7 @@ cc.Class({
    
         this.Rocker.on(cc.Node.EventType.TOUCH_MOVE,function(e){
             if(!this.is_Cd){
+                line.active = true;
                 var w_pos = e.getLocation();
                 var pos = this.node.convertToNodeSpaceAR(w_pos);
                 var len = pos.mag();
@@ -84,6 +87,7 @@ cc.Class({
    
         this.Rocker.on(cc.Node.EventType.TOUCH_END,function(e){
             if(!this.is_Cd){
+                cc.game.emit('useskill',2);
                 // TODO 开炮
                 line.active = false;
                 var skillbullet = cc.instantiate(this.skill_bullet);
@@ -92,6 +96,11 @@ cc.Class({
                 p.scaleX = player.getChildByName("hero").scaleX;
                 let data = {
                     width:line.width,
+                    attack:Global.attack,
+                    crit:player.getComponent("Player").crit,
+                    hit:1,
+                    uuid:-1,
+                    killname:Global.name,
                 }
                 skillbullet.getComponent("Bullet").init(data);
                 p.getChildByName("pos").addChild(skillbullet);
@@ -108,6 +117,7 @@ cc.Class({
    
         this.Rocker.on(cc.Node.EventType.TOUCH_CANCEL,function(e){
             if(!this.is_Cd){
+                cc.game.emit('useskill',2);
                 // TODO 开炮
                 line.active = false;
                 var skillbullet = cc.instantiate(this.skill_bullet);
@@ -116,6 +126,11 @@ cc.Class({
                 p.scaleX = player.getChildByName("hero").scaleX;
                 let data = {
                     width:line.width,
+                    attack:Global.attack,
+                    crit:player.getComponent("Player").crit,
+                    hit:1,
+                    uuid:-1,
+                    killname:Global.name,
                 }
                 skillbullet.getComponent("Bullet").init(data);
                 p.getChildByName("pos").addChild(skillbullet);

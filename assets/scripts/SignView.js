@@ -43,7 +43,7 @@ cc.Class({
         Global.GetUserSignInfo((res)=>{
             if(res.state == 1){
                 if(res.result.istoday){
-                    self.text.string = res.result.days;
+                    self.text.string = (res.result.days-1).toString();
                     //TODO 已经签到图片改变
                     var imgurl = "text_xuanyao";
                     cc.loader.loadRes(imgurl, cc.SpriteFrame, function (err, spriteFrame) {

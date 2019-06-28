@@ -15,40 +15,74 @@
       null,
       true,
       true,
+      true,
+      true,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      true,
+      false,
+      false,
+      null,
+      null,
+      null,
+      true
+    ],
+    [
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      true,
+      true,
+      true
+    ],
+    [
+      false,
+      false,
+      true,
+      false,
+      false,
+      true,
+      false,
+      false,
+      true
+    ],
+    [
+      false,
+      false,
+      true,
+      false,
+      false,
+      true,
+      false,
+      false,
       true
     ],
     [
       false,
       false,
       false,
-      false
-    ],
-    [
-      false,
       false,
       true,
-      false,
-      false
-    ],
-    [
-      false,
-      false,
       true,
-      false,
-      false,
-      false,
-      true
-    ],
-    [
-      false,
-      false,
       true,
-      false,
-      false,
       true,
       false
     ],
     [
+      false,
+      false,
       false,
       false,
       false,
@@ -82,14 +116,17 @@
     "Mask",
     "gem",
     "bullet",
-    "trigger"
+    "trigger",
+    "enemy",
+    "maskchild"
   ],
-  "last-module-event-record-time": 1560933965519,
+  "last-module-event-record-time": 1561616441092,
   "simulator-orientation": false,
   "simulator-resolution": {
     "height": 640,
     "width": 960
   },
   "use-customize-simulator": true,
-  "use-project-simulator-setting": false
+  "use-project-simulator-setting": false,
+  "start-scene": "current"
 }

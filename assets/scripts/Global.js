@@ -120,13 +120,21 @@ window.Global = {
             });
         });
     },
+    //刷新玩家信息
+    RefreshUesrInfo(){
+        let parme = {
+            sessionId:this.sessionId
+        }
+        this.Post("Qmeng/getuserinfo",parme,(res)=>{
+            this.gold = res.result.gold;
+            this.diamond= res.result.diamonds;
+            this.userlvl = res.result.userlvl;
+            this.score = res.result.score;
+        });
+    },
     //获取段位信息
     GetSeaonLvl(callback){
         this.Post("Qmeng/GetSeaonLvl",null,callback);
-    },
-    //获取所有英雄信息
-    GetAllHeros(callback){
-        this.Post("Qmeng/GetAllHeros",null,callback);
     },
     //获取玩家身上的英雄信息
     GetUserHeros(callback){
@@ -134,13 +142,6 @@ window.Global = {
             sessionId:this.sessionId
         }
         this.Post("Qmeng/GetUserHeros",parme,callback);
-    },
-    //获取高手榜的信息
-    GetAllRank(callback){
-        let parme = {
-            sessionId:this.sessionId
-        }
-        this.Post("Qmeng/GetAllRank",parme,callback);
     },
     //获取玩家赛季信息
     GetUserSeaon(callback){
@@ -159,22 +160,6 @@ window.Global = {
             change :change,  //数量
         }
         this.Post("Qmeng/UserChange",data,callback);
-    },
-    //购买英雄
-    BuyHeros(id,callback){
-        let data = {
-            sessionId:this.sessionId,
-            hid:id,
-        }
-        this.Post("Qmeng/BuyHeros",data,callback);
-    },
-    //获取任务
-    GetMission(callback){
-        let data = {
-            sessionId:this.sessionId,
-            appid:this.appid,
-        }
-        this.Post("game/GetMission",data,callback);
     },
     //购买技能，升级技能
     BuySkill(heroid,skill,callback){
@@ -221,10 +206,9 @@ window.Global = {
     },
     
     //游戏结算
-    GameSettle(heroid,kill,rank,callback){
+    GameSettle(kill,rank,callback){
         let data = {
             sessionId:this.sessionId,
-            hid:heroid,
             kill:kill,
             rank:rank,
         }
