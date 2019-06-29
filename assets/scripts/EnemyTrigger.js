@@ -32,7 +32,8 @@ cc.Class({
     // onLoad () {},
 
     start () {
-        this.dir = cc.v2(0,0);
+        this.dir = cc.v2(-1,0);
+        this.FangXiang();
         this.behit = true;
         this.cd = this.enemy.getComponent("EnemyPrefab").cd;
         this.is_Cd = false;
@@ -75,18 +76,8 @@ cc.Class({
         //     }
         // }
     },
-    //移动方向
-    ComputeDir(otherpos){
-        this.isGO = false;
-
-        var pos = otherpos.sub(this.enemy.position);
-        var len = pos.mag();
-        //var time = len /this.enemy.getComponent("EnemyPrefab").speed;
-        if(len !=0 ){
-            this.dir.x = pos.x / len;
-            this.dir.y = pos.y / len;
-            this.is_trigger =true;
-        }
+    //方向计算
+    FangXiang(){
         //方向计算
         var r = Math.atan2(this.dir.y,this.dir.x);
         var degree = r * 180/(Math.PI);
@@ -98,6 +89,19 @@ cc.Class({
         }else if(rotationnum>180&&rotationnum<360){
             this.enemy.getChildByName("hero").scaleX =  Math.abs(this.enemy.getChildByName("hero").scaleX) *-1;
         }
+    },
+    //移动方向
+    ComputeDir(otherpos){
+        this.isGO = false;
+        var pos = otherpos.sub(this.enemy.position);
+        var len = pos.mag();
+        //var time = len /this.enemy.getComponent("EnemyPrefab").speed;
+        if(len !=0 ){
+            this.dir.x = pos.x / len;
+            this.dir.y = pos.y / len;
+            this.is_trigger =true;
+        }
+        this.FangXiang();
 
         // var action = cc.moveTo(2, otherpos.x, otherpos.y);
         // this.enemy.runAction(cc.sequence(action,cc.callFunc(()=>{
@@ -120,15 +124,16 @@ cc.Class({
             this.dir.x = pos.x / len;
             this.dir.y = pos.y / len;
         }
-         //方向计算
-         var r = Math.atan2(this.dir.y,this.dir.x);
-         var degree = r * 180/(Math.PI);
-        //  degree = 360 - degree + 90;
+        //方向计算
+        var r = Math.atan2(this.dir.y,this.dir.x);
+        var degree = r * 180/(Math.PI);
+        degree = 360 - degree + 90;
         if(this.enemy.getChildByName("hero").scaleX==-1){
             this.gun.rotation = degree+180;
         }else{
             this.gun.rotation = -degree;
         }
+        this.FangXiang();
         let data = {
             width:240,
             attack:this.enemy.getComponent("EnemyPrefab").attack,
@@ -160,7 +165,7 @@ cc.Class({
             }else if(other.node.group == "enemy" && other.getComponent("EnemyPrefab").gameuuid != this.gameuuid){
                 this.ComputeDir(other.node.position);
             }else if(other.node.group == "gem"){
-                if(other.node.name != "item_grassPrefab"||other.node.name != "item_stonePrefab"){
+                if((other.node.name != "item_stonePrefab")&&(other.node.name != "item_grassPrefab")){
                     this.ComputeDir(other.node.position);
                 }
             }
@@ -169,7 +174,7 @@ cc.Class({
     onCollisionStay: function (other, self) {
         if(this.isGO){
             if(other.node.group == "gem"&&this.behit){
-                if(other.node.name != "item_grassPrefab"||other.node.name != "item_stonePrefab"){
+                if((other.node.name != "item_stonePrefab")&&(other.node.name != "item_grassPrefab")){
                     this.ComputeDir(other.node.position);
                 }
             }

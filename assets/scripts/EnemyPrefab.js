@@ -44,23 +44,47 @@ cc.Class({
             default:null,
             type:cc.Node,
         },
+        eff_addspeed:{
+            default:null,
+            type:cc.Node,
+        },
         gameuuid:null,
     },
 
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
+        //开启碰撞检测
+        cc.director.getCollisionManager().enabled = true;
         this.NodePool = cc.find("Canvas/gamebg").getComponent("GameItemManager");
         
         this.player = this.node.getChildByName("hero");
         this.playerdie = this.node.getChildByName("herodie");
         
+        //-------------------------------------------
+        this.curhp = 1600;
+        this.maxhp = 1600;
+        this.lv = 1;
+        this.exp = 0;                   //当前所需经验值
+        this.expnum = 0;                //当前经验值
+        this.xishu = 6;                 //升级系数
+        this.crit = 0.05;               //暴击率 5%~20%
+        this.hit = 0.3;                 //命中率 30%~50%
+        this.attack = 600;              //攻击力
+        this.speed=70;                 //初始速度
+        this.addspeed = 100;            //加速度
+        this.killsnumber = 0;           //杀敌数
+        this.isDun = false;             //是否有护盾
+        this.is_chidu = false;          //是否吃毒
+        this.cd = 3;                    //技能CD
+        //---------------------------------------------
         //this.gameuuid=1;
         this.Herolv.string = this.lv;
         this.Heroexp.fillRange =0;
         this.Herohp.progress = this.curhp/this.maxhp;
         this.killername = null; 
         this.time = 3;
+        this.chidutime=0;
     },
 
     start () {
@@ -109,10 +133,15 @@ cc.Class({
         }
         
     },
-
     update (dt) {
         //如果吃毒
         if(this.is_chidu){
+            if( this.chidutime==0){
+                this.trigger.dir.x = -this.trigger.dir.x;
+                this.trigger.dir.y = -this.trigger.dir.y;
+                this.trigger.FangXiang();
+                this.chidutime++;
+            }
             if(this.time>0){
                 this.time -=dt;
              }else{
@@ -149,11 +178,13 @@ cc.Class({
                 if(this.node.x+sx+herowidth >top.x&&this.node.x+sx-herowidth<right.x&&this.node.y+sy-heroheight>right.y && this.node.y+sy-heroheight<top.y){
                     this.trigger.dir.x = -this.trigger.dir.x;
                     this.trigger.dir.y = -this.trigger.dir.y;
+                    this.trigger.FangXiang();
                     return;
                 }
                 if(this.node.x+sx+herowidth >left.x&&this.node.x+sx-herowidth<bottom.x&&this.node.y+sy+heroheight>left.y && this.node.y+sy-heroheight<bottom.y){
                     this.trigger.dir.x = -this.trigger.dir.x;
                     this.trigger.dir.y = -this.trigger.dir.y;
+                    this.trigger.FangXiang();
                     return;
                 }
             }
@@ -183,8 +214,11 @@ cc.Class({
             }else if(other.node.name == "item_xiePrefab"){
                 this.NodePool.onItemKilled(other.node);
                 this.speed += this.addspeed;
+                this.eff_addspeed.getComponent(cc.Animation).play("speed");
                 this.scheduleOnce(function() {
-                    this.speed -= this.addspeed;;
+                    this.speed -= this.addspeed;
+                    this.eff_addspeed.getComponent(cc.Animation).stop("speed");
+                    this.eff_addspeed.getComponent(cc.Sprite).spriteFrame = null;
                 }, 3);
             }else if(other.node.name == "item_stonePrefab"){
                 // 石头------------------------------------------------------------

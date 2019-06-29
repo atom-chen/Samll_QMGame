@@ -43,6 +43,10 @@ cc.Class({
             default:null,
             type:cc.Animation,
         },
+        eff_addspeed:{
+            default:null,
+            type:cc.Node,
+        },
         critImg:{
             default:null,
             type:cc.Node,
@@ -103,6 +107,8 @@ cc.Class({
        },this);
        //初始化
        cc.game.emit('change',0);
+       
+       
     },
 
      update (dt) {
@@ -179,8 +185,11 @@ cc.Class({
             }else if(other.node.name == "item_xiePrefab"){
                 this.NodePool.onItemKilled(other.node);
                 this.speed += this.addspeed;
+                this.eff_addspeed.getComponent(cc.Animation).play("speed");
                 this.scheduleOnce(function() {
-                    this.speed -= this.addspeed;;
+                    this.speed -= this.addspeed;
+                    this.eff_addspeed.getComponent(cc.Animation).stop("speed");
+                    this.eff_addspeed.getComponent(cc.Sprite).spriteFrame = null;
                 }, 3);
             }else if(other.node.name == "item_stonePrefab"){
                 // 石头------------------------------------------------------------

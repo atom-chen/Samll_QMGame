@@ -31,7 +31,7 @@ cc.Class({
         this.width = data.width;
         this.killname = data.killname;
         //子弹位移
-        var action = cc.moveTo(0.5, this.width, 0);
+        var action = cc.moveTo(0.3, this.width, 0);
         this.node.runAction(cc.sequence(action,cc.callFunc(()=>{
             //this.controller.onBulletKilled(this.node);
             this.node.destroy();

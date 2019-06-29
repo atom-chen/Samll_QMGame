@@ -40,17 +40,19 @@ cc.Class({
 
     start () {
         this.Max_r = 53;
-        this.cd=2;
+        this.cd=1;
         this.is_Cd = false;
         this.dir = cc.v2(0,0);
         var line = this.target.getChildByName("line");
         var player = cc.find("Canvas/player");
         var p = this.bullte.getChildByName("p");
+        this.click =false;//用来检验是否单击
+        this.clicktime=0;//通过时间来判断
         this.Rocker.on(cc.Node.EventType.TOUCH_START,function(e){
             if(!this.is_Cd){
                 //当按住技能是移动速度变慢(发送监听)
                 cc.game.emit('useskill',1);
-                line.active = true;
+                //line.active = true;
                 var w_pos = e.getLocation();
                 var pos = this.node.convertToNodeSpaceAR(w_pos);
                 var len = pos.mag();//获取向量长度
@@ -62,13 +64,18 @@ cc.Class({
                     pos.y = this.Max_r * pos.y / len;
                 }
                 this.Rocker.setPosition(pos);
+                //是否单击
+                this.click = true;
+                this.clicktime=0;
             }
             
         },this);
    
         this.Rocker.on(cc.Node.EventType.TOUCH_MOVE,function(e){
             if(!this.is_Cd){
-                line.active = true;
+                if(this.clicktime>30){
+                    line.active = true;
+                }
                 var w_pos = e.getLocation();
                 var pos = this.node.convertToNodeSpaceAR(w_pos);
                 var len = pos.mag();
@@ -112,6 +119,9 @@ cc.Class({
                 this.scheduleOnce(function() {
                     this.target.rotation = 0;
                 }, 0.9);
+                //是否单击
+                this.click = false;
+                this.clicktime=0;
             }
         },this);
    
@@ -142,6 +152,10 @@ cc.Class({
                 this.scheduleOnce(function() {
                     this.target.rotation = 0;
                 }, 0.9);
+
+                //是否单击
+                this.click = false;
+                this.clicktime=0;
             }
             
         },this);
@@ -156,6 +170,9 @@ cc.Class({
                 this.is_Cd = false;
                 this.skill1_mask.fillRange =1;
             }
+        }
+        if(this.click){
+            this.clicktime++;
         }
     },
 });

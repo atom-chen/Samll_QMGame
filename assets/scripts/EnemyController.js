@@ -34,7 +34,7 @@ cc.Class({
 
     start () {
         this.map =  cc.find("Canvas/gamebg");
-        for(let i = 0; i < Global.enemynumber; ++i){
+        for(let i = 0; i < 17; ++i){
             this.createEnemy(i,1);
         }
 

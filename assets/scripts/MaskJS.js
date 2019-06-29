@@ -16,7 +16,10 @@ cc.Class({
             default:null,
             type:cc.Prefab,
         },
-        
+        map_img:{
+            default:null,
+            type:cc.Node,
+        },
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -37,13 +40,28 @@ cc.Class({
             this.time = 30;
             this.speed = 50;
             this.is_suodu= true;
-        }, 60);
+            this.DuQuanWarning(this.time);
+        }, 2);
         this.scheduleOnce(function() {
             this.ShowTips();
             this.time = 50;
-            this.speed = 80;
+            this.speed = 50;
             this.is_suodu= true;
+            this.DuQuanWarning(this.time);
         }, 150);
+        
+    },
+    DuQuanWarning(time){
+        var num = Math.ceil(time/3);
+        cc.tween(this.map_img)
+            .to(1, { opacity: 255})
+            .to(2, { scale: 15})
+            .call(() => {
+            this.map_img.opacity =0;
+            this.map_img.scale = 1;
+            })
+            .repeat(num)
+            .start()
     },
     ShowTips(){
         let tip = cc.instantiate(this.tip_prefab);
@@ -59,11 +77,12 @@ cc.Class({
              this.unscheduleAllCallbacks();
              return;
          }
-         if(this.node.height<=0){
+         if(this.node.height<=0||this.node.width<=0){
             Global.is_end = true;
-            this.scheduleOnce(function() {
-                cc.find("Canvas/GameOverView").active = true;
-            }, 2);
+            cc.find("Canvas/GameOverView").active = true;
+            // this.scheduleOnce(function() {
+            //     cc.find("Canvas/GameOverView").active = true;
+            // }, 2);
             return
          }
          if(!this.is_suodu){
@@ -78,6 +97,7 @@ cc.Class({
             this.time -=dt;
          }else{
             this.is_suodu = false;
+            console.log("安全区域范围："+this.node.width +" 高:"+this.node.height);
          }
          
      },
@@ -103,6 +123,7 @@ cc.Class({
             other.getComponent("Player").is_chidu = true;
         }else if(other.node.group == "enemy"){
             other.getComponent("EnemyPrefab").is_chidu = true;
+            other.getComponent("EnemyPrefab").chidutime=0;
         }
     },
 });
