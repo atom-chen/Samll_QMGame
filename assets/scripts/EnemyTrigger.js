@@ -34,13 +34,14 @@ cc.Class({
     start () {
         this.dir = cc.v2(-1,0);
         this.FangXiang();
-        this.behit = true;
+
         this.cd = this.enemy.getComponent("EnemyPrefab").cd;
         this.is_Cd = false;
         this.isGO = true;
         this.map =  cc.find("Canvas/gamebg");
         this.gameuuid = this.enemy.getComponent("EnemyPrefab").gameuuid;
-        this.arrStayPos =[];
+        this.isNoturn = false;
+
         this.BulletController = cc.find("Canvas/gamebg").getComponent("BulletController");
     },
 
@@ -53,7 +54,7 @@ cc.Class({
                 this.cd=this.enemy.getComponent("EnemyPrefab").cd;
             }
         }
-        // if(this.is_trigger && !Global.is_end && this.behit&&this.isGO){
+        // if(this.is_trigger && !Global.is_end &&this.isGO){
         //     var vx = this.dir.x * this.enemy.getComponent("EnemyPrefab").speed;
         //     var vy = this.dir.y * this.enemy.getComponent("EnemyPrefab").speed;
 
@@ -117,30 +118,30 @@ cc.Class({
     UserSkill(otherpos){
         this.isGO = false;
         this.is_Cd = true;
-        this.enemy.stopAllActions();
+        //this.enemy.stopAllActions();
         var pos = otherpos.sub(this.enemy.position);
         var len = pos.mag();
         if(len !=0 ){
             this.dir.x = pos.x / len;
             this.dir.y = pos.y / len;
         }
+        this.FangXiang();
         //方向计算
         var r = Math.atan2(this.dir.y,this.dir.x);
         var degree = r * 180/(Math.PI);
-        degree = 360 - degree + 90;
         if(this.enemy.getChildByName("hero").scaleX==-1){
             this.gun.rotation = degree+180;
         }else{
             this.gun.rotation = -degree;
         }
-        this.FangXiang();
+        
         let data = {
             width:240,
             attack:this.enemy.getComponent("EnemyPrefab").attack,
             crit:this.enemy.getComponent("EnemyPrefab").crit,
             hit:this.enemy.getComponent("EnemyPrefab").hit,
             uuid:this.enemy.getComponent("EnemyPrefab").gameuuid,
-            killname:this.enemy.getComponent("EnemyPrefab").gameuuid,
+            killname:this.enemy.getComponent("EnemyPrefab").Heroname.string,
         }
         let skillbullet = cc.instantiate(this.skill_bullet);
         //this.BulletController.CreateBullet(data,this.gun);
@@ -159,13 +160,13 @@ cc.Class({
     },
     onCollisionEnter: function (other, self) {
         //判断碰撞的类型
-        if(this.behit&&this.isGO){
+        if(this.isGO){
             if(other.node.group == "Player"){
                 this.UserSkill(other.node.position);
             }else if(other.node.group == "enemy" && other.getComponent("EnemyPrefab").gameuuid != this.gameuuid){
                 this.ComputeDir(other.node.position);
             }else if(other.node.group == "gem"){
-                if((other.node.name != "item_stonePrefab")&&(other.node.name != "item_grassPrefab")){
+                if((other.node.name != "item_grassPrefab"&&!this.isNoturn)){
                     this.ComputeDir(other.node.position);
                 }
             }
@@ -173,8 +174,8 @@ cc.Class({
     },
     onCollisionStay: function (other, self) {
         if(this.isGO){
-            if(other.node.group == "gem"&&this.behit){
-                if((other.node.name != "item_stonePrefab")&&(other.node.name != "item_grassPrefab")){
+            if(other.node.group == "gem"){
+                if((other.node.name != "item_grassPrefab"&&!this.isNoturn)){
                     this.ComputeDir(other.node.position);
                 }
             }
@@ -186,7 +187,7 @@ cc.Class({
         }
     },
     // onCollisionExit: function (other, self) {
-    //     if(other.node.group == "gem"&&this.behit){
+    //     if(other.node.group == "gem"){
     //         if(other.node.name != "item_grassPrefab"||other.node.name != "item_stonePrefab"){
     //             this.isGO = true;
     //         }

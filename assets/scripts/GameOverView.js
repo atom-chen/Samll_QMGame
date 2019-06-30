@@ -33,6 +33,14 @@ cc.Class({
         jifenText:cc.Label,
         duanImg:cc.Sprite,
         duantext:cc.Label,
+        VictoryBgm:{
+            default:null,
+            type:cc.AudioSource,
+        },
+        LoseBgm:{
+            default:null,
+            type:cc.AudioSource,
+        },
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -43,15 +51,27 @@ cc.Class({
         let self =this;
         var kill = cc.find("Canvas/player").getComponent("Player").killsnumber;
         var rank = Global.enemynumber-Global.dienumber+1;
+        console.log("机器人总数： "+Global.enemynumber);
+        console.log("机器人死亡数： "+Global.dienumber);
         this.killtext.string = kill;
         this.ranktext.string = rank;
         if(rank!=1){
+            this.LoseBgm.play();
             let url = 'gameover_sb';
             cc.loader.loadRes(url, cc.SpriteFrame, function (err, spriteFrame) {
                 self.jb_img.spriteFrame = spriteFrame;
+                self.jb_img.width = self.jb_img.height = 24;
             });
             self.titletext.active =false;
             self.titleshibai.node.active = true;
+            if(cc.find("Canvas/player").getComponent("Player").killername!=null){
+                let name_string = cc.find("Canvas/player").getComponent("Player").killername;
+                self.titleshibai.string = "本轮被玩家"+name_string+"淘汰了";
+            }else{
+                self.titleshibai.string = "本轮被毒圈淘汰了";
+            }
+        }else{
+            this.VictoryBgm.play();
         }
         Global.GameSettle(kill,rank,(res)=>{
             if(res.state ==1){
@@ -62,10 +82,16 @@ cc.Class({
                 cc.loader.loadRes(url, cc.SpriteFrame, function (err, spriteFrame) {
                     self.duanImg.spriteFrame = spriteFrame;
                 });
-                Global.RefreshUesrInfo();
+                Global.RefreshUesrInfo((res)=>{
+                    Global.gold = res.result.gold;
+                    Global.diamond= res.result.diamonds;
+                    Global.userlvl = res.result.userlvl;
+                    Global.score = res.result.score;
+                    this.SmallDuanWei();
+                });
             }
         });
-        this.SmallDuanWei();
+        
     },
 
     GameAgain(){

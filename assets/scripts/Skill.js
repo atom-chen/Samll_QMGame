@@ -31,6 +31,10 @@ cc.Class({
         bullte:{
             default:null,
             type:cc.Node,
+        },
+        bullteBgm:{
+            default:null,
+            type:cc.AudioSource,
         }
     },
 
@@ -50,9 +54,14 @@ cc.Class({
         this.clicktime=0;//通过时间来判断
         this.Rocker.on(cc.Node.EventType.TOUCH_START,function(e){
             if(!this.is_Cd){
+                //是否单击
+                this.click = true;
+                this.clicktime=0;
                 //当按住技能是移动速度变慢(发送监听)
                 cc.game.emit('useskill',1);
-                //line.active = true;
+                if(this.clicktime>20){
+                    line.active = true;
+                }
                 var w_pos = e.getLocation();
                 var pos = this.node.convertToNodeSpaceAR(w_pos);
                 var len = pos.mag();//获取向量长度
@@ -64,16 +73,14 @@ cc.Class({
                     pos.y = this.Max_r * pos.y / len;
                 }
                 this.Rocker.setPosition(pos);
-                //是否单击
-                this.click = true;
-                this.clicktime=0;
+                
             }
             
         },this);
    
         this.Rocker.on(cc.Node.EventType.TOUCH_MOVE,function(e){
             if(!this.is_Cd){
-                if(this.clicktime>30){
+                if(this.clicktime>20){
                     line.active = true;
                 }
                 var w_pos = e.getLocation();
@@ -122,6 +129,7 @@ cc.Class({
                 //是否单击
                 this.click = false;
                 this.clicktime=0;
+                this.bullteBgm.play();
             }
         },this);
    
@@ -156,6 +164,7 @@ cc.Class({
                 //是否单击
                 this.click = false;
                 this.clicktime=0;
+                this.bullteBgm.play();
             }
             
         },this);

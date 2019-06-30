@@ -32,23 +32,23 @@ cc.Class({
 
     start () {
         //出现提示
-        this.is_suodu= true;
+        this.is_suodu= false;
         this.time=0;
         this.speed = 0;
         this.scheduleOnce(function() {
             this.ShowTips();
             this.time = 30;
-            this.speed = 50;
+            this.speed = 35;
             this.is_suodu= true;
             this.DuQuanWarning(this.time);
-        }, 2);
+        },64);
         this.scheduleOnce(function() {
             this.ShowTips();
             this.time = 50;
-            this.speed = 50;
+            this.speed = 35;
             this.is_suodu= true;
             this.DuQuanWarning(this.time);
-        }, 150);
+        },154);
         
     },
     DuQuanWarning(time){
@@ -97,7 +97,7 @@ cc.Class({
             this.time -=dt;
          }else{
             this.is_suodu = false;
-            console.log("安全区域范围："+this.node.width +" 高:"+this.node.height);
+            console.log("安全区范围: "+this.node.width +" 高 "+this.node.height)
          }
          
      },
@@ -121,6 +121,7 @@ cc.Class({
     onCollisionExit: function (other, self) {
         if(other.node.group == "Player"){
             other.getComponent("Player").is_chidu = true;
+            other.getComponent("Player").killername=null;
         }else if(other.node.group == "enemy"){
             other.getComponent("EnemyPrefab").is_chidu = true;
             other.getComponent("EnemyPrefab").chidutime=0;

@@ -43,6 +43,10 @@ cc.Class({
             default:null,
             type:cc.Animation,
         },
+        LvUpBgm:{
+            default:null,
+            type:cc.AudioSource,
+        },
         eff_addspeed:{
             default:null,
             type:cc.Node,
@@ -50,6 +54,10 @@ cc.Class({
         critImg:{
             default:null,
             type:cc.Node,
+        },
+        killtips:{
+            default:null,
+            type:cc.Prefab,
         },
         // lvUp: {
         //     default: null,
@@ -82,8 +90,6 @@ cc.Class({
         this.killsnumber = 0;
         this.isDun = false;         //是否有护盾
         this.is_chidu = false;      //是否吃毒
-        this.behit = false;         //是否被攻击（被攻击是不能移动）
-        this.wudi = false;          //是否无敌
         this.time = 3;
         this.killername = null;     //杀我的人
 
@@ -107,8 +113,13 @@ cc.Class({
        },this);
        //初始化
        cc.game.emit('change',0);
-       
-       
+       //开局3秒无敌防止给机器人包围直接打死
+        this.wudi = true;          //是否无敌
+        this.node.getChildByName("dun").active = true;
+        this.scheduleOnce(function() {
+            this.wudi = false; 
+            this.node.getChildByName("dun").active = false;
+        }, 6);
     },
 
      update (dt) {
@@ -125,7 +136,6 @@ cc.Class({
         if(this.Rocker.dir.mag()<0.5){
             return;
         }
-        // if(!this.behit){
             var vx = this.Rocker.dir.x * this.speed;
             var vy = this.Rocker.dir.y * this.speed;
 
@@ -143,7 +153,7 @@ cc.Class({
             }
             //this.stonepos = cc.v2(80,0);
             if(this.stonepos!=null){
-                var top = cc.v2(this.stonepos.x-34,this.stonepos.y+30);
+                var top = cc.v2(this.stonepos.x,this.stonepos.y+30);
                 var right = cc.v2(this.stonepos.x+34,this.stonepos.y-30);;
                 var bottom = cc.v2(this.stonepos.x+34,this.stonepos.y+30);
                 var left = cc.v2(this.stonepos.x-34,this.stonepos.y-30);
@@ -166,7 +176,7 @@ cc.Class({
      },
      onCollisionEnter: function (other, self) {
         //判断碰撞的类型
-        if(other.node.group == "gem"){
+        if(other.node.group == "gem"&&other.node.getComponent("ItemIsTrue").istrue){
             // 道具-----------------------------------------------------------
             if(other.node.name == "item_dunPrefab"){
                 this.NodePool.onItemKilled(other.node);
@@ -174,27 +184,25 @@ cc.Class({
             }else if(other.node.name == "item_hpPrefab"){
                 this.NodePool.onItemKilled(other.node);
                 if(this.curhp < this.maxhp){
-                    if(this.curhp +100>this.maxhp){
+                    if(this.curhp +600>this.maxhp){
                         this.curhp =this.maxhp;
                     }else{
-                        this.curhp +=100;
+                        this.curhp +=600;
                     }
                     this.Herohp.progress = this.curhp/this.maxhp;
                     this.addhp.play('AddHp');
                 }
             }else if(other.node.name == "item_xiePrefab"){
                 this.NodePool.onItemKilled(other.node);
-                this.speed += this.addspeed;
+                if(this.speed=100){
+                    this.speed += this.addspeed;
+                }
                 this.eff_addspeed.getComponent(cc.Animation).play("speed");
                 this.scheduleOnce(function() {
-                    this.speed -= this.addspeed;
+                    this.speed = 100;
                     this.eff_addspeed.getComponent(cc.Animation).stop("speed");
                     this.eff_addspeed.getComponent(cc.Sprite).spriteFrame = null;
                 }, 3);
-            }else if(other.node.name == "item_stonePrefab"){
-                // 石头------------------------------------------------------------
-                
-                this.stonepos = other.node.position;
             }else if(other.node.name == "item_grassPrefab"){
                 // 草------------------------------------------------------------
                 this.node.opacity = 127.5;
@@ -209,10 +217,10 @@ cc.Class({
                     this.expnum =0;
                     this.crit += 0.04;
                     if(this.curhp < this.maxhp){
-                        if(this.curhp +100>this.maxhp){
+                        if(this.curhp +200>this.maxhp){
                             this.curhp =this.maxhp;
                         }else{
-                            this.curhp +=100;
+                            this.curhp +=200;
                         }
                         this.Herohp.progress = this.curhp/this.maxhp;
                         this.addhp.play('AddHp');
@@ -222,10 +230,13 @@ cc.Class({
                 this.Herolv.string = this.lv;
                 this.Heroexp.fillRange = this.expnum /this.exp*-1;
             }
+        }else if(other.node.group == "stone"){
+            // 石头------------------------------------------------------------
+            this.stonepos = other.node.position;
         }
     },
     onCollisionExit: function (other, self) {
-        if(other.node.name == "item_stonePrefab"){
+        if(other.node.group == "stone"){
             this.stonepos = null;
         }else if(other.node.name == "item_grassPrefab"){
             this.node.opacity = 255;
@@ -238,13 +249,39 @@ cc.Class({
             cc.find("Canvas/GameOverView").active = true;
         }
     },
-    // //攻击
-    // HeroAttack(){
-    //     
-    //     if(this.Rocker.is_Cd){
-
-    //     }
-    // },
+    SHowKillNum(){
+        let text = "";
+        switch(this.killsnumber){
+            case 1:
+                text = "拿到第一滴血";
+                this.ShowTip(text);
+                break;
+            case 3:
+                text = "正在大杀特杀";
+                this.ShowTip(text);
+                break;
+            case 5:
+                text = "已势不可挡";
+                this.ShowTip(text);
+                break;
+            default:
+            break;
+        }
+        if(this.killsnumber>=8){
+            text = "已成为神了";
+            this.ShowTip(text);
+        }
+    },
+    ShowTip(text){
+        let tip = cc.instantiate(this.killtips);
+        if (tip) {
+            this.node.addChild(tip);
+            let src = tip.getComponent(require("TipShow"));
+            if (src) {
+                src.label.string = text;
+            }
+        }
+    },
     AddDun(){
         if(!this.isDun){
             this.isDun = true;
@@ -258,30 +295,25 @@ cc.Class({
                 this.node.getChildByName("dun").active = false;
                 this.isDun = false;
             }else{
-                if(this.is_chidu){
-                    this.curhp -=damage;
-                    this.Herohp.progress = this.curhp/this.maxhp;
-                }else{
-                    this.curhp -=damage;
-                    this.Herohp.progress = this.curhp/this.maxhp;
-                    // //实现闪烁效果。播放眩晕动画
-                    // this.player.getChildByName("yun").getComponent(cc.Animation).play('yun').repeatCount =10;
-                    // //闪烁
-                    // this.node.runAction(cc.blink(3, 3));
-                    //被击中状态不能进行移动等操作（机器人也不能动）
-                    this.behit = false;
-                    ////晕2秒不能移动
-                    // this.scheduleOnce(function() {
-                    //     this.behit = false;
-                    //     this.wudi = true;
-                    //     this.player.opacity = 0;
-                    // }, 2);
-                    // //晕玩之后无敌3秒
-                    // this.scheduleOnce(function() {
-                    //     this.wudi = false;
-                    //     this.player.opacity = 255;
-                    // }, 5);
-                }   
+                
+                this.curhp -=damage;
+                this.Herohp.progress = this.curhp/this.maxhp;
+                // //实现闪烁效果。播放眩晕动画
+                // this.player.getChildByName("yun").getComponent(cc.Animation).play('yun').repeatCount =10;
+                // //闪烁
+                // this.node.runAction(cc.blink(3, 3));
+                //被击中状态不能进行移动等操作（机器人也不能动）
+                ////晕2秒不能移动
+                // this.scheduleOnce(function() {
+                //     this.wudi = true;
+                //     this.player.opacity = 0;
+                // }, 2);
+                // //晕玩之后无敌3秒
+                // this.scheduleOnce(function() {
+                //     this.wudi = false;
+                //     this.player.opacity = 255;
+                // }, 5);
+                
                 this.HeroDead();
             }
 
@@ -289,6 +321,7 @@ cc.Class({
     },
     HeroLvUp(){
         this.lvUp.play('LvUp');
+        this.LvUpBgm.play();
     },
     ShowBoomImg(){
         this.critImg.active = true;

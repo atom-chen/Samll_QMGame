@@ -56,11 +56,9 @@ cc.Class({
                     var day = res.result.days-1;
                     if(day<0){
                         day = 0;
-                        res.result.days=1;
                     }
                     self.text.string = day;
-                    var ran =  Math.round(Math.random()*6)+6;
-                    this.num = ran * Math.ceil(res.result.days/7);
+                    this.num = res.result.gold;
                     self.number.string = "x"+this.num;
                 }
             }

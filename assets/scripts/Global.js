@@ -121,16 +121,11 @@ window.Global = {
         });
     },
     //刷新玩家信息
-    RefreshUesrInfo(){
+    RefreshUesrInfo(callback){
         let parme = {
             sessionId:this.sessionId
         }
-        this.Post("Qmeng/getuserinfo",parme,(res)=>{
-            this.gold = res.result.gold;
-            this.diamond= res.result.diamonds;
-            this.userlvl = res.result.userlvl;
-            this.score = res.result.score;
-        });
+        this.Post("Qmeng/getuserinfo",parme,callback);
     },
     //获取段位信息
     GetSeaonLvl(callback){
@@ -222,6 +217,15 @@ window.Global = {
         }
         this.Post("QMeng/BuyHerosLvl",data,callback);
     },
+    //获取机器人名字
+    GetName(num,callback){
+        let data = {
+            sessionId:this.sessionId,
+            num:num,
+        }
+        this.Post("game/getnicks",data,callback);
+    },
+    
     //登陆
     Login(){
         if (CC_WECHATGAME) {

@@ -21,11 +21,6 @@ cc.Class({
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
-        this.enemyPool = new cc.NodePool();
-        for(let i = 0; i < Global.enemynumber; ++i){
-            let enemy = cc.instantiate(this.enemyPrefab); // 创建节点
-            this.enemyPool.put(enemy); // 通过 put 接口放入对象池
-        }
         if(Global.is_end){
             Global.is_end = false;
             Global.dienumber = 0;
@@ -33,31 +28,87 @@ cc.Class({
     },
 
     start () {
-        this.map =  cc.find("Canvas/gamebg");
-        for(let i = 0; i < 17; ++i){
-            this.createEnemy(i,1);
-        }
-
+        // this.map =  cc.find("Canvas/gamebg");
+        this.arrPos = [{x:-1350,y:-900},{x:-1050,y:-900},{x:-750,y:-900},{x:-450,y:-900},{x:-150,y:-900},{x:150,y:-900},{x:450,y:-900},{x:750,y:-900},{x:1050,y:-900},{x:1350,y:-900},
+            {x:-1350,y:-300},{x:-1050,y:-300},{x:-750,y:-300},{x:-450,y:-300},{x:450,y:-300},{x:750,y:-300},{x:1050,y:-300},{x:1350,y:-300},
+            {x:-1350,y:300},{x:-1050,y:300},{x:-750,y:300},{x:-450,y:300},{x:450,y:300},{x:750,y:300},{x:1050,y:300},{x:1350,y:300},
+            {x:-1350,y:900},{x:-1050,y:900},{x:-750,y:900},{x:-450,y:900},{x:-150,y:900},{x:150,y:900},{x:450,y:900},{x:750,y:900},{x:1050,y:900},{x:1350,y:900},
+        ];
+        Global.GetName(Global.enemynumber,(res)=>{
+            if(res.state ==1){
+                for(let i = 0; i < 29; i++){
+                    let name_string = res.result[i];
+                    if(name_string.length>5){
+                        name_string = name_string.substr(0,5);
+                    }
+                    this.createEnemy(i,1,name_string,this.arrPos[i]);
+                }
+            }
+        });
+        this.scheduleOnce(function() {
+            this.DelayCreateEnemy();
+        },94);
     },
-    createEnemy: function (i,type) {
-        let enemy = null;
-        if (this.enemyPool.size() > 0) { // 通过 size 接口判断对象池中是否有空闲的对象
-            enemy = this.enemyPool.get();
-        } else { // 如果没有空闲对象，也就是对象池中备用对象不够时，我们就用 cc.instantiate 重新创建
-            enemy = cc.instantiate(this.enemyPrefab);
+    DelayCreateEnemy(){
+        var pos = cc.find("Canvas/player").position;
+        //玩家的视野范围
+        var leftx = -1125-(pos.x-350);
+        var rightx = 1125-(pos.x+350);
+        Global.GetName(Global.enemynumber,(res)=>{
+            if(res.state ==1){
+                for(let i = 30; i < Global.enemynumber; i++){
+                    let name_string = res.result[i];
+                    //let name_string = "hhhhhhhhhhhhhh";
+                    if(name_string.length>5){
+                        name_string = name_string.substr(0,5);
+                    }
+                    var y = Math.random()*(1550)-775;
+                    var x =null;
+                    if(leftx>rightx){
+                        x = Math.random()*leftx+pos.x-350;
+                    }else{
+                        x = Math.random()*rightx+pos.x+350;
+                    }
+                    var enemypos = cc.v2(x,y);
+                    this.createOtherEnemypos(i,1,name_string,enemypos);
+                }
+            }
+        });
+    },
+    createOtherEnemypos: function (i,type,name,pos) {
+        let enemy = cc.instantiate(this.enemyPrefab);
+        enemy.position = pos;
+        enemy.getComponent("EnemyPrefab").gameuuid = i;
+        enemy.getComponent("EnemyPrefab").init(type,name);
+        //enemy.name = enemy.getComponent("EnemyManager").gameuuid;
+        //enemy.parent = this.node; // 将生成的敌人加入节点树
+        console.log("kkkkkkkk: "+pos);
+        this.node.addChild(enemy);
+    },
+    createEnemy: function (i,type,name,pos) {
+        if(pos.x>0){
+            this.max_x = pos.x + 80;
+            this.min_x = pos.x - 80;
+        }else if(pos.x<0){
+            this.max_x = pos.x - 80;
+            this.min_x = pos.x + 80;
         }
-        var x = Math.random()*(this.map.width/2 - (this.map.width/-2) - enemy.width) + (this.map.width/-2+enemy.width/2);
-        var y = Math.random()*(this.map.height/2 - (this.map.height/-2)- enemy.height) + (this.map.height/-2+enemy.height/2);
+        if(pos.y>0){
+            this.max_y = pos.y + 220;
+            this.min_y = pos.y - 220;
+        }else if(pos.y<0){
+            this.max_y = pos.y - 220;
+            this.min_y = pos.y + 220;
+        }
+        let enemy = cc.instantiate(this.enemyPrefab);
+        var x = Math.random()*(this.max_x - this.min_x) + (this.min_x);
+        var y = Math.random()*(this.max_y - this.min_y) + (this.min_y);
         enemy.position = cc.v2(x,y);
         enemy.getComponent("EnemyPrefab").gameuuid = i;
-        enemy.getComponent("EnemyPrefab").init(type);
+        enemy.getComponent("EnemyPrefab").init(type,name);
         //enemy.name = enemy.getComponent("EnemyManager").gameuuid;
         //enemy.parent = this.node; // 将生成的敌人加入节点树
         this.node.addChild(enemy);
     },
     // update (dt) {},
-
-    onEnemyKilled: function (enemy) {
-        this.enemyPool.put(enemy); 
-    },
 });

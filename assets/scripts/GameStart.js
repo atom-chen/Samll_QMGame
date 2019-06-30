@@ -27,6 +27,7 @@ cc.Class({
 
     start () {
         let self = this;
+        cc.find("MusicBGM").getComponent("MusicControl").PlayBGM();
         Global.GetUserHeros((res)=>{
             if(res.state ==1){
                 Global.hp = res.result[0].Health;

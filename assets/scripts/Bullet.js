@@ -44,10 +44,10 @@ cc.Class({
         this.node.destroy();
     },
     onCollisionEnter: function (other, self) {
-        if(other.node.group == "gem"&&other.node.name == "item_stonePrefab"){
+        if(other.node.group == "stone"){
             this.node.stopAllActions();
             this.node.getComponent(cc.Animation).play('bullet');
-        }else if(other.node.group == "enemy"&&other.getComponent("EnemyPrefab").trigger.behit){
+        }else if(other.node.group == "enemy"){
             if(other.getComponent("EnemyPrefab").gameuuid!=this.id){
                 //命中率
                 var ranhit = Math.random();
@@ -67,13 +67,14 @@ cc.Class({
                     }
                 }
             }
-        }else if(other.node.group == "Player"&&!other.getComponent("Player").behit){
+        }else if(other.node.group == "Player"){
             if(other.getComponent("Player").gameuuid!=this.id){
                 //命中率
                 var ranhit = Math.random();
                 if(ranhit<=this.hit){
                     this.node.stopAllActions();
                     this.node.getComponent(cc.Animation).play('bullet');
+                    other.getComponent("Player").killername = this.killname;
                     //调用受伤方法
                     //暴击率
                     var rancrit = Math.random();
