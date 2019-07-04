@@ -22,7 +22,7 @@ cc.Class({
     // onLoad () {},
 
     start () {
-
+        cc.find("MusicBGM").getComponent("MusicControl").PlayBGM();
     },
     onPlayBtn(){
         let self = this;

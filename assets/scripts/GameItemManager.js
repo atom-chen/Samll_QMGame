@@ -90,7 +90,7 @@ cc.Class({
     },
     //创建石头
     CreateStone(){
-        var ran = Math.round(Math.random()*(this.stonePos.length-1));
+        var ran = Math.floor(Math.random()*(this.stonePos.length));
         let pos = this.stonePos[ran];
         let item = cc.instantiate(this.stonePrefab);
         item.x = pos.x;
@@ -99,7 +99,7 @@ cc.Class({
     },
     //创建石头
     CreateGrass(){
-        var ran = Math.round(Math.random()*(this.arrPos.length-1));
+        var ran = Math.floor(Math.random()*(this.arrPos.length));
         let pos = this.arrPos[ran];
         let item = cc.instantiate(this.grassPrefab);
         item.x = pos.x;

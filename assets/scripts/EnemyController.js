@@ -36,7 +36,7 @@ cc.Class({
         ];
         Global.GetName(Global.enemynumber,(res)=>{
             if(res.state ==1){
-                for(let i = 0; i < 29; i++){
+                for(let i = 0; i < 25; i++){
                     let name_string = res.result[i];
                     if(name_string.length>5){
                         name_string = name_string.substr(0,5);
@@ -52,17 +52,17 @@ cc.Class({
     DelayCreateEnemy(){
         var pos = cc.find("Canvas/player").position;
         //玩家的视野范围
-        var leftx = -1125-(pos.x-350);
-        var rightx = 1125-(pos.x+350);
+        var leftx = -1500-(pos.x-350);
+        var rightx = 1500-(pos.x+350);
         Global.GetName(Global.enemynumber,(res)=>{
             if(res.state ==1){
-                for(let i = 30; i < Global.enemynumber; i++){
+                for(let i = 25; i < Global.enemynumber; i++){
                     let name_string = res.result[i];
                     //let name_string = "hhhhhhhhhhhhhh";
                     if(name_string.length>5){
                         name_string = name_string.substr(0,5);
                     }
-                    var y = Math.random()*(1550)-775;
+                    var y = Math.random()*(2400)-1200;
                     var x =null;
                     if(leftx>rightx){
                         x = Math.random()*leftx+pos.x-350;
@@ -70,7 +70,7 @@ cc.Class({
                         x = Math.random()*rightx+pos.x+350;
                     }
                     var enemypos = cc.v2(x,y);
-                    this.createOtherEnemypos(i,1,name_string,enemypos);
+                    this.createOtherEnemypos(i,2,name_string,enemypos);
                 }
             }
         });
@@ -82,7 +82,7 @@ cc.Class({
         enemy.getComponent("EnemyPrefab").init(type,name);
         //enemy.name = enemy.getComponent("EnemyManager").gameuuid;
         //enemy.parent = this.node; // 将生成的敌人加入节点树
-        console.log("kkkkkkkk: "+pos);
+        console.log("高级怪位置: "+pos);
         this.node.addChild(enemy);
     },
     createEnemy: function (i,type,name,pos) {

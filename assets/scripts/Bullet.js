@@ -22,6 +22,7 @@ cc.Class({
     start () {
         this.player =  cc.find("Canvas/player").getComponent("Player");
         this.controller = cc.find("Canvas/gamebg").getComponent("BulletController");
+        this.isboom = true;         //子弹碰撞之后就禁用碰撞防止造成多重伤害
     },
     init(data){
         this.attack = data.attack;  //攻击力
@@ -44,11 +45,13 @@ cc.Class({
         this.node.destroy();
     },
     onCollisionEnter: function (other, self) {
-        if(other.node.group == "stone"){
+        if(other.node.group == "stone"&&this.isboom){
+            this.isboom = false;
             this.node.stopAllActions();
             this.node.getComponent(cc.Animation).play('bullet');
-        }else if(other.node.group == "enemy"){
+        }else if(other.node.group == "enemy"&&this.isboom){
             if(other.getComponent("EnemyPrefab").gameuuid!=this.id){
+                this.isboom = false;
                 //命中率
                 var ranhit = Math.random();
                 if(ranhit<=this.hit){
@@ -67,8 +70,9 @@ cc.Class({
                     }
                 }
             }
-        }else if(other.node.group == "Player"){
+        }else if(other.node.group == "Player"&&this.isboom){
             if(other.getComponent("Player").gameuuid!=this.id){
+                this.isboom = false;
                 //命中率
                 var ranhit = Math.random();
                 if(ranhit<=this.hit){

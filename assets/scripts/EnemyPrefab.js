@@ -95,9 +95,9 @@ cc.Class({
         this.wudi = true;          //是否无敌
         this.node.getChildByName("dun").active = true;
         this.scheduleOnce(function() {
-            this.wudi = false; 
+            this.wudi = false;
             this.node.getChildByName("dun").active = false;
-        }, 6);
+        }, 3);
     },
     init(type,name){
         this.type = type;
@@ -110,11 +110,11 @@ cc.Class({
             this.lv = 1;
             this.exp = 0;                   //当前所需经验值
             this.expnum = 0;                //当前经验值
-            this.xishu = 6;                 //升级系数
-            this.crit = 0.05;               //暴击率 5%~20%
-            this.hit = 0.3;                 //命中率 30%~50%
+            this.xishu = 3;                 //升级系数
+            this.crit = 0.1;                //暴击率 5%~20%
+            this.hit = 0.5;                 //命中率 30%~50%
             this.attack = 600;              //攻击力
-            this.speed=70;                 //初始速度
+            this.speed=70;                  //初始速度
             this.addspeed = 100;            //加速度
             this.isDun = false;             //是否有护盾
             this.is_chidu = false;          //是否吃毒
@@ -123,17 +123,17 @@ cc.Class({
             //高级机器人
             this.curhp = Global.hp;
             this.maxhp = Global.hp;
-            this.lv = 1;
+            this.lv = 3;
             this.exp = 0;                   //当前所需经验值
             this.expnum = 0;                //当前经验值
-            this.xishu = 6;                 //升级系数
-            this.crit = 0.5;                //暴击率 40%~60%
-            this.hit = 0.7;                 //命中率 70%~90%
+            this.xishu = 3;                 //升级系数
+            this.crit = 0.4;                //暴击率 40%~60%
+            this.hit = 0.55;                 //命中率 70%~90%
             this.attack = Global.attack;    //攻击力
-            this.speed=80;                 //初始速度
+            this.speed=70;                  //初始速度
             this.addspeed = 100;            //加速度
             this.isDun = false;             //是否有护盾
-            this.is_chidu = false;          //是否吃毒
+            this.is_chidu = true;          //是否吃毒
             this.cd = 1;                    //技能CD
         }
         
@@ -141,16 +141,18 @@ cc.Class({
     update (dt) {
         //如果吃毒
         if(this.is_chidu){
-            if( this.chidutime==0){
-                this.ChangFX();
-                this.chidutime++;
-            }
             if(this.time>0){
                 this.time -=dt;
-             }else{
+            }else{
                  this.HeroDamage(300);
                  this.time =3;
-             }
+            }
+
+            if( this.chidutime==0){
+                this.GoToYuanDian();
+                this.chidutime++;
+            }
+            
         }
         if(this.trigger.dir.mag()<0.5){
             return;
@@ -195,6 +197,17 @@ cc.Class({
             this.node.x += sx;
             this.node.y += sy;
         }
+    },
+    GoToYuanDian(){
+        var yuandian = cc.v2(0,0);
+        var pos = yuandian.sub(this.node.position);
+        var len = pos.mag();
+        if(len !=0 ){
+            this.trigger.dir.x = pos.x / len;
+            this.trigger.dir.y = pos.y / len;
+        }
+        this.trigger.isNoturn = true;
+        this.trigger.FangXiang();
     },
     //变向
     ChangFX(){

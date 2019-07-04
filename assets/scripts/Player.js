@@ -82,7 +82,7 @@ cc.Class({
         this.lv = 1;
         this.exp = 0;                   //当前所需经验值
         this.expnum = 0;                //当前经验值
-        this.xishu = 6;                 //升级系数
+        this.xishu = 3;                 //升级系数
         this.crit = 0.1;               //暴击率
         this.attack = Global.attack;    //攻击力
         this.speed=100;                 //初始速度
@@ -153,7 +153,7 @@ cc.Class({
             }
             //this.stonepos = cc.v2(80,0);
             if(this.stonepos!=null){
-                var top = cc.v2(this.stonepos.x,this.stonepos.y+30);
+                var top = cc.v2(this.stonepos.x-34,this.stonepos.y+30);
                 var right = cc.v2(this.stonepos.x+34,this.stonepos.y-30);;
                 var bottom = cc.v2(this.stonepos.x+34,this.stonepos.y+30);
                 var left = cc.v2(this.stonepos.x-34,this.stonepos.y-30);
@@ -215,7 +215,7 @@ cc.Class({
                 if(this.expnum>=this.exp){
                     this.lv +=1;
                     this.expnum =0;
-                    this.crit += 0.04;
+                    this.crit += 0.05;
                     if(this.curhp < this.maxhp){
                         if(this.curhp +200>this.maxhp){
                             this.curhp =this.maxhp;

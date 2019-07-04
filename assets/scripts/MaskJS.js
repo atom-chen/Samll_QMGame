@@ -38,7 +38,7 @@ cc.Class({
         this.scheduleOnce(function() {
             this.ShowTips();
             this.time = 30;
-            this.speed = 35;
+            this.speed = 60;
             this.is_suodu= true;
             this.DuQuanWarning(this.time);
         },64);
@@ -80,9 +80,7 @@ cc.Class({
          if(this.node.height<=0||this.node.width<=0){
             Global.is_end = true;
             cc.find("Canvas/GameOverView").active = true;
-            // this.scheduleOnce(function() {
-            //     cc.find("Canvas/GameOverView").active = true;
-            // }, 2);
+
             return
          }
          if(!this.is_suodu){
@@ -107,6 +105,10 @@ cc.Class({
             other.getComponent("Player").is_chidu = false;
         }else if(other.node.group == "enemy"){
             other.getComponent("EnemyPrefab").is_chidu = false;
+            this.scheduleOnce(function() {
+                other.getComponent("EnemyPrefab").trigger.isNoturn = false;
+            }, 2);
+            
         }
     },
     //持续触发

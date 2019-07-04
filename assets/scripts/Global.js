@@ -40,8 +40,8 @@ window.Global = {
 
     jumpinfo_callback: null,
 
-    //linkUrl:"https://wx.zaohegame.com/",
-    linkUrl:"http://wx.zaohegame.com:8099/",//测试地址
+    linkUrl:"https://wx.zaohegame.com/",
+    //linkUrl:"http://wx.zaohegame.com:8099/",//测试地址
     url_UserLogin: "game/UserLogin",
     url_UserAuth: "game/UserAuth",
     data: {
