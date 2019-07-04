@@ -87,6 +87,11 @@ cc.Class({
                     Global.diamond= res.result.diamonds;
                     Global.userlvl = res.result.userlvl;
                     Global.score = res.result.score;
+                    for(let i =0;i<Global.SeaonLvl.length;i++){
+                        if(Global.userlvl == Global.SeaonLvl[i].id){
+                            Global.duntext = Global.SeaonLvl[i].name;
+                        }
+                    }
                     this.SmallDuanWei();
                 });
             }

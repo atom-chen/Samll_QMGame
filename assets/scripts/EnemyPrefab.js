@@ -84,6 +84,7 @@ cc.Class({
         this.killername = null; 
         this.time = 3;
         this.chidutime=0;
+        this.isDie = false;
     },
 
     start () {
@@ -112,7 +113,7 @@ cc.Class({
             this.expnum = 0;                //当前经验值
             this.xishu = 3;                 //升级系数
             this.crit = 0.1;                //暴击率 5%~20%
-            this.hit = 0.5;                 //命中率 30%~50%
+            this.hit = 0.3;                 //命中率 30%~50%
             this.attack = 600;              //攻击力
             this.speed=70;                  //初始速度
             this.addspeed = 100;            //加速度
@@ -128,7 +129,7 @@ cc.Class({
             this.expnum = 0;                //当前经验值
             this.xishu = 3;                 //升级系数
             this.crit = 0.4;                //暴击率 40%~60%
-            this.hit = 0.55;                 //命中率 70%~90%
+            this.hit = 0.5;                 //命中率 70%~90%
             this.attack = Global.attack;    //攻击力
             this.speed=70;                  //初始速度
             this.addspeed = 100;            //加速度
@@ -198,6 +199,7 @@ cc.Class({
             this.node.y += sy;
         }
     },
+    //去往中心点
     GoToYuanDian(){
         var yuandian = cc.v2(0,0);
         var pos = yuandian.sub(this.node.position);
@@ -208,6 +210,12 @@ cc.Class({
         }
         this.trigger.isNoturn = true;
         this.trigger.FangXiang();
+    },
+    //延迟改变转向（不让他刚出毒圈就触发。不然会在毒圈边缘徘徊）
+    DelayisNoturn(){
+        this.scheduleOnce(function() {
+            this.trigger.isNoturn = false;
+        }, 3);
     },
     //变向
     ChangFX(){
@@ -330,14 +338,15 @@ cc.Class({
         }, 1);
     },
     HeroDead(){
-        if(this.curhp <=0){
+        if(this.curhp <=0&&!this.isDie){
+            this.isDie = true;
             //死亡动画
             this.node.getChildByName("trigger").active=false;
             this.player.active = false;
             this.playerdie.active = true;
+            Global.dienumber += 1;
+            cc.game.emit('change',Global.dienumber);
             this.node.runAction(cc.sequence(cc.delayTime(0.5), cc.fadeOut(1.0), cc.callFunc(()=>{
-                Global.dienumber += 1;
-                cc.game.emit('change',Global.dienumber);
                 this.node.destroy();
                 this.DropItem();
             },this)));

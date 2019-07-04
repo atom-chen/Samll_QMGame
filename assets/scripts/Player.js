@@ -159,12 +159,25 @@ cc.Class({
                 var left = cc.v2(this.stonepos.x-34,this.stonepos.y-30);
                 var herowidth = this.node.width/2;
                 var heroheight = this.node.height/2;
-                if(this.node.x+sx+herowidth >top.x&&this.node.x+sx-herowidth<right.x&&this.node.y+sy-heroheight>right.y && this.node.y+sy-heroheight<top.y){
+                // if(this.node.x+sx+herowidth >top.x&&this.node.x+sx-herowidth<right.x&&this.node.y+sy-heroheight>right.y && this.node.y+sy-heroheight<top.y){
+                //     return;
+                // }
+                // if(this.node.x+sx+herowidth >left.x&&this.node.x+sx-herowidth<bottom.x&&this.node.y+sy+heroheight>left.y && this.node.y+sy-heroheight<bottom.y){
+                //     return;
+                // }
+                if(this.node.x+sx+herowidth>top.x&&this.node.x+sx-herowidth<right.x&&this.node.y+sy+heroheight>left.y&&this.node.y+sy-heroheight<bottom.y){
+                    if(this.node.x<top.x){
+                        this.node.y += sy;
+                    }else if(this.node.x>right.x){
+                        this.node.y += sy;
+                    }else if(this.node.y<left.y){
+                        this.node.x += sx;
+                    }else if(this.node.y>bottom.y){
+                        this.node.x += sx;
+                    }
                     return;
                 }
-                if(this.node.x+sx+herowidth >left.x&&this.node.x+sx-herowidth<bottom.x&&this.node.y+sy+heroheight>left.y && this.node.y+sy-heroheight<bottom.y){
-                    return;
-                }
+                
             }
             //移动
             this.node.x += sx;

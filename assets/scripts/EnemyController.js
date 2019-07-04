@@ -41,35 +41,60 @@ cc.Class({
                     if(name_string.length>5){
                         name_string = name_string.substr(0,5);
                     }
-                    this.createEnemy(i,1,name_string,this.arrPos[i]);
+                    var arrRan = Math.floor((Math.random()*this.arrPos.length));
+                    this.createEnemy(i,1,name_string,this.arrPos[arrRan]);
                 }
             }
         });
         this.scheduleOnce(function() {
             this.DelayCreateEnemy();
         },94);
+        this.secondPos=[{x:-1350,y:-300},{x:-1050,y:-300},{x:-750,y:-300},{x:-450,y:-300},{x:450,y:-300},{x:750,y:-300},{x:1050,y:-300},{x:1350,y:-300},
+            {x:-1350,y:300},{x:-1050,y:300},{x:-750,y:300},{x:-450,y:300},{x:450,y:300},{x:750,y:300},{x:1050,y:300},{x:1350,y:300},
+            {x:-150,y:-900},{x:150,y:-900},
+            {x:-150,y:-300},{x:150,y:-300},
+            {x:-150,y:300},{x:150,y:300},
+            {x:-150,y:900},{x:150,y:900},
+        ];
+    },
+    RanDomSecondPos(){
+        var ran = Math.floor((Math.random()*this.secondPos.length));
+        this.num = this.secondPos[ran];
+        if(this.num.x<this.leftx||this.num.x>this.rightx||this.num.y<this.bottomy|this.num.y>this.topy){
+            this.secondPos.splice(ran-1,1);
+            return;
+        }else{
+            this.RanDomSecondPos();
+        }
     },
     DelayCreateEnemy(){
         var pos = cc.find("Canvas/player").position;
         //玩家的视野范围
-        var leftx = -1500-(pos.x-350);
-        var rightx = 1500-(pos.x+350);
+        // var leftx = -1500-(pos.x-350);
+        // var rightx = 1500-(pos.x+350);
+        // var topy = 1200-(pos.y+180);
+        // var bottomy = -1200-(pos.y-180);
+        this.leftx = pos.x-350;
+        this.rightx = pos.x+350;
+        this.topy = pos.y+180;
+        this.bottomy = pos.y-180;
         Global.GetName(Global.enemynumber,(res)=>{
             if(res.state ==1){
                 for(let i = 25; i < Global.enemynumber; i++){
                     let name_string = res.result[i];
-                    //let name_string = "hhhhhhhhhhhhhh";
                     if(name_string.length>5){
                         name_string = name_string.substr(0,5);
                     }
-                    var y = Math.random()*(2400)-1200;
-                    var x =null;
-                    if(leftx>rightx){
-                        x = Math.random()*leftx+pos.x-350;
-                    }else{
-                        x = Math.random()*rightx+pos.x+350;
-                    }
-                    var enemypos = cc.v2(x,y);
+                    // var y = Math.random()*(2400)-1200;
+                    // var x =null;
+                    // if(leftx>rightx){
+                    //     x = Math.random()*leftx+pos.x-350;
+                    // }else{
+                    //     x = Math.random()*rightx+pos.x+350;
+                    // }
+                    // var enemypos = cc.v2(x,y);
+                    this.RanDomSecondPos();
+                    var enemypos = cc.v2(this.num.x,this.num.y);
                     this.createOtherEnemypos(i,2,name_string,enemypos);
                 }
             }

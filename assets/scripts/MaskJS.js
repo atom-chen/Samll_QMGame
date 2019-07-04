@@ -105,10 +105,7 @@ cc.Class({
             other.getComponent("Player").is_chidu = false;
         }else if(other.node.group == "enemy"){
             other.getComponent("EnemyPrefab").is_chidu = false;
-            this.scheduleOnce(function() {
-                other.getComponent("EnemyPrefab").trigger.isNoturn = false;
-            }, 2);
-            
+            other.getComponent("EnemyPrefab").DelayisNoturn();
         }
     },
     //持续触发
