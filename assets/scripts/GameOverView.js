@@ -49,8 +49,13 @@ cc.Class({
 
     start () {
         let self =this;
+        if(cc.find("Canvas/MaskDuQuan").height<=0||cc.find("Canvas/MaskDuQuan").width<=0){
+            var rank = 1;
+        }else{
+            var rank = Global.enemynumber-Global.dienumber+1;
+        }
         var kill = cc.find("Canvas/player").getComponent("Player").killsnumber;
-        var rank = Global.enemynumber-Global.dienumber+1;
+        
         console.log("机器人总数： "+Global.enemynumber);
         console.log("机器人死亡数： "+Global.dienumber);
         this.killtext.string = kill;

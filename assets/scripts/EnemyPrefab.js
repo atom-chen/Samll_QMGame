@@ -57,7 +57,6 @@ cc.Class({
         //开启碰撞检测
         //cc.director.getCollisionManager().enabled = true;
         this.NodePool = cc.find("Canvas/gamebg").getComponent("GameItemManager");
-        
         this.player = this.node.getChildByName("hero");
         this.playerdie = this.node.getChildByName("herodie");
         
@@ -82,7 +81,7 @@ cc.Class({
         this.Heroexp.fillRange =0;
         this.Herohp.progress = this.curhp/this.maxhp;
         this.killername = null; 
-        this.time = 3;
+        this.time = 1.5;
         this.chidutime=0;
         this.isDie = false;
     },
@@ -92,13 +91,7 @@ cc.Class({
         this.stonepos = null;               //石头的位置
         this.map =  cc.find("Canvas/gamebg");
         this.player.getComponent(cc.Animation).play('heromove');
-        //开局3秒无敌防止给机器人包围直接打死
-        this.wudi = true;          //是否无敌
-        this.node.getChildByName("dun").active = true;
-        this.scheduleOnce(function() {
-            this.wudi = false;
-            this.node.getChildByName("dun").active = false;
-        }, 3);
+        
     },
     init(type,name){
         this.type = type;
@@ -120,6 +113,8 @@ cc.Class({
             this.isDun = false;             //是否有护盾
             this.is_chidu = false;          //是否吃毒
             this.cd = 2;                    //技能CD
+
+            this.wudi = false;          //是否无敌
         }else{
             //高级机器人
             this.curhp = Global.hp;
@@ -136,6 +131,14 @@ cc.Class({
             this.isDun = false;             //是否有护盾
             this.is_chidu = true;          //是否吃毒
             this.cd = 1;                    //技能CD
+            
+            //开局3秒无敌防止给机器人包围直接打死
+            this.wudi = true;          //是否无敌
+            this.node.getChildByName("dun").active = true;
+            this.scheduleOnce(function() {
+                this.wudi = false;
+                this.node.getChildByName("dun").active = false;
+            }, 3);
         }
         
     },
@@ -178,6 +181,7 @@ cc.Class({
                 this.ChangFX();
                 return;
             }
+            //碰到障碍物(石头)
             if(this.stonepos!=null){
                 var top = cc.v2(this.stonepos.x-34,this.stonepos.y+30);
                 var right = cc.v2(this.stonepos.x+34,this.stonepos.y-30);;
@@ -185,12 +189,25 @@ cc.Class({
                 var left = cc.v2(this.stonepos.x-34,this.stonepos.y-30);
                 var herowidth = this.node.width/2;
                 var heroheight = this.node.height/2;
-                if(this.node.x+sx+herowidth >top.x&&this.node.x+sx-herowidth<right.x&&this.node.y+sy-heroheight>right.y && this.node.y+sy-heroheight<top.y){
-                    this.ChangFX();
-                    return;
-                }
-                if(this.node.x+sx+herowidth >left.x&&this.node.x+sx-herowidth<bottom.x&&this.node.y+sy+heroheight>left.y && this.node.y+sy-heroheight<bottom.y){
-                    this.ChangFX();
+                // if(this.node.x+sx+herowidth >top.x&&this.node.x+sx-herowidth<right.x&&this.node.y+sy-heroheight>right.y && this.node.y+sy-heroheight<top.y){
+                //     this.ChangFX();
+                //     return;
+                // }
+                // if(this.node.x+sx+herowidth >left.x&&this.node.x+sx-herowidth<bottom.x&&this.node.y+sy+heroheight>left.y && this.node.y+sy-heroheight<bottom.y){
+                //     this.ChangFX();
+                //     return;
+                // }
+                //不让机器人穿透石头
+                if(this.node.x+sx+herowidth>top.x&&this.node.x+sx-herowidth<right.x&&this.node.y+sy+heroheight>left.y&&this.node.y+sy-heroheight<bottom.y){
+                    if(this.node.x<top.x){
+                        this.node.y += sy;
+                    }else if(this.node.x>right.x){
+                        this.node.y += sy;
+                    }else if(this.node.y<left.y){
+                        this.node.x += sx;
+                    }else if(this.node.y>bottom.y){
+                        this.node.x += sx;
+                    }
                     return;
                 }
             }
@@ -364,7 +381,6 @@ cc.Class({
         for(var i=0;i<gemnum;i++){
             this.CreateGem();
         }
-        
         this.CreateItem();
 
     },
@@ -375,7 +391,7 @@ cc.Class({
         if (this.NodePool.GemPool.size() > 0) { 
             item = this.NodePool.GemPool.get();
         } else { 
-            item = cc.instantiate(this.NodePool.gemPrefab[Math.round(Math.random()*4)]);
+            item = cc.instantiate(this.NodePool.gemPrefab[Math.round(Math.random()*3)]);
         }
         item.position = this.node.position;
         //item.parent = cc.find("Canvas/GameController");
@@ -384,7 +400,7 @@ cc.Class({
         let comVec = cc.v2(0, 1);// 一个向上的对比向量
         let dirVec = comVec.rotate(-radian);
         cc.tween(item)
-        .to(1, { position: cc.v2(this.node.x+dirVec.x*80,this.node.y+dirVec.y*80) })
+        .to(1, { position: cc.v2(this.node.x+dirVec.x*50,this.node.y+dirVec.y*50) })
         .start()
     },
     //随机生成道具
@@ -402,7 +418,7 @@ cc.Class({
         let comVec = cc.v2(0, 1);// 一个向上的对比向量
         let dirVec = comVec.rotate(-radian);
         cc.tween(item)
-        .to(1, { position: cc.v2(item.x+dirVec.x*80,item.y+dirVec.y*80)})
+        .to(1, { position: cc.v2(item.x+dirVec.x*50,item.y+dirVec.y*50)})
         .start()
     },
 });

@@ -21,7 +21,6 @@ cc.Class({
 
     start () {
         this.player =  cc.find("Canvas/player").getComponent("Player");
-        this.controller = cc.find("Canvas/gamebg").getComponent("BulletController");
         this.isboom = true;         //子弹碰撞之后就禁用碰撞防止造成多重伤害
     },
     init(data){
@@ -34,7 +33,6 @@ cc.Class({
         //子弹位移
         var action = cc.moveTo(0.3, this.width, 0);
         this.node.runAction(cc.sequence(action,cc.callFunc(()=>{
-            //this.controller.onBulletKilled(this.node);
             this.node.destroy();
         },this)));
     },

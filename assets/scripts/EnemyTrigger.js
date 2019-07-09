@@ -41,8 +41,6 @@ cc.Class({
         this.map =  cc.find("Canvas/gamebg");
         this.gameuuid = this.enemy.getComponent("EnemyPrefab").gameuuid;
         this.isNoturn = false;
-
-        this.BulletController = cc.find("Canvas/gamebg").getComponent("BulletController");
     },
 
     update (dt) {
@@ -144,13 +142,6 @@ cc.Class({
             killname:this.enemy.getComponent("EnemyPrefab").Heroname.string,
         }
         let skillbullet = cc.instantiate(this.skill_bullet);
-        //this.BulletController.CreateBullet(data,this.gun);
-        // let skillbullet = null;
-        // if(this.BulletController.BulletPool.size() >0){ 
-        //     skillbullet = this.BulletController.BulletPool.get();
-        // }else{ 
-        //     skillbullet = cc.instantiate(this.BulletController.bulletprefab);
-        // }
         skillbullet.getComponent("Bullet").init(data);
         this.gun.addChild(skillbullet);
         this.scheduleOnce(function() {

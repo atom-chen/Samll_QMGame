@@ -90,7 +90,7 @@ cc.Class({
         this.killsnumber = 0;
         this.isDun = false;         //是否有护盾
         this.is_chidu = false;      //是否吃毒
-        this.time = 3;
+        this.time = 1.5;
         this.killername = null;     //杀我的人
 
         this.Herolv.string = this.lv;

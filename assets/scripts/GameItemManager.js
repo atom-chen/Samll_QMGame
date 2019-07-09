@@ -36,12 +36,12 @@ cc.Class({
         }
         this.GemPool = new cc.NodePool();
         this.ItemPool = new cc.NodePool();
-        for(var i=0;i<100;i++){
+        for(var i=0;i<500;i++){
             var str = Math.round(Math.random()*3);
             var item =  cc.instantiate(this.gemPrefab[str]);
             this.GemPool.put(item);
         }
-        for(var i=0;i<100;i++){
+        for(var i=0;i<40;i++){
             var str = Math.round(Math.random()*2);
             var item =  cc.instantiate(this.ItemPrefab[str]);
             this.ItemPool.put(item);
@@ -73,19 +73,51 @@ cc.Class({
     },
 
     start () {
-        for(let i =0;i<this.arrPos.length;i++){
-            this.SetUpGem(this.arrPos[i]);
-        }
+        // for(let i =0;i<this.arrPos.length;i++){
+        //     this.scheduleOnce(function() {
+        //         this.SetUpGem(this.arrPos[i]);
+        //     },0.01);
+        // }
+        // this.scheduleOnce(function() {
+        //     for(let i =0;i<14;i++){
+        //         this.SetUpGem(this.arrPos[i]);
+        //     }  
+        // },0);
+        // this.scheduleOnce(function() {
+        //     for(let i =14;i<27;i++){
+        //         this.SetUpGem(this.arrPos[i]);
+        //     }  
+        // },1);
+        // this.scheduleOnce(function() {
+        //     for(let i =27;i<40;i++){
+        //         this.SetUpGem(this.arrPos[i]);
+        //     }  
+        // },2);
+
+        //创建草
         for(let i =0;i<=12;i++){
-            this.CreateStone();
+            //this.CreateStone();
             this.CreateGrass();
         }
+        //创建石头 分开生成降低DC
+        for(let i =0;i<=12;i++){
+            this.CreateStone();
+        }
+        // this.scheduleOnce(function() {
+        //     for(let i =0;i<this.arrPos.length;i++){
+        //         this.scheduleOnce(function() {
+        //             this.SetUpGem(this.arrPos[i]);
+        //         },0.01);
+        //     }
+        // },64);
     },
     
     SetUpGem(pos){
-        var ran = Math.round(Math.random()*12)+12;
+        var ran = Math.round(Math.random()*10);
         for(let i=0;i<ran;i++){
-            this.CreateGem(pos);
+            this.scheduleOnce(function() {
+                this.CreateGem(pos);
+            },0.01);
         }
     },
     //创建石头
@@ -172,19 +204,13 @@ cc.Class({
         this.ItemPool.put(item); 
     },
     update (dt) {
-        //当宝石给吃了50个的时候在创建一些宝石
-        // if(this.GemPool.size() >50){
-        //     for(var i=0;i<this.GemPool.size();i++){
-        //         this.CreateGem();
-        //     }
-        // }
-        // if(this.ItemPool.size() >15){
-        //     for(var i=0;i<this.ItemPool.size();i++){
-        //         this.CreateItem();
-        //     }
-        // }
         if(Global.is_end){
             return;
+        }
+        if(this.GemPool.size() >100){
+            var arrRan = Math.floor((Math.random()*this.arrPos.length));
+            var arrpos = this.arrPos[arrRan];
+            this.CreateGem(arrpos);
         }
         if(Global.dienumber == Global.enemynumber&&Global.is_end ==false){
             Global.is_end = true;
