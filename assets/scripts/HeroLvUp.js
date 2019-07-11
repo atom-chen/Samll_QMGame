@@ -86,17 +86,29 @@ cc.Class({
         if(Global.diamond<this.costdimo){
             this.ShowTip("拥有能量不足，请参与游戏获得~");
         }else{
-            //this.ShowTip("观看视频成功");
-            Global.BuyHerosLvl(this.isvideo,(res)=>{
-                if(res.state ==1){
-                    this.GetUserHeros();
-                    Global.gold = res.result.gold;
-                    Global.diamond = res.result.diamonds;
-                    this.ShowTip("升级成功");
-                    cc.game.emit('UserChang');
-                }
-            });
+            // this.ShowTip("观看视频成功");
+            // 阿拉丁埋点
+            wx.aldSendEvent('dmx_advertising_click()',{'page' : '游戏准备'});
+            Global.showAdVedio(this.Success.bind(this),this.Failed.bind(this));
         }
+    },
+    Success(){
+        // 阿拉丁埋点
+        wx.aldSendEvent('dmx_advertising_click()',{'valid' : '是'});
+        Global.BuyHerosLvl(this.isvideo,(res)=>{
+            if(res.state ==1){
+                this.GetUserHeros();
+                Global.gold = res.result.gold;
+                Global.diamond = res.result.diamonds;
+                this.ShowTip("升级成功");
+                cc.game.emit('UserChang');
+            }
+        });
+    },
+    Failed(){
+        // 阿拉丁埋点
+        wx.aldSendEvent('dmx_advertising_click()',{'valid' : '否'});
+        this.ShowTip("观看完整视频才能获取奖励");
     },
     ShowTip(text){
         let tip = cc.instantiate(this.tip_prefab);

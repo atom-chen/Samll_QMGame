@@ -26,6 +26,13 @@ cc.Class({
     // onLoad () {},
 
     start () {
+        // 阿拉丁埋点
+        wx.aldSendEvent("dmx_homePage_pv/uv");
+        //广告位置
+        Global.banner.show();
+        Global.banner.style.width = 321;
+        Global.banner.style.left = Global.ScreenWidth-321;
+
         let self = this;
         cc.find("MusicBGM").getComponent("MusicControl").PlayBGM();
         Global.GetUserHeros((res)=>{
@@ -76,9 +83,14 @@ cc.Class({
         }
     },
     onShowAppMsg(){
+        // 阿拉丁埋点
+        wx.aldSendEvent('dmx_share_click()',{'page' : '游戏大厅'});
+        
         Global.TiaoZhanFriend();
     },
     onPlayBtn(){
+        //隐藏广告
+        Global.banner.hide();
         let self = this;
         cc.find("Canvas/PiPeiView").active = true;
         //2s显示匹配成功
@@ -88,6 +100,22 @@ cc.Class({
             self.hook.active =true;
             cc.director.loadScene("Game.fire");
         }, 2)
+        // 阿拉丁埋点（快速开始）
+        wx.aldSendEvent("dmx_homePage_quickStart_click");
+    },
+    onGameReadyBtn(){
+        //隐藏广告
+        Global.banner.hide();
+        // 阿拉丁埋点（荒漠战场）
+        wx.aldSendEvent("dmx_homePage_battlefield_click");
+        cc.director.loadScene("GameReady.fire");
+    },
+    onOpenSignView() {
+        //隐藏广告
+        Global.banner.hide();
+        // 阿拉丁埋点（累计签到）
+        wx.aldSendEvent("dmx_homePage_SignIn_click");
+        cc.find("Canvas/SignView").active =true;
     },
     SmallDuanWei(){
         //设置星星

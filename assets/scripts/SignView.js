@@ -36,7 +36,7 @@ cc.Class({
         this.GetUserSignInfo();
     },
     start () {
-        
+        Global.banner.hide();
     },
     GetUserSignInfo(){
         var self = this;
@@ -70,6 +70,13 @@ cc.Class({
     },
     //看视频领取
     OnVideoBtn(){
+        // 阿拉丁埋点
+        wx.aldSendEvent('dmx_advertising_click()',{'page' : '累计签到弹窗'});
+        Global.showAdVedio(this.Success.bind(this),this.Failed.bind(this));
+    },
+    Success(){
+        // 阿拉丁埋点
+        wx.aldSendEvent('dmx_advertising_click()',{'valid' : '是'});
         this.ShowTip("观看视频成功");
         this.scheduleOnce(function() {
             var receive = cc.instantiate(this.receivePrefab);
@@ -79,6 +86,11 @@ cc.Class({
             receive.getComponent("RewardPrefab").init(data);
             this.node.addChild(receive);
         },1)
+    },
+    Failed(){
+        // 阿拉丁埋点
+        wx.aldSendEvent('dmx_advertising_click()',{'valid' : '否'});
+        this.ShowTip("观看完整视频才能获取奖励");
     },
     ShowTip(text){
         let tip = cc.instantiate(this.tip_prefab);
@@ -92,7 +104,9 @@ cc.Class({
     },
     onShowApp(){
         if (CC_WECHATGAME) {
-           
+            // 阿拉丁埋点
+            wx.aldSendEvent('dmx_share_click()',{'page' : '累计签到弹窗'});
+
             wx.shareAppMessage({
                 title: '被这游戏分分钟虐的怀疑人生，我就问问：还有谁？',
                 imageUrl: Global.shareimg,
@@ -104,6 +118,14 @@ cc.Class({
                 },
             });
         }
+    },
+    onCloseSignView(){
+        //广告位置
+        Global.banner.show();
+        Global.banner.style.width = 321;
+        Global.banner.style.left = Global.ScreenWidth-321;
+
+        cc.find("Canvas/SignView").active =false;
     }
     // update (dt) {},
 });

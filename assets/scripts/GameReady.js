@@ -23,8 +23,18 @@ cc.Class({
 
     start () {
         cc.find("MusicBGM").getComponent("MusicControl").PlayBGM();
+        // 阿拉丁埋点
+        wx.aldSendEvent("dmx_preparePage_pv/uv");
+        //广告位置
+        Global.banner.show();
+        Global.banner.style.width = 378;
+        Global.banner.style.left = 15;
     },
     onPlayBtn(){
+        //隐藏广告
+        Global.banner.hide();
+        // 阿拉丁埋点（快速匹配）
+        wx.aldSendEvent("dmx_preparePage_matching_click");
         let self = this;
         cc.find("Canvas/PiPeiView").active = true;
         //2s显示匹配成功

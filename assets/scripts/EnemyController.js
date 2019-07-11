@@ -28,7 +28,9 @@ cc.Class({
     },
 
     start () {
-        // this.map =  cc.find("Canvas/gamebg");
+        this.index =0;
+        this.isCreate =false;
+
         this.arrPos = [{x:-1350,y:-900},{x:-1050,y:-900},{x:-750,y:-900},{x:-450,y:-900},{x:-150,y:-900},{x:150,y:-900},{x:450,y:-900},{x:750,y:-900},{x:1050,y:-900},{x:1350,y:-900},
             {x:-1350,y:-300},{x:-1050,y:-300},{x:-750,y:-300},{x:-450,y:-300},{x:450,y:-300},{x:750,y:-300},{x:1050,y:-300},{x:1350,y:-300},
             {x:-1350,y:300},{x:-1050,y:300},{x:-750,y:300},{x:-450,y:300},{x:450,y:300},{x:750,y:300},{x:1050,y:300},{x:1350,y:300},
@@ -37,57 +39,30 @@ cc.Class({
         Global.GetName(Global.enemynumber,(res)=>{
             if(res.state ==1){
                 this.ArrName = res.result;
-                for(let i = 0; i < 10; i++){
-                    this.scheduleOnce(function() {
-                        let name_string = res.result[i];
-                        if(name_string.length>5){
-                            name_string = name_string.substr(0,5);
-                        }
-                        var arrRan = Math.floor((Math.random()*this.arrPos.length));
-                        var arrpos = this.arrPos[arrRan];
-                        this.arrPos.splice(arrRan-1,1);
-                        this.createEnemy(i,1,name_string,arrpos);
-                    },0.01);
-                }
+                // for(let i = 0; i < 10; i++){
+                //     this.scheduleOnce(function() {
+                //         let name_string = res.result[i];
+                //         if(name_string.length>5){
+                //             name_string = name_string.substr(0,5);
+                //         }
+                //         var arrRan = Math.floor((Math.random()*this.arrPos.length));
+                //         var arrpos = this.arrPos[arrRan];
+                //         this.arrPos.splice(arrRan-1,1);
+                //         this.createEnemy(i,1,name_string,arrpos);
+                //     },0.01);
+                // }
+                this.isCreate =true;
             }
         });
         //延迟生成
+        // this.scheduleOnce(function() {
+        //     this.isCreate =true;
+        // },34);
+        // this.scheduleOnce(function() {
+        //     this.isCreate =true;
+        // },54);
         this.scheduleOnce(function() {
-            var pos = cc.find("Canvas/player").position;
-            this.leftx = pos.x-350;
-            this.rightx = pos.x+350;
-            this.topy = pos.y+180;
-            this.bottomy = pos.y-180;
-
-            for(let i = 10; i < 18; i++){
-                let name_string = this.ArrName[i];
-                if(name_string.length>5){
-                    name_string = name_string.substr(0,5);
-                }
-                this.RanDomSecondPos_2()
-                var enemypos = cc.v2(this.num.x,this.num.y);
-                this.createEnemy(i,1,name_string,enemypos);
-            }
-        },24);
-        this.scheduleOnce(function() {
-            var pos = cc.find("Canvas/player").position;
-            this.leftx = pos.x-350;
-            this.rightx = pos.x+350;
-            this.topy = pos.y+180;
-            this.bottomy = pos.y-180;
-
-            for(let i = 18; i < 25; i++){
-                let name_string = this.ArrName[i];
-                if(name_string.length>5){
-                    name_string = name_string.substr(0,5);
-                }
-                this.RanDomSecondPos_2()
-                var enemypos = cc.v2(this.num.x,this.num.y);
-                this.createEnemy(i,1,name_string,enemypos);
-            }
-        },54);
-        this.scheduleOnce(function() {
-            this.DelayCreateEnemy();
+            this.isCreate =true;
         },94);
         this.secondPos=[{x:-1350,y:-300},{x:-1050,y:-300},{x:-750,y:-300},{x:-450,y:-300},{x:450,y:-300},{x:750,y:-300},{x:1050,y:-300},{x:1350,y:-300},
             {x:-1350,y:300},{x:-1050,y:300},{x:-750,y:300},{x:-450,y:300},{x:450,y:300},{x:750,y:300},{x:1050,y:300},{x:1350,y:300},
@@ -97,24 +72,26 @@ cc.Class({
             {x:-150,y:900},{x:150,y:900},
         ];
     },
-    RanDomSecondPos_2(){
+    UpdateCreateEnemy(){
+        var pos = cc.find("Canvas/player").position;
+        this.leftx = pos.x-350;
+        this.rightx = pos.x+350;
+        this.topy = pos.y+180;
+        this.bottomy = pos.y-180;
         var ran = Math.floor((Math.random()*this.arrPos.length));
         this.num = this.arrPos[ran];
         if(this.num.x<this.leftx||this.num.x>this.rightx||this.num.y<this.bottomy|this.num.y>this.topy){
             this.arrPos.splice(ran-1,1);
-            return;
-        }else{
-            this.RanDomSecondPos_2();
+            var enemypos = cc.v2(this.num.x,this.num.y);
+            let name_string = this.ArrName[this.index];
+            if(name_string.length>5){
+                name_string = name_string.substr(0,5);
+            }
+            this.createEnemy(this.index,1,name_string,enemypos);
+            this.index++;
         }
-    },
-    RanDomSecondPos(){
-        var ran = Math.floor((Math.random()*this.secondPos.length));
-        this.num = this.secondPos[ran];
-        if(this.num.x<this.leftx||this.num.x>this.rightx||this.num.y<this.bottomy|this.num.y>this.topy){
-            this.secondPos.splice(ran-1,1);
-            return;
-        }else{
-            this.RanDomSecondPos();
+        if(this.index==25){
+            this.isCreate =false;
         }
     },
     DelayCreateEnemy(){
@@ -129,11 +106,18 @@ cc.Class({
         this.topy = pos.y+180;
         this.bottomy = pos.y-180;
 
-        for(let i = 25; i < Global.enemynumber; i++){
-            let name_string = this.ArrName[i];
+        var ran = Math.floor((Math.random()*this.arrPos.length));
+        this.num = this.arrPos[ran];
+        if(this.num.x<this.leftx||this.num.x>this.rightx||this.num.y<this.bottomy|this.num.y>this.topy){
+            this.arrPos.splice(ran-1,1);
+            var enemypos = cc.v2(this.num.x,this.num.y);
+            let name_string = this.ArrName[this.index];
             if(name_string.length>5){
                 name_string = name_string.substr(0,5);
             }
+            this.createEnemy(this.index,2,name_string,enemypos);
+            this.index++;
+        }
             // var y = Math.random()*(2400)-1200;
             // var x =null;
             // if(leftx>rightx){
@@ -142,19 +126,12 @@ cc.Class({
             //     x = Math.random()*rightx+pos.x+350;
             // }
             // var enemypos = cc.v2(x,y);
-            this.RanDomSecondPos();
-            var enemypos = cc.v2(this.num.x,this.num.y);
-            this.createOtherEnemypos(i,2,name_string,enemypos);
-        }
-
-
     },
     createOtherEnemypos: function (i,type,name,pos) {
         let enemy = cc.instantiate(this.enemyPrefab);
         enemy.position = pos;
         enemy.getComponent("EnemyPrefab").gameuuid = i;
         enemy.getComponent("EnemyPrefab").init(type,name);
-        //enemy.name = enemy.getComponent("EnemyManager").gameuuid;
         //enemy.parent = this.node; // 将生成的敌人加入节点树
         this.node.addChild(enemy);
     },
@@ -179,9 +156,16 @@ cc.Class({
         enemy.position = cc.v2(x,y);
         enemy.getComponent("EnemyPrefab").gameuuid = i;
         enemy.getComponent("EnemyPrefab").init(type,name);
-        //enemy.name = enemy.getComponent("EnemyManager").gameuuid;
         //enemy.parent = this.node; // 将生成的敌人加入节点树
         this.node.addChild(enemy);
     },
-    // update (dt) {},
+    update (dt) {
+        if(this.isCreate){
+            if(this.index<25){
+                this.UpdateCreateEnemy();
+            }else if(this.index>=25&&this.index<Global.enemynumber){
+                this.DelayCreateEnemy();
+            }
+        }
+    },
 });

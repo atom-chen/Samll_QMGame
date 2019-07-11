@@ -28,7 +28,8 @@ cc.Class({
     // onLoad () {},
 
     start () {
-        Global.showBanner();
+        // 阿拉丁埋点
+        wx.aldSendEvent("dmx_ likePage_pv/uv");
         let randindex = [];
         for (let i = 0;Global.jumpappObject && i < Global.jumpappObject.length ;i++)
         {
@@ -67,6 +68,15 @@ cc.Class({
             }
         }
     },
-
+    onAgainBtn(){
+        // 阿拉丁埋点
+        wx.aldSendEvent("dmx_ likePage_rmrematch_click");
+        cc.director.loadScene("GameReady.fire");
+    },
+    onBackGameStat(){
+        // 阿拉丁埋点
+        wx.aldSendEvent("dmx_ likePage_backHall_click");
+        cc.find("Canvas/DOYouLikeView").active =false;
+    }
     // update (dt) {},
 });

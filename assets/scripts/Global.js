@@ -433,7 +433,7 @@ window.Global = {
     showAdVedio(success, failed) {
         if (CC_WECHATGAME) {
             let videoAd = wx.createRewardedVideoAd({
-                adUnitId: 'adunit-3dd2f672a153d93a'
+                adUnitId: 'adunit-c307755960692bb5'
             })
 
             videoAd.load()
@@ -477,11 +477,11 @@ window.Global = {
                     this.ios = -1;
                 }
                 let bannerAd = wx.createBannerAd({
-                    adUnitId: 'adunit-e4a48fdb20684eec',
+                    adUnitId: 'adunit-0cab32f80e2ee1e0',
                     style: {
-                        left: 0,
-                        top: this.ScreenHeight - 90,
-                        width: this.ScreenWidth,
+                        left: this.ScreenWidth/2-378/2,
+                        top: this.ScreenHeight-90,
+                        width: 378,
                     }
                 })
 
@@ -519,11 +519,11 @@ window.Global = {
                 this.showBannerTime = 0;
                 this.banner.destroy();
                 let bannerAd = wx.createBannerAd({
-                    adUnitId: 'adunit-e4a48fdb20684eec',
+                    adUnitId: 'adunit-0cab32f80e2ee1e0',
                     style: {
-                        left: 0,
-                        top: this.ScreenHeight - 90,
-                        width: this.ScreenWidth,
+                        left: this.ScreenWidth/2-378/2,
+                        top: this.ScreenHeight-90,
+                        width: 378,
                     }
                 })
 

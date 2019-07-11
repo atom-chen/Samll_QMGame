@@ -37,6 +37,13 @@ cc.Class({
         event.stopPropagation();
         if (CC_WECHATGAME)
         {
+            if(this.node.name =="gameggPrefab"){
+                // 阿拉丁埋点
+                wx.aldSendEvent('dmx_flowGame_click()',{'page' : '猜你喜欢'});
+            }else{
+                // 阿拉丁埋点
+                wx.aldSendEvent('dmx_flowGame_click()',{'page' : '游戏大厅'});
+            }
             wx.navigateToMiniProgram({
                 appId:Global.jumpappObject[this.index].apid,
                 path:Global.jumpappObject[this.index].path,

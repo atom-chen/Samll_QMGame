@@ -46,14 +46,21 @@ cc.Class({
     },
  
     start () {
-        
+        // 阿拉丁埋点
+        wx.aldSendEvent("dmx_loginPage_pv/uv");
+
     },
  
  
     // update (dt) {},
     onTouchBtn(){
+        // 阿拉丁埋点
+        wx.aldSendEvent("dmx_loginPage_start_click");
         Global.GetUesrInfo();
+        //隐藏广告
+        Global.banner.hide();
     },
+    
     /**
     * 加载远程资源
     * wx.env.USER_DATA_PATH： 这个是小游戏在手机上的临时目录
@@ -86,6 +93,12 @@ cc.Class({
                         self.text.node.active =false;
                         self.startBtn.node.active =true;
                         self.enabled = false;
+                        Global.showBanner();
+                        self.scheduleOnce(function() {
+                            var action = cc.moveTo(0.2, 0, 52);
+                            self.startBtn.node.runAction(action);
+                            //self.startBtn.node.y=52;
+                        },2);
                     }
                 })
             },

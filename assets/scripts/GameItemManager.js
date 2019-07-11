@@ -73,6 +73,8 @@ cc.Class({
     },
 
     start () {
+        // 阿拉丁埋点
+        wx.aldSendEvent("dmx_marchPage_pv/uv");
         // for(let i =0;i<this.arrPos.length;i++){
         //     this.scheduleOnce(function() {
         //         this.SetUpGem(this.arrPos[i]);

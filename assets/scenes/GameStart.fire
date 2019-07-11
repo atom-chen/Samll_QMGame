@@ -3483,12 +3483,12 @@
   {
     "__type__": "cc.ClickEvent",
     "target": {
-      "__id__": 4
+      "__id__": 7
     },
     "component": "",
-    "_componentId": "2127bw86qlEWbTP16eIDWNI",
-    "handler": "GtoScene",
-    "customEventData": "GameReady"
+    "_componentId": "5761dRIfc5JwajzFhs0X7ak",
+    "handler": "onGameReadyBtn",
+    "customEventData": ""
   },
   {
     "__type__": "cc.Node",
@@ -3826,12 +3826,12 @@
   {
     "__type__": "cc.ClickEvent",
     "target": {
-      "__id__": 4
+      "__id__": 7
     },
     "component": "",
-    "_componentId": "2127bw86qlEWbTP16eIDWNI",
-    "handler": "onOpen",
-    "customEventData": "SignView"
+    "_componentId": "5761dRIfc5JwajzFhs0X7ak",
+    "handler": "onOpenSignView",
+    "customEventData": ""
   },
   {
     "__type__": "cc.Node",
@@ -5974,12 +5974,12 @@
   {
     "__type__": "cc.ClickEvent",
     "target": {
-      "__id__": 4
+      "__id__": 109
     },
     "component": "",
-    "_componentId": "2127bw86qlEWbTP16eIDWNI",
-    "handler": "onClose",
-    "customEventData": "SignView"
+    "_componentId": "7cd0b9d8GhCO6EvqNfZiRtd",
+    "handler": "onCloseSignView",
+    "customEventData": ""
   },
   {
     "__type__": "cc.Node",
@@ -7278,12 +7278,12 @@
   {
     "__type__": "cc.ClickEvent",
     "target": {
-      "__id__": 4
+      "__id__": 149
     },
     "component": "",
-    "_componentId": "2127bw86qlEWbTP16eIDWNI",
-    "handler": "onClose",
-    "customEventData": "DOYouLikeView"
+    "_componentId": "6aab2bLxpdGMq4XRV7p2Ll1",
+    "handler": "onBackGameStat",
+    "customEventData": ""
   },
   {
     "__type__": "cc.Node",
@@ -7554,12 +7554,12 @@
   {
     "__type__": "cc.ClickEvent",
     "target": {
-      "__id__": 4
+      "__id__": 149
     },
     "component": "",
-    "_componentId": "2127bw86qlEWbTP16eIDWNI",
-    "handler": "GtoScene",
-    "customEventData": "GameReady"
+    "_componentId": "6aab2bLxpdGMq4XRV7p2Ll1",
+    "handler": "onAgainBtn",
+    "customEventData": ""
   },
   {
     "__type__": "cc.Sprite",

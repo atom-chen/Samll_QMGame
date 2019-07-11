@@ -28,6 +28,10 @@ cc.Class({
         var button = node.getComponent(cc.Button);
         
         cc.find("Canvas/"+customEventData).active =true;
+        if(customEventData == "PopupView"){
+            // 阿拉丁埋点
+            wx.aldSendEvent("dmx_marchPage_quitGame_click");
+        }
         
     },
     //按钮点击功能（关闭画布下的界面）
@@ -36,7 +40,6 @@ cc.Class({
         var button = node.getComponent(cc.Button);
         
         cc.find("Canvas/"+customEventData).active =false;
-        
     },
     GtoScene:function (event, customEventData){
         var node = event.target;
@@ -51,7 +54,14 @@ cc.Class({
         
     },
     OnFengxiang(){
+        // 阿拉丁埋点
+        wx.aldSendEvent('dmx_share_click()',{'page' : '游戏准备'});
         Global.TiaoZhanFriend();
+    },
+    PopupGotoGameStart(){
+        // 阿拉丁埋点
+        wx.aldSendEvent("dmx_marchPage_confirmQuit_click");
+        cc.director.loadScene("GameStart.fire");
     }
     // update (dt) {},
 });

@@ -48,6 +48,10 @@ cc.Class({
             default:null,
             type:cc.Node,
         },
+        dun:{
+            default:null,
+            type:cc.Node,
+        },
         gameuuid:null,
     },
 
@@ -91,7 +95,16 @@ cc.Class({
         this.stonepos = null;               //石头的位置
         this.map =  cc.find("Canvas/gamebg");
         this.player.getComponent(cc.Animation).play('heromove');
+        var speedran = Math.random();
+        this.speed=70+speedran;                  //初始速度
         
+        //开局3秒无敌防止给机器人包围直接打死
+        this.wudi = true;          //是否无敌
+        this.dun.active = true;
+        this.scheduleOnce(function() {
+            this.wudi = false;
+            this.dun.active = false;
+        }, 3);
     },
     init(type,name){
         this.type = type;
@@ -108,13 +121,10 @@ cc.Class({
             this.crit = 0.1;                //暴击率 5%~20%
             this.hit = 0.3;                 //命中率 30%~50%
             this.attack = 600;              //攻击力
-            this.speed=70;                  //初始速度
             this.addspeed = 100;            //加速度
             this.isDun = false;             //是否有护盾
             this.is_chidu = false;          //是否吃毒
             this.cd = 2;                    //技能CD
-
-            this.wudi = false;          //是否无敌
         }else{
             //高级机器人
             this.curhp = Global.hp;
@@ -126,26 +136,17 @@ cc.Class({
             this.crit = 0.4;                //暴击率 40%~60%
             this.hit = 0.5;                 //命中率 70%~90%
             this.attack = Global.attack;    //攻击力
-            this.speed=70;                  //初始速度
             this.addspeed = 100;            //加速度
             this.isDun = false;             //是否有护盾
             this.is_chidu = true;          //是否吃毒
             this.cd = 1;                    //技能CD
-            
-            //开局3秒无敌防止给机器人包围直接打死
-            this.wudi = true;          //是否无敌
-            this.node.getChildByName("dun").active = true;
-            this.scheduleOnce(function() {
-                this.wudi = false;
-                this.node.getChildByName("dun").active = false;
-            }, 3);
         }
         
     },
     update (dt) {
         //如果吃毒
         if(this.is_chidu){
-            if(this.time>0){
+            if(this.time>0&&!this.wudi){
                 this.time -=dt;
             }else{
                  this.HeroDamage(300);
@@ -315,14 +316,14 @@ cc.Class({
     AddDun(){
         if(!this.isDun){
             this.isDun = true;
-            this.node.getChildByName("dun").active = true;
+            this.dun.active = true;
         }
     },
     //受伤
     HeroDamage(damage){
         if(!this.wudi){
             if(this.isDun){
-                this.node.getChildByName("dun").active = false;
+                this.dun.active = false;
                 this.isDun = false;
             }else{
                 

@@ -1869,6 +1869,9 @@
     "eff_addspeed": {
       "__id__": 7
     },
+    "dun": {
+      "__id__": 34
+    },
     "gameuuid": null,
     "_id": ""
   },

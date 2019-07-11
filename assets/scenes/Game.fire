@@ -6220,8 +6220,8 @@
     },
     "component": "",
     "_componentId": "2127bw86qlEWbTP16eIDWNI",
-    "handler": "GtoScene",
-    "customEventData": "GameStart"
+    "handler": "PopupGotoGameStart",
+    "customEventData": ""
   },
   {
     "__type__": "cc.Node",

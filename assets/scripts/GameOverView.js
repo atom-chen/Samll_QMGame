@@ -48,6 +48,13 @@ cc.Class({
     // onLoad () {},
 
     start () {
+        //广告位置
+        Global.banner.show();
+        Global.banner.style.width = 378;
+        Global.banner.style.left = (Global.ScreenWidth-378)/2;
+        // 阿拉丁埋点
+        wx.aldSendEvent("dmx_finishPage_pv/uv");
+
         let self =this;
         if(cc.find("Canvas/MaskDuQuan").height<=0||cc.find("Canvas/MaskDuQuan").width<=0){
             var rank = 1;
@@ -105,13 +112,17 @@ cc.Class({
     },
 
     GameAgain(){
+        //隐藏广告
+        Global.banner.hide();
         //再来一局按钮线跳到首页出现推广窗口
         Global.is_Again = true;
         cc.director.loadScene("GameStart.fire");
     },
     OnFenxiang() {
         if (CC_WECHATGAME) {
-            
+            // 阿拉丁埋点
+            wx.aldSendEvent('dmx_share_click()',{'page' : '游戏结束'});
+
             wx.shareAppMessage({
                 title: '这是我的战绩可敢一战',
                 imageUrl: Global.shareimg,
