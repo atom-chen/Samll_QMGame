@@ -80,6 +80,8 @@ cc.Class({
    
         this.Rocker.on(cc.Node.EventType.TOUCH_MOVE,function(e){
             if(!this.is_Cd){
+                //是否单击
+                this.click = true;
                 if(this.clicktime>20){
                     line.active = true;
                 }

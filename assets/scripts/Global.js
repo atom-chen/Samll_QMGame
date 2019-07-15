@@ -368,7 +368,7 @@ window.Global = {
 
     GetJumpInfo(callback) {
         var self = this;
-        this.Get("https://wx.zaohegame.com/game/jumpapp?appid=wxfa819a83fa221978", (obj) => {
+        this.Get("https://wx.zaohegame.com/game/jumpapp?appid=wx039e71b55cba9869", (obj) => {
             if (obj.state == 1) {
                 this.jumpappObject = obj.result;
                 var self = this;
@@ -479,9 +479,9 @@ window.Global = {
                 let bannerAd = wx.createBannerAd({
                     adUnitId: 'adunit-0cab32f80e2ee1e0',
                     style: {
-                        left: this.ScreenWidth/2-378/2,
+                        left: this.ScreenWidth/2-150,
                         top: this.ScreenHeight-90,
-                        width: 378,
+                        width: 300,
                     }
                 })
 
@@ -521,15 +521,16 @@ window.Global = {
                 let bannerAd = wx.createBannerAd({
                     adUnitId: 'adunit-0cab32f80e2ee1e0',
                     style: {
-                        left: this.ScreenWidth/2-378/2,
+                        left: this.ScreenWidth/2-150,
                         top: this.ScreenHeight-90,
-                        width: 378,
+                        width: 300,
+
                     }
                 })
 
                 bannerAd.onResize(res => {
                     console.log(res.width, res.height);
-
+                    
                     if (bannerAd.style.realHeight > 120)
                         bannerAd.style.top = this.ScreenHeight - 120;
                     else

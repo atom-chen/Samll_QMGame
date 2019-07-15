@@ -28,7 +28,7 @@ cc.Class({
     },
 
     start () {
-        this.index =0;
+        this.index =15;
         this.isCreate =false;
 
         this.arrPos = [{x:-1350,y:-900},{x:-1050,y:-900},{x:-750,y:-900},{x:-450,y:-900},{x:-150,y:-900},{x:150,y:-900},{x:450,y:-900},{x:750,y:-900},{x:1050,y:-900},{x:1350,y:-900},
@@ -39,30 +39,92 @@ cc.Class({
         Global.GetName(Global.enemynumber,(res)=>{
             if(res.state ==1){
                 this.ArrName = res.result;
-                // for(let i = 0; i < 10; i++){
-                //     this.scheduleOnce(function() {
-                //         let name_string = res.result[i];
-                //         if(name_string.length>5){
-                //             name_string = name_string.substr(0,5);
-                //         }
-                //         var arrRan = Math.floor((Math.random()*this.arrPos.length));
-                //         var arrpos = this.arrPos[arrRan];
-                //         this.arrPos.splice(arrRan-1,1);
-                //         this.createEnemy(i,1,name_string,arrpos);
-                //     },0.01);
-                // }
-                this.isCreate =true;
+                for(let i = 0; i < 15; i++){
+                    this.scheduleOnce(function() {
+                        let name_string = res.result[i];
+                        if(name_string.length>5){
+                            name_string = name_string.substr(0,5);
+                        }
+                        var arrpos = this.arrPos[i];
+                        this.createEnemy(i,1,name_string,arrpos);
+                    },0.01);
+                }
+                //this.isCreate =true;
             }
         });
         //延迟生成
-        // this.scheduleOnce(function() {
-        //     this.isCreate =true;
-        // },34);
+        this.scheduleOnce(function() {
+            // this.isCreate =true;
+            var pos = cc.find("Canvas/player").position;
+            this.leftx = pos.x-350;
+            this.rightx = pos.x+350;
+            this.topy = pos.y+180;
+            this.bottomy = pos.y-180;
+            for(let i =15;i<20;i++){
+                let name_string = this.ArrName[i];
+                if(name_string.length>5){
+                    name_string = name_string.substr(0,5);
+                }
+                this.RanDomSecondPos();
+                var enemypos = cc.v2(this.num.x,this.num.y);
+                this.createOtherEnemypos(i,1,name_string,enemypos);
+            }
+        },24);
+        this.scheduleOnce(function() {
+            // this.isCreate =true;
+            var pos = cc.find("Canvas/player").position;
+            this.leftx = pos.x-350;
+            this.rightx = pos.x+350;
+            this.topy = pos.y+180;
+            this.bottomy = pos.y-180;
+            for(let i =20;i<25;i++){
+                let name_string = this.ArrName[i];
+                if(name_string.length>5){
+                    name_string = name_string.substr(0,5);
+                }
+                this.RanDomSecondPos();
+                var enemypos = cc.v2(this.num.x,this.num.y);
+                this.createOtherEnemypos(i,1,name_string,enemypos);
+            }
+        },34);
+        this.scheduleOnce(function() {
+            // this.isCreate =true;
+            var pos = cc.find("Canvas/player").position;
+            this.leftx = pos.x-350;
+            this.rightx = pos.x+350;
+            this.topy = pos.y+180;
+            this.bottomy = pos.y-180;
+            for(let i =25;i<30;i++){
+                let name_string = this.ArrName[i];
+                if(name_string.length>5){
+                    name_string = name_string.substr(0,5);
+                }
+                this.RanDomSecondPos();
+                var enemypos = cc.v2(this.num.x,this.num.y);
+                this.createOtherEnemypos(i,1,name_string,enemypos);
+            }
+        },44);
         // this.scheduleOnce(function() {
         //     this.isCreate =true;
         // },54);
         this.scheduleOnce(function() {
-            this.isCreate =true;
+            //this.isCreate =true;
+            //this.DelayCreateEnemy();
+
+            var pos = cc.find("Canvas/player").position;
+            this.leftx = pos.x-350;
+            this.rightx = pos.x+350;
+            this.topy = pos.y+180;
+            this.bottomy = pos.y-180;
+            for(let i =30;i<Global.enemynumber;i++){
+                let name_string = this.ArrName[i];
+                if(name_string.length>5){
+                    name_string = name_string.substr(0,5);
+                }
+                this.RanDomSecondPos();
+                var enemypos = cc.v2(this.num.x,this.num.y);
+                this.createOtherEnemypos(i,2,name_string,enemypos);
+            }
         },94);
         this.secondPos=[{x:-1350,y:-300},{x:-1050,y:-300},{x:-750,y:-300},{x:-450,y:-300},{x:450,y:-300},{x:750,y:-300},{x:1050,y:-300},{x:1350,y:-300},
             {x:-1350,y:300},{x:-1050,y:300},{x:-750,y:300},{x:-450,y:300},{x:450,y:300},{x:750,y:300},{x:1050,y:300},{x:1350,y:300},
@@ -90,8 +152,18 @@ cc.Class({
             this.createEnemy(this.index,1,name_string,enemypos);
             this.index++;
         }
-        if(this.index==25){
+        if(this.index==30){
             this.isCreate =false;
+        }
+    },
+    RanDomSecondPos(){
+        var ran = Math.floor((Math.random()*this.arrPos.length));
+        this.num = this.arrPos[ran];
+        if(this.num.x<this.leftx||this.num.x>this.rightx||this.num.y<this.bottomy|this.num.y>this.topy){
+            this.arrPos.splice(ran-1,1);
+            return
+        }else{
+            this.RanDomSecondPos();
         }
     },
     DelayCreateEnemy(){
@@ -109,7 +181,7 @@ cc.Class({
         var ran = Math.floor((Math.random()*this.arrPos.length));
         this.num = this.arrPos[ran];
         if(this.num.x<this.leftx||this.num.x>this.rightx||this.num.y<this.bottomy|this.num.y>this.topy){
-            this.arrPos.splice(ran-1,1);
+            //this.arrPos.splice(ran-1,1);
             var enemypos = cc.v2(this.num.x,this.num.y);
             let name_string = this.ArrName[this.index];
             if(name_string.length>5){
@@ -118,6 +190,15 @@ cc.Class({
             this.createEnemy(this.index,2,name_string,enemypos);
             this.index++;
         }
+        // for(let i =30;i<Global.enemynumber;i++){
+        //     let name_string = this.ArrName[i];
+        //     if(name_string.length>5){
+        //         name_string = name_string.substr(0,5);
+        //     }
+        //     this.RanDomSecondPos();
+        //     var enemypos = cc.v2(this.num.x,this.num.y);
+        //     this.createOtherEnemypos(this.index,2,name_string,enemypos);
+        // }
             // var y = Math.random()*(2400)-1200;
             // var x =null;
             // if(leftx>rightx){
@@ -132,8 +213,8 @@ cc.Class({
         enemy.position = pos;
         enemy.getComponent("EnemyPrefab").gameuuid = i;
         enemy.getComponent("EnemyPrefab").init(type,name);
-        //enemy.parent = this.node; // 将生成的敌人加入节点树
-        this.node.addChild(enemy);
+        enemy.parent = this.node; // 将生成的敌人加入节点树
+        //this.node.addChild(enemy);
     },
     createEnemy: function (i,type,name,pos) {
         if(pos.x>0){
@@ -156,16 +237,17 @@ cc.Class({
         enemy.position = cc.v2(x,y);
         enemy.getComponent("EnemyPrefab").gameuuid = i;
         enemy.getComponent("EnemyPrefab").init(type,name);
-        //enemy.parent = this.node; // 将生成的敌人加入节点树
-        this.node.addChild(enemy);
+        enemy.parent = this.node; // 将生成的敌人加入节点树
+        //this.node.addChild(enemy);
     },
     update (dt) {
-        if(this.isCreate){
-            if(this.index<25){
-                this.UpdateCreateEnemy();
-            }else if(this.index>=25&&this.index<Global.enemynumber){
-                this.DelayCreateEnemy();
-            }
-        }
+        //&&this.node.children.length<=8
+        // if(this.isCreate){
+        //     if(this.index<30){
+        //         this.UpdateCreateEnemy();
+        //     }else if(this.index>=30&&this.index<Global.enemynumber){
+        //         this.DelayCreateEnemy();
+        //     }
+        // }
     },
 });

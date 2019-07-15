@@ -66,7 +66,7 @@ cc.Class({
     ShowTips(){
         let tip = cc.instantiate(this.tip_prefab);
         if (tip) {
-            cc.find("Canvas").addChild(tip);
+            cc.find("Canvas/gamebg").addChild(tip);
             tip.runAction(cc.sequence(cc.blink(5, 5),cc.callFunc(()=>{
                 tip.destroy();
             },this)));

@@ -119,7 +119,7 @@ cc.Class({
         this.scheduleOnce(function() {
             this.wudi = false; 
             this.node.getChildByName("dun").active = false;
-        }, 6);
+        }, 4);
     },
 
      update (dt) {

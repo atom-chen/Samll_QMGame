@@ -122,8 +122,7 @@ cc.Class({
     onCloseSignView(){
         //广告位置
         Global.banner.show();
-        Global.banner.style.width = 321;
-        Global.banner.style.left = Global.ScreenWidth-321;
+        Global.banner.style.left = Global.ScreenWidth-(Global.banner.style.realWidth);
 
         cc.find("Canvas/SignView").active =false;
     }

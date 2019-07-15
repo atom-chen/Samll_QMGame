@@ -133,9 +133,9 @@ cc.Class({
             this.exp = 0;                   //当前所需经验值
             this.expnum = 0;                //当前经验值
             this.xishu = 3;                 //升级系数
-            this.crit = 0.4;                //暴击率 40%~60%
+            this.crit = 0.2;                //暴击率 40%~60%
             this.hit = 0.5;                 //命中率 70%~90%
-            this.attack = Global.attack;    //攻击力
+            this.attack = Global.attack>1000?1000:Global.attack;    //攻击力(高级攻击力上线1000)
             this.addspeed = 100;            //加速度
             this.isDun = false;             //是否有护盾
             this.is_chidu = true;          //是否吃毒

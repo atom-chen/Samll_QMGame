@@ -30,8 +30,7 @@ cc.Class({
         wx.aldSendEvent("dmx_homePage_pv/uv");
         //广告位置
         Global.banner.show();
-        Global.banner.style.width = 321;
-        Global.banner.style.left = Global.ScreenWidth-321;
+        Global.banner.style.left = Global.ScreenWidth-(Global.banner.style.realWidth);
 
         let self = this;
         cc.find("MusicBGM").getComponent("MusicControl").PlayBGM();

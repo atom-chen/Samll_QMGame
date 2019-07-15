@@ -50,8 +50,7 @@ cc.Class({
     start () {
         //广告位置
         Global.banner.show();
-        Global.banner.style.width = 378;
-        Global.banner.style.left = (Global.ScreenWidth-378)/2;
+        Global.banner.style.left = (Global.ScreenWidth-Global.banner.style.realWidth)/2;
         // 阿拉丁埋点
         wx.aldSendEvent("dmx_finishPage_pv/uv");
 

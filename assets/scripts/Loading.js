@@ -95,7 +95,7 @@ cc.Class({
                         self.enabled = false;
                         Global.showBanner();
                         self.scheduleOnce(function() {
-                            var action = cc.moveTo(0.2, 0, 52);
+                            var action = cc.moveTo(0.2, 0, 56);
                             self.startBtn.node.runAction(action);
                             //self.startBtn.node.y=52;
                         },2);

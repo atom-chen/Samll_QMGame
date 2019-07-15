@@ -27,7 +27,6 @@ cc.Class({
         wx.aldSendEvent("dmx_preparePage_pv/uv");
         //广告位置
         Global.banner.show();
-        Global.banner.style.width = 378;
         Global.banner.style.left = 15;
     },
     onPlayBtn(){

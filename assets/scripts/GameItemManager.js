@@ -112,6 +112,11 @@ cc.Class({
         //         },0.01);
         //     }
         // },64);
+        this.isStart = true;
+        this.time=0.2;
+        this.scheduleOnce(function() {
+            this.isStart = false;
+        },8);
     },
     
     SetUpGem(pos){
@@ -210,9 +215,21 @@ cc.Class({
             return;
         }
         if(this.GemPool.size() >100){
-            var arrRan = Math.floor((Math.random()*this.arrPos.length));
-            var arrpos = this.arrPos[arrRan];
-            this.CreateGem(arrpos);
+            if(this.isStart){
+                var arrRan = Math.floor((Math.random()*this.arrPos.length));
+                var arrpos = this.arrPos[arrRan];
+                this.CreateGem(arrpos);
+            }else{
+                if(this.time>0){
+                    this.time-=dt;
+                }else{
+                    var arrRan = Math.floor((Math.random()*this.arrPos.length));
+                    var arrpos = this.arrPos[arrRan];
+                    this.CreateGem(arrpos);
+                    this.time = 0.2;
+                }
+            }
+            
         }
         if(Global.dienumber == Global.enemynumber&&Global.is_end ==false){
             Global.is_end = true;
