@@ -24,7 +24,9 @@ cc.Class({
     start () {
         cc.find("MusicBGM").getComponent("MusicControl").PlayBGM();
         // 阿拉丁埋点
-        wx.aldSendEvent("dmx_preparePage_pv/uv");
+        wx.aldSendEvent("游戏准备",{"dmx_preparePage_pv/uv":"页面访问数"});
+        this.startTime = Date.now();
+        
         //广告位置
         Global.banner.show();
         Global.banner.style.left = 15;
@@ -33,7 +35,10 @@ cc.Class({
         //隐藏广告
         Global.banner.hide();
         // 阿拉丁埋点（快速匹配）
-        wx.aldSendEvent("dmx_preparePage_matching_click");
+        wx.aldSendEvent("游戏准备",{"dmx_preparePage_matching_click":"快速匹配"});
+        wx.aldSendEvent("游戏准备页面停留时间",{
+            "耗时" : (Date.now()-this.startTime)/1000
+          });
         let self = this;
         cc.find("Canvas/PiPeiView").active = true;
         //2s显示匹配成功

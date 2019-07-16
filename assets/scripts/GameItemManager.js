@@ -74,7 +74,8 @@ cc.Class({
 
     start () {
         // 阿拉丁埋点
-        wx.aldSendEvent("dmx_marchPage_pv/uv");
+        //wx.aldSendEvent("游戏进行",{"dmx_marchPage_pv/uv":"页面访问数"});
+        Global.startTime = Date.now();
         // for(let i =0;i<this.arrPos.length;i++){
         //     this.scheduleOnce(function() {
         //         this.SetUpGem(this.arrPos[i]);

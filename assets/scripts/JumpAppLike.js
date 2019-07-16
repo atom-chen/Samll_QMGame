@@ -29,7 +29,9 @@ cc.Class({
 
     start () {
         // 阿拉丁埋点
-        wx.aldSendEvent("dmx_ likePage_pv/uv");
+        wx.aldSendEvent("猜你喜欢",{"dmx_ likePage_pv/uv":"页面访问数"});
+        this.startTime = Date.now();
+        
         let randindex = [];
         for (let i = 0;Global.jumpappObject && i < Global.jumpappObject.length ;i++)
         {
@@ -70,12 +72,18 @@ cc.Class({
     },
     onAgainBtn(){
         // 阿拉丁埋点
-        wx.aldSendEvent("dmx_ likePage_rmrematch_click");
+        wx.aldSendEvent("猜你喜欢",{"dmx_ likePage_rmrematch_click":"再来一局"});
+        wx.aldSendEvent("猜你喜欢页面停留时间",{
+            "耗时" : (Date.now()-this.startTime)/1000
+          });
         cc.director.loadScene("GameReady.fire");
     },
     onBackGameStat(){
         // 阿拉丁埋点
-        wx.aldSendEvent("dmx_ likePage_backHall_click");
+        wx.aldSendEvent("猜你喜欢",{"dmx_ likePage_backHall_click":"回到大厅"});
+        wx.aldSendEvent("猜你喜欢页面停留时间",{
+            "耗时" : (Date.now()-this.startTime)/1000
+          });
         cc.find("Canvas/DOYouLikeView").active =false;
     }
     // update (dt) {},

@@ -39,10 +39,10 @@ cc.Class({
         {
             if(this.node.name =="gameggPrefab"){
                 // 阿拉丁埋点
-                wx.aldSendEvent('dmx_flowGame_click()',{'page' : '猜你喜欢'});
+                wx.aldSendEvent('游戏推广',{'dmx_flowGame_click()' : '猜你喜欢'});
             }else{
                 // 阿拉丁埋点
-                wx.aldSendEvent('dmx_flowGame_click()',{'page' : '游戏大厅'});
+                wx.aldSendEvent('游戏推广',{'dmx_flowGame_click()' : '游戏大厅'});
             }
             wx.navigateToMiniProgram({
                 appId:Global.jumpappObject[this.index].apid,

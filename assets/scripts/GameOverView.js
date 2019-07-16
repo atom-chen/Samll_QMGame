@@ -51,8 +51,13 @@ cc.Class({
         //广告位置
         Global.banner.show();
         Global.banner.style.left = (Global.ScreenWidth-Global.banner.style.realWidth)/2;
+        //阿拉丁埋点
+        wx.aldSendEvent("游戏进行页面停留时间",{
+            "耗时" : (Date.now()-Global.startTime)/1000
+          }); 
         // 阿拉丁埋点
-        wx.aldSendEvent("dmx_finishPage_pv/uv");
+        wx.aldSendEvent("游戏结束",{"dmx_finishPage_pv/uv":"页面访问数"});
+        this.startTime = Date.now();
 
         let self =this;
         if(cc.find("Canvas/MaskDuQuan").height<=0||cc.find("Canvas/MaskDuQuan").width<=0){
@@ -115,12 +120,15 @@ cc.Class({
         Global.banner.hide();
         //再来一局按钮线跳到首页出现推广窗口
         Global.is_Again = true;
+        wx.aldSendEvent("游戏结束页面停留时间",{
+            "耗时" : (Date.now()-this.startTime)/1000
+          });
         cc.director.loadScene("GameStart.fire");
     },
     OnFenxiang() {
         if (CC_WECHATGAME) {
             // 阿拉丁埋点
-            wx.aldSendEvent('dmx_share_click()',{'page' : '游戏结束'});
+            wx.aldSendEvent('分享',{'dmx_share_click()' : '游戏结束'});
 
             wx.shareAppMessage({
                 title: '这是我的战绩可敢一战',

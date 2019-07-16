@@ -21,6 +21,7 @@ window.Global = {
     hp:1600,            //血量
     attack:600,         //攻击力
     heroLv:1,           //等级
+    startTime:null,     //纪录游戏页面的开始时间
 
 
     prefab_icon: null,
@@ -37,6 +38,7 @@ window.Global = {
     banner: null,
 
     jumpappObject: null,
+    GuangGaoIndex: 0,                           //试玩广告index（需要切换界面就切换的）
 
     jumpinfo_callback: null,
 
@@ -49,7 +51,17 @@ window.Global = {
         tip_current: 0,
         
     },
-
+    //获取广告下表
+    GetGuangGaoIndex() {
+        if (this.jumpappObject) {
+            if (this.GuangGaoIndex >= this.jumpappObject.length) {
+                this.GuangGaoIndex = 0;
+            } else {
+                this.GuangGaoIndex++;
+            }
+        }
+        return this.GuangGaoIndex;
+    },
     UserLogin(parme){
         let self = this;
         this.Post(self.url_UserLogin,parme,(res)=>{

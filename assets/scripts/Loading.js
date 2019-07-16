@@ -40,22 +40,24 @@ cc.Class({
         if (CC_WECHATGAME) {
             Global.Login();
             Global.Getinfo();
-            Global.GetJumpInfo();
             this.loadRemoteAssets();
         }
     },
  
     start () {
         // 阿拉丁埋点
-        wx.aldSendEvent("dmx_loginPage_pv/uv");
-
+        wx.aldSendEvent("登录页",{"dmx_loginPage_pv/uv":"页面的访问数"});
+        this.startTime = Date.now();
     },
  
  
     // update (dt) {},
     onTouchBtn(){
         // 阿拉丁埋点
-        wx.aldSendEvent("dmx_loginPage_start_click");
+        wx.aldSendEvent("登录页",{"dmx_loginPage_start_click":"点击开始游戏按钮"});
+        wx.aldSendEvent("登录页页面停留时间",{
+            "耗时" : (Date.now()-this.startTime)/1000
+          });
         Global.GetUesrInfo();
         //隐藏广告
         Global.banner.hide();
