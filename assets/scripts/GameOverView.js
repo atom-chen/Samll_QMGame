@@ -41,6 +41,21 @@ cc.Class({
             default:null,
             type:cc.AudioSource,
         },
+        tanchuangprefab:{
+            default:null,
+            type:cc.Prefab,
+        },
+        page_1:cc.Node,
+        page_2:cc.Node,
+        //2个循环播放的广告
+        jumpAppPrefab: {
+            default: [],
+            type: cc.Node,
+        },
+        smallGamePrefab:{
+            default:null,
+            type:cc.Prefab,
+        }
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -91,13 +106,18 @@ cc.Class({
         }
         Global.GameSettle(kill,rank,(res)=>{
             if(res.state ==1){
-                self.goldnum.string = "x"+res.result.Gold;
+                this.curgold =  res.result.Gold;
+                self.goldnum.string = "x"+this.curgold;
                 self.nlnum.string = "x"+res.result.Diamonds;
                 self.addscore.string = "+"+res.result.Score;
                 let url = res.result.thelvl+'.png';
                 cc.loader.loadRes(url, cc.SpriteFrame, function (err, spriteFrame) {
                     self.duanImg.spriteFrame = spriteFrame;
                 });
+                if(res.result.chest.givevalue){
+                    Global.boxChest = res.result.chest;
+                    Global.endHaveBox = true;
+                }
                 Global.RefreshUesrInfo((res)=>{
                     Global.gold = res.result.gold;
                     Global.diamond= res.result.diamonds;
@@ -112,9 +132,8 @@ cc.Class({
                 });
             }
         });
-        
+        this.ChangeJumpAppSelectSprite();
     },
-
     GameAgain(){
         //隐藏广告
         Global.banner.hide();
@@ -211,5 +230,97 @@ cc.Class({
                 break;
         }
     },
+    /**
+     * 循环切换广告图片的方法
+     */
+    ChangeJumpAppSelectSprite() {
+        let Arr_jumpApp_Sprite = [];
+        for (let i = 0; i < this.jumpAppPrefab.length; i++) {
+            let sprite = this.jumpAppPrefab[i].getChildByName("sprite");
+            let temp = sprite.getComponent(cc.Sprite);
+            Arr_jumpApp_Sprite.push(temp);
+            this.jumpAppPrefab[i].index = i;
+            this.jumpAppPrefab[i].on("touchend", this.TouchEnd, this);
+            this.JumpAppFangSuo(this.jumpAppPrefab[i]);
+        }
+        this.schedule(() => {
+            for (let j = 0; j < this.jumpAppPrefab.length; j++) {
+                // // 上线前注释console.log(" Arr_jumpApp_Sprite[j].index == ", Arr_jumpApp_Sprite[j].index);
+                if (this.jumpAppPrefab[j].index < Global.jumpappObject.length - 1) {
+                    this.jumpAppPrefab[j].index++;
+                } else {
+                    this.jumpAppPrefab[j].index = 0;
+                }
+                Arr_jumpApp_Sprite[j].spriteFrame = Global.jumpappObject[this.jumpAppPrefab[j].index].sprite;
+            }
+        }, 3.0, cc.macro.REPEAT_FOREVER, 0.1);
+    },
+
+    /**
+    * 游戏广告按钮的放缩
+    */
+    JumpAppFangSuo: function (node) {
+        var self = this;
+        this.schedule(function () {
+            var action = self.FangSuoFun();
+            node.runAction(action);
+        }, 1.0, cc.macro.REPEAT_FOREVER, 0.1);
+    },
+
+    /**
+     * 按钮放缩方法
+     */
+    FangSuoFun: function () {
+        var action = cc.sequence(
+            cc.scaleTo(0.5, 1.0, 1.0),
+            cc.scaleTo(0.5, 1.2, 1.2),
+        );
+        return action;
+    },
+
+    TouchEnd(event) {
+        // 上线前注释console.log("event == ", event.target);
+       
+        event.stopPropagation();
+        // 上线前注释console.log("this.index == ", event.target.index);
+
+        if (CC_WECHATGAME) {
+            wx.navigateToMiniProgram({
+                appId: Global.jumpappObject[event.target.index].apid,
+                path: Global.jumpappObject[event.target.index].path,
+                success: function (res) {
+                    // 上线前注释console.log(res);
+                },
+                fail: function (res) {
+                    // 上线前注释console.log(res);
+                },
+            });
+        }
+    },
+    showAdVedio(){
+        Global.showAdVedio(this.Success.bind(this),this.Failed.bind(this));
+    },
+    Success(){
+        this.page_1.active = false;
+        this.page_2.active = false;
+        this.curgold = this.curgold*2;
+        var tanchuang = cc.instantiate(this.tanchuangprefab);
+        tanchuang.getComponent("GameOver_TanChuang").init(this.curgold);
+        this.node.addChild(tanchuang);
+    },
+    Failed(){
+        Global.ShowTip(this.node,"观看完整视频才能获的双倍奖励");
+    },
+    //点点小游戏
+    SmallGame(){
+        var small = cc.instantiate(this.smallGamePrefab);
+        //增加金币
+        Global.UserChange(2,1,"结算奖励",this.coinNum,(res)=>{
+            if(res.state ==1){
+                Global.gold+= this.coinNum;
+            }
+        });
+        this.node.parent.addChild(small);
+    }
     // update (dt) {},
 });

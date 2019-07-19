@@ -120,10 +120,10 @@ cc.Class({
         }
     },
     onCloseSignView(){
-        //广告位置
-        Global.banner.show();
-        Global.banner.style.left = Global.ScreenWidth-(Global.banner.style.realWidth);
-
+        // //广告位置
+        // Global.banner.show();
+        // Global.banner.style.left = Global.ScreenWidth-(Global.banner.style.realWidth);
+        Global.whetherShowSign = false;
         cc.find("Canvas/SignView").active =false;
     }
     // update (dt) {},

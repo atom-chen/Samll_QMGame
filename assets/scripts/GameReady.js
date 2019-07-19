@@ -15,6 +15,10 @@ cc.Class({
         text:cc.Label,
         content:cc.Node,
         hook:cc.Node,
+        gglunbo:{
+            default:null,
+            type:cc.Node,
+        },
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -30,6 +34,7 @@ cc.Class({
         //广告位置
         Global.banner.show();
         Global.banner.style.left = 15;
+        this.ChangeJumpAppSelectSprite();
     },
     onPlayBtn(){
         //隐藏广告
@@ -47,7 +52,70 @@ cc.Class({
             self.content.active = false;
             self.hook.active =true;
             cc.director.loadScene("Game.fire");
-        }, 2)
+        }, 6)
+    },
+    /**
+     * 循环切换广告图片的方法
+     */
+    ChangeJumpAppSelectSprite() {
+        let sprite = this.gglunbo.getChildByName("sprite").getComponent(cc.Sprite);
+        this.gglunbo.index = 0;
+        this.gglunbo.on("touchend", this.TouchEnd, this);
+        this.JumpAppFangSuo(this.gglunbo);
+        this.schedule(() => {
+            if (this.gglunbo.index < Global.jumpappObject.length - 1) {
+                this.gglunbo.index++;
+            } else {
+                this.gglunbo.index = 0;
+            }
+            sprite.spriteFrame = Global.jumpappObject[this.gglunbo.index].sprite;
+            
+        }, 3.0, cc.macro.REPEAT_FOREVER, 0.1);
+    },
+    /**
+    * 游戏广告按钮的放缩
+    */
+   JumpAppFangSuo: function (node) {
+    var self = this;
+    this.schedule(function () {
+            var action = self.FangSuoFun();
+            node.runAction(action);
+        }, 1.0, cc.macro.REPEAT_FOREVER, 0.1);
+    },
+
+    /**
+     * 按钮放缩方法
+     */
+    FangSuoFun: function () {
+        var action = cc.sequence(
+            cc.scaleTo(0.5, 1.0, 1.0),
+            cc.scaleTo(0.5, 1.2, 1.2),
+        );
+        return action;
+    },
+    TouchEnd(event) {
+        // 上线前注释console.log("event == ", event.target);
+       
+        event.stopPropagation();
+        // 上线前注释console.log("this.index == ", event.target.index);
+
+        if (CC_WECHATGAME) {
+            wx.navigateToMiniProgram({
+                appId: Global.jumpappObject[event.target.index].apid,
+                path: Global.jumpappObject[event.target.index].path,
+                success: function (res) {
+                    // 上线前注释console.log(res);
+                },
+                fail: function (res) {
+                    // 上线前注释console.log(res);
+                },
+            });
+        }
+    },
+    GtoScene(){
+        //隐藏广告
+        Global.banner.hide();
+        cc.director.loadScene("GameStart.fire");
     },
     // update (dt) {},
 });

@@ -31,6 +31,9 @@ cc.Class({
 
     start () {
         this.node.on("touchend",this.TouchEnd,this );
+        //广告位置
+        Global.banner.show();
+        Global.banner.style.left = (Global.ScreenWidth-Global.banner.style.realWidth)/2;
     },
 
     TouchEnd(event){

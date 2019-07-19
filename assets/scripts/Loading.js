@@ -27,6 +27,11 @@ cc.Class({
             default:null,
             type:cc.Button,
         },
+        //2个循环播放的广告
+        jumpAppPrefab: {
+            default: [],
+            type: cc.Node,
+        },
         
     },
 
@@ -40,6 +45,7 @@ cc.Class({
         if (CC_WECHATGAME) {
             Global.Login();
             Global.Getinfo();
+            Global.GetJumpInfo();
             this.loadRemoteAssets();
         }
     },
@@ -48,6 +54,8 @@ cc.Class({
         // 阿拉丁埋点
         wx.aldSendEvent("登录页",{"dmx_loginPage_pv/uv":"页面的访问数"});
         this.startTime = Date.now();
+
+        
     },
  
  
@@ -58,7 +66,29 @@ cc.Class({
         wx.aldSendEvent("登录页页面停留时间",{
             "耗时" : (Date.now()-this.startTime)/1000
           });
-        Global.GetUesrInfo();
+          this.LaunchData = JSON.stringify(wx.getLaunchOptionsSync());
+            // // 上线前注释console.log("LaunchData=====", this.LaunchData);
+
+            this.LaunchData_json = JSON.parse(this.LaunchData);
+            // // 上线前注释console.log("LaunchData_json=====", this.LaunchData_json);
+
+            this.sceneValue = this.LaunchData_json.scene;
+            // // 上线前注释console.log("sceneValue=====", this.sceneValue);
+
+            this.queryValue =  this.LaunchData_json.query;
+            // 上线前注释console.log("queryValue===分享ID==", this.queryValue);
+
+        if (this.queryValue) {
+            // // 上线前注释console.log("ceshi-1: "+this.LaunchData_json['query']['introuid']);
+            if (this.LaunchData_json['query']['introuid']) {
+                Global.GetUesrInfo(this.LaunchData_json['query']['introuid']);
+            }else{
+                Global.GetUesrInfo();
+            }
+        }else{
+            Global.GetUesrInfo();
+        }
+        
         //隐藏广告
         Global.banner.hide();
     },
@@ -95,6 +125,10 @@ cc.Class({
                         self.text.node.active =false;
                         self.startBtn.node.active =true;
                         self.enabled = false;
+                        for (let i = 0; i < self.jumpAppPrefab.length; i++) {
+                            self.jumpAppPrefab[i].active = true;
+                        }
+                        self.ChangeJumpAppSelectSprite();
                         Global.showBanner();
                         self.scheduleOnce(function() {
                             var action = cc.moveTo(0.2, 0, 56);
@@ -119,5 +153,71 @@ cc.Class({
             })
         }
     },
+    /**
+     * 循环切换广告图片的方法
+     */
+    ChangeJumpAppSelectSprite() {
+        let Arr_jumpApp_Sprite = [];
+        for (let i = 0; i < this.jumpAppPrefab.length; i++) {
+            let sprite = this.jumpAppPrefab[i].getChildByName("sprite");
+            let temp = sprite.getComponent(cc.Sprite);
+            Arr_jumpApp_Sprite.push(temp);
+            this.jumpAppPrefab[i].index = i;
+            this.jumpAppPrefab[i].on("touchend", this.TouchEnd, this);
+            this.JumpAppFangSuo(this.jumpAppPrefab[i]);
+        }
+        this.schedule(() => {
+            for (let j = 0; j < this.jumpAppPrefab.length; j++) {
+                // // 上线前注释console.log(" Arr_jumpApp_Sprite[j].index == ", Arr_jumpApp_Sprite[j].index);
+                if (this.jumpAppPrefab[j].index < Global.jumpappObject.length - 1) {
+                    this.jumpAppPrefab[j].index++;
+                } else {
+                    this.jumpAppPrefab[j].index = 0;
+                }
+                Arr_jumpApp_Sprite[j].spriteFrame = Global.jumpappObject[this.jumpAppPrefab[j].index].sprite;
+            }
+        }, 3.0, cc.macro.REPEAT_FOREVER, 0.1);
+    },
 
+    /**
+    * 游戏广告按钮的放缩
+    */
+    JumpAppFangSuo: function (node) {
+        var self = this;
+        this.schedule(function () {
+            var action = self.FangSuoFun();
+            node.runAction(action);
+        }, 1.0, cc.macro.REPEAT_FOREVER, 0.1);
+    },
+
+    /**
+     * 按钮放缩方法
+     */
+    FangSuoFun: function () {
+        var action = cc.sequence(
+            cc.scaleTo(0.5, 1.0, 1.0),
+            cc.scaleTo(0.5, 1.2, 1.2),
+        );
+        return action;
+    },
+
+    TouchEnd(event) {
+        // 上线前注释console.log("event == ", event.target);
+       
+        event.stopPropagation();
+        // 上线前注释console.log("this.index == ", event.target.index);
+
+        if (CC_WECHATGAME) {
+            wx.navigateToMiniProgram({
+                appId: Global.jumpappObject[event.target.index].apid,
+                path: Global.jumpappObject[event.target.index].path,
+                success: function (res) {
+                    // 上线前注释console.log(res);
+                },
+                fail: function (res) {
+                    // 上线前注释console.log(res);
+                },
+            });
+        }
+    },
 });

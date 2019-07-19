@@ -22,28 +22,30 @@ window.Global = {
     attack:600,         //攻击力
     heroLv:1,           //等级
     startTime:null,     //纪录游戏页面的开始时间
+    endHaveBox:false,   //结束是否出现宝箱
+    boxChest:null,      //宝箱信息
+    Crit:0,             //暴击率
 
 
-    prefab_icon: null,
-    prefab_gongxi: null,
-    prefab_errortip: null,
-    prefab_miji: null,
-    prefab_shibai: null,
+    prefab_tip: null,            //错误提示
     prefab_guanggao: null,
 
-    clip_right: null,
-    clip_wrong: null,
-    clip_tap: null,
     shareimg: null,
     banner: null,
 
     jumpappObject: null,
     GuangGaoIndex: 0,                           //试玩广告index（需要切换界面就切换的）
+    Zcount: 0,                       //转盘次数
+    whetherShowSign: true,             //是否显示签到界面
+    onAddSignCount: 0,
+    whetherShowLucky: true,             //是否显示抽奖界面
+    onAddLuckyCount: 0,
+    PrizeListData: [],           //奖品列表
 
     jumpinfo_callback: null,
 
-    linkUrl:"https://wx.zaohegame.com/",
-    //linkUrl:"http://wx.zaohegame.com:8099/",//测试地址
+    //linkUrl:"https://wx.zaohegame.com/",
+    linkUrl:"http://wx.zaohegame.com:8099/",//测试地址
     url_UserLogin: "game/UserLogin",
     url_UserAuth: "game/UserAuth",
     data: {
@@ -116,16 +118,26 @@ window.Global = {
         }
     },
     //获取玩家信息
-    GetUesrInfo(){
+    GetUesrInfo(id){
         let parme = {
-            sessionId:this.sessionId
+            sessionId:this.sessionId,
+            fromuid:id,
         }
+        console.log("id："+id);
         this.Post("Qmeng/getuserinfo",parme,(res)=>{
             this.gold = res.result.gold;
             this.diamond= res.result.diamonds;
             this.userlvl = res.result.userlvl;
             this.score = res.result.score;
             this.userkey = res.result.userkey;
+            this.Zcount = res.result.zpcount;
+            if(res.result.chest.givevalue){
+                console.log("宝箱存在: ");
+                this.boxChest = res.result.chest;
+            }else{
+                this.boxChest = {"givevalue":33,"canopentime":"1563513060","closetime":"1563516660"};
+                console.log("宝箱不存在,自己编的数据: "+this.boxChest);
+            }
             Global.GetSeaonLvl((res)=>{
                 Global.SeaonLvl = res.result.list;
                 cc.director.loadScene("GameStart.fire");
@@ -204,12 +216,36 @@ window.Global = {
         this.Post("game/RunZhuanPan",data,callback);
     },
     //获取转盘获奖信息
-    GetZhuanPanLog(callback){
+    GetZhuanPanLog(){
         let data = {
             sessionId:this.sessionId,
             appid:this.appid,
         }
-        this.Post("game/GetZhuanPanLog",data,callback);
+        this.Post("game/GetZhuanPanLog",data,(res)=>{
+            this.PrizeListData = res.result;
+        });
+    },
+    //修改转盘次数信息
+    UpdateZP(){
+        let data = {
+            sessionId:this.sessionId,
+        }
+        this.Post("Qmeng/UpdateZP",data);
+    },
+    //开宝箱
+    OpenChest(isvideo,callback){
+        let data ={
+            sessionId:this.sessionId,
+            isvideo:isvideo,
+        }
+        this.Post("Qmeng/OpenChest",data,callback);
+    },
+    //获取邀请任务
+    GetIntiveMission(callback){
+        let data = {
+            sessionId:this.sessionId,
+        }
+        this.Post("Qmeng/GetIntiveMission",data,callback);
     },
     
     //游戏结算
@@ -237,7 +273,35 @@ window.Global = {
         }
         this.Post("game/getnicks",data,callback);
     },
-    
+    /**
+     * 添加提示语
+     * @param {*} node 
+     * @param {*} msg 
+     */
+    ShowTip(node, msg) {
+        let tip = cc.instantiate(this.prefab_tip);
+        // 上线前注释console.log("tip == ", tip);
+        if (tip) {
+            if (node.getChildByName("tips")) {
+
+            } else {
+                node.addChild(tip);
+                let src = tip.getComponent(require("TipShow"));
+                if (src) {
+                    src.label.string = msg;
+                }
+            }
+        }
+    },
+    /**
+     * 光效旋转方法
+     */
+    LightRotate: function () {
+        var lightRotate = cc.repeatForever(
+            cc.rotateBy(5, 360),
+        )
+        return lightRotate;
+    },
     //登陆
     Login(){
         if (CC_WECHATGAME) {
@@ -306,7 +370,17 @@ window.Global = {
                                 Global.avatarUrl = res.userInfo.avatarUrl; //用户头像图片 url
                                 Global.sex = res.userInfo.gender;   //用户性别
                                 button.destroy();
-                                Global.GetUesrInfo();
+                                let LaunchData_json = wx.getLaunchOptionsSync();
+                                let queryValue = LaunchData_json.query;
+                                if (queryValue) {
+                                    if (LaunchData_json['query']['introuid']) {
+                                        Global.GetUesrInfo(LaunchData_json['query']['introuid']);
+                                    }else{
+                                        Global.GetUesrInfo();
+                                    }
+                                }else{
+                                    Global.GetUesrInfo();
+                                }
                             }else {
                                 console.log("用户拒绝授权:", res);
                             }
@@ -339,7 +413,8 @@ window.Global = {
             if (res.resultcode == 500) {
                 this.UserAuthPost(this.res, this.sessionId, callback);
                 console.log("需要重新授权");
-                this.GetUserData();
+            }else{
+                this.Introuid = res.result.uid;
             }
         });
     },
@@ -380,11 +455,12 @@ window.Global = {
 
     GetJumpInfo(callback) {
         var self = this;
-        this.Get("https://wx.zaohegame.com/game/jumpapp?appid=wx039e71b55cba9869", (obj) => {
+        this.Get("http://wx.zaohegame.com:8099/game/jumpapp?appid=wx039e71b55cba9869", (obj) => {
             if (obj.state == 1) {
                 this.jumpappObject = obj.result;
                 var self = this;
                 var count = 0;
+                
                 for (let i = 0; i < this.jumpappObject.length; i++) {
                     cc.loader.load({ url: this.jumpappObject[i].img, type: "png" }, function (err, res) {
                         self.jumpappObject[i].sprite = null;
@@ -402,6 +478,21 @@ window.Global = {
                             console.log(i, err);
                         }
                     });
+                    if(this.jumpappObject[i].img2 !=""){
+                        cc.loader.load({ url: this.jumpappObject[i].img2, type: "jpg" }, function (err, res) {
+                            self.jumpappObject[i].lunbo = null;
+                            if (err == null) {
+                                let spriteFrame = new cc.SpriteFrame(res);
+                                self.jumpappObject[i].lunbo  = spriteFrame;
+                                
+                            }
+                            else {
+                                console.log(i, err);
+                            }
+                        });
+                    }else{
+                        self.jumpappObject[i].lunbo = null;
+                    }
                 }
             }
         });

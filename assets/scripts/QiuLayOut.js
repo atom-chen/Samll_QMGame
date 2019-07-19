@@ -13,6 +13,7 @@ cc.Class({
 
     properties: {
         qiu:cc.Node,
+        pageView:cc.PageView,
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -27,9 +28,22 @@ cc.Class({
                 this.num=0;
             }
             this.num++;
-        }, 0.5)
+        }, 0.5);
+        this.GuidePage();
     },
-
+    //轮播引导
+    GuidePage(){
+        this.schedule(() => {
+            //一共多少页
+           let count = this.pageView.getPages().length;        
+           //取当前页下序号 
+           let index = this.pageView.getCurrentPageIndex();
+           //为最后一页，index为0，否则+1
+           index = index >= count ? 0 : index + 1;
+           //执行切换                
+           this.pageView.scrollToPage(index, 2);
+       }, 1.5);
+    },
     // update (dt) {
         
     // },

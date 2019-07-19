@@ -83,7 +83,7 @@ cc.Class({
         this.exp = 0;                   //当前所需经验值
         this.expnum = 0;                //当前经验值
         this.xishu = 3;                 //升级系数
-        this.crit = 0.1;               //暴击率
+        this.crit = 0.1+Global.Crit/100;               //暴击率
         this.attack = Global.attack;    //攻击力
         this.speed=100;                 //初始速度
         this.addspeed = 100;            //加速度
