@@ -40,12 +40,16 @@ window.Global = {
     onAddSignCount: 0,
     whetherShowLucky: true,             //是否显示抽奖界面
     onAddLuckyCount: 0,
+    whetherShowFriend: true,             //是否显示邀请好友界面
+    onAddFriendCount: 0,
     PrizeListData: [],           //奖品列表
+    showGameLoop:false,
 
     jumpinfo_callback: null,
+    TheGameLoop: null,                          //游戏圈
 
-    //linkUrl:"https://wx.zaohegame.com/",
-    linkUrl:"http://wx.zaohegame.com:8099/",//测试地址
+    linkUrl:"https://wx.zaohegame.com/",
+    //linkUrl:"http://wx.zaohegame.com:8099/",//测试地址
     url_UserLogin: "game/UserLogin",
     url_UserAuth: "game/UserAuth",
     data: {
@@ -123,7 +127,6 @@ window.Global = {
             sessionId:this.sessionId,
             fromuid:id,
         }
-        console.log("id："+id);
         this.Post("Qmeng/getuserinfo",parme,(res)=>{
             this.gold = res.result.gold;
             this.diamond= res.result.diamonds;
@@ -132,11 +135,9 @@ window.Global = {
             this.userkey = res.result.userkey;
             this.Zcount = res.result.zpcount;
             if(res.result.chest.givevalue){
-                console.log("宝箱存在: ");
                 this.boxChest = res.result.chest;
             }else{
-                this.boxChest = {"givevalue":33,"canopentime":"1563513060","closetime":"1563516660"};
-                console.log("宝箱不存在,自己编的数据: "+this.boxChest);
+                console.log("宝箱不存在: ");
             }
             Global.GetSeaonLvl((res)=>{
                 Global.SeaonLvl = res.result.list;
@@ -375,6 +376,8 @@ window.Global = {
                                 if (queryValue) {
                                     if (LaunchData_json['query']['introuid']) {
                                         Global.GetUesrInfo(LaunchData_json['query']['introuid']);
+                                        // 阿拉丁埋点
+                                        wx.aldSendEvent('邀请',{'是否有效' : '是'});
                                     }else{
                                         Global.GetUesrInfo();
                                     }
@@ -455,7 +458,7 @@ window.Global = {
 
     GetJumpInfo(callback) {
         var self = this;
-        this.Get("http://wx.zaohegame.com:8099/game/jumpapp?appid=wx039e71b55cba9869", (obj) => {
+        this.Get("https://wx.zaohegame.com/game/jumpapp?appid=wx039e71b55cba9869", (obj) => {
             if (obj.state == 1) {
                 this.jumpappObject = obj.result;
                 var self = this;
@@ -583,7 +586,7 @@ window.Global = {
                     adUnitId: 'adunit-0cab32f80e2ee1e0',
                     style: {
                         left: this.ScreenWidth/2-150,
-                        top: this.ScreenHeight-90,
+                        top: this.ScreenHeight,
                         width: 300,
                     }
                 })
@@ -592,10 +595,10 @@ window.Global = {
                     console.log(res.width, res.height);
                     console.log(bannerAd.style)
 
-                    if (bannerAd.style.realHeight > 120)
-                        bannerAd.style.top = this.ScreenHeight - 120;
-                    else
-                        bannerAd.style.top = this.ScreenHeight - bannerAd.style.realHeight;
+                    // if (bannerAd.style.realHeight > 120)
+                    //     bannerAd.style.top = this.ScreenHeight - 120;
+                    // else
+                    //     bannerAd.style.top = this.ScreenHeight - bannerAd.style.realHeight;
                 })
                 this.banner = bannerAd;
                 bannerAd.show()
@@ -625,7 +628,7 @@ window.Global = {
                     adUnitId: 'adunit-0cab32f80e2ee1e0',
                     style: {
                         left: this.ScreenWidth/2-150,
-                        top: this.ScreenHeight-90,
+                        top: this.ScreenHeight,
                         width: 300,
 
                     }
@@ -634,10 +637,10 @@ window.Global = {
                 bannerAd.onResize(res => {
                     console.log(res.width, res.height);
                     
-                    if (bannerAd.style.realHeight > 120)
-                        bannerAd.style.top = this.ScreenHeight - 120;
-                    else
-                        bannerAd.style.top = this.ScreenHeight - bannerAd.style.realHeight;
+                    // if (bannerAd.style.realHeight > 120)
+                    //     bannerAd.style.top = this.ScreenHeight - 120;
+                    // else
+                    //     bannerAd.style.top = this.ScreenHeight - bannerAd.style.realHeight;
                 })
 
                 bannerAd.show();

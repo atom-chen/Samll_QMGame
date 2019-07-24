@@ -39,8 +39,9 @@ cc.Class({
     },
 
     start() {
-        this.outpos = cc.v2(-519, 0);
-        this.hidepos = cc.v2(-121, 0);
+        this.outpos = this.node.position;
+        this.hidepos = cc.v2(this.node.x+this.node.width, 0);
+        
         this.hide = true;
         // if (Global.jumpinfo_callback == null) {
         //     Global.jumpinfo_callback = this.JumpCallBack.bind(this);
@@ -72,15 +73,28 @@ cc.Class({
     },
 
     onButtonClick(event) {
-
         if (this.hide == false) {
-            this.node.runAction(cc.moveTo(0.5, this.outpos).easing(cc.easeBackIn()));
+            wx.aldSendEvent("游戏大厅_精品推荐页面停留时间",{
+                "耗时" : (Date.now()-this.startTime)/1000
+            });
+            this.node.runAction(cc.sequence(cc.moveTo(0.5, this.outpos).easing(cc.easeBackOut()),cc.callFunc(()=>{
+                this.node.getComponent(cc.Widget).left = -398;
+                this.node.getComponent(cc.Widget).updateAlignment();
+                Global.showGameLoop =true;
+            })));
             this.btn_sprite.spriteFrame = this.btnSprite[0];
             this.zhezhao.active = false;
             this.btn.x = 239;
         }
         else {
-            this.node.runAction(cc.moveTo(0.5, this.hidepos).easing(cc.easeBackOut()));
+            //页面停留开始时间
+            this.startTime = Date.now();
+
+            this.node.runAction(cc.sequence(cc.moveTo(0.5, this.hidepos).easing(cc.easeBackOut()),cc.callFunc(()=>{
+                this.node.getComponent(cc.Widget).left = 0;
+                this.node.getComponent(cc.Widget).updateAlignment();
+            })));
+            Global.showGameLoop =false;
             this.btn_sprite.spriteFrame = this.btnSprite[1];
             this.btn.x = 208;
             this.zhezhao.active = true;

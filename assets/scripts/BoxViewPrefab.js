@@ -12,8 +12,6 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
-        goldnum:cc.Label,
-        videbtn:cc.Node,
         gglunbo:cc.Node,
     },
 
@@ -22,45 +20,19 @@ cc.Class({
     // onLoad () {},
 
     start () {
-        this.goldnum.string = "x"+Global.boxChest.givevalue;
-        this.isvideo = false;
-        //页面停留开始时间
-        this.startTime = Date.now();
 
-        this.ChangeJumpAppSelectSprite();
-    },
-    showAdVedio(){
-        // 阿拉丁埋点
-        wx.aldSendEvent('视频广告',{'页面' : '游戏宝箱_双倍领取'});
-        Global.showAdVedio(this.Success.bind(this),this.Failed.bind(this));
-    },
-    Success(){
-        // 阿拉丁埋点
-        wx.aldSendEvent('视频广告',{'是否有效' : '是'});
-        this.videbtn.active = false;
-        var double = Global.boxChest.givevalue*2;
-        this.goldnum.string = "x"+double;
-        this.isvideo = true;
-    },
-    Failed(){
-        // 阿拉丁埋点
-        wx.aldSendEvent('视频广告',{'是否有效' : '否'});
-        Global.ShowTip(this.node,"观看完整视频才能获取奖励");
+        Global.banner.style.left = Global.ScreenWidth-(Global.banner.style.realWidth);
+        this.ChangeJumpAppSelectSprite()
     },
     /**
-      * 关闭界面
-      */
-    onClickClose: function () {
+     * 点击关闭界面按钮
+     */
+    onClickComeback() {
         //隐藏广告
         Global.banner.hide();
-        Global.OpenChest(this.isvideo,(res)=>{
-            Global.boxChest = null;
-        });
         this.node.destroy();
+        Global.showGameLoop = true;
 
-        wx.aldSendEvent("游戏大厅_游戏宝箱(双倍领取)页面停留时间",{
-            "耗时" : (Date.now()-this.startTime)/1000
-        });
     },
     /**
      * 循环切换广告图片的方法
@@ -84,10 +56,9 @@ cc.Class({
         }, 3.0, cc.macro.REPEAT_FOREVER, 0.1);
     },
     TouchEnd(event) {
-        // 上线前注释console.log("event == ", event.target);
-       
         event.stopPropagation();
-        // 上线前注释console.log("this.index == ", event.target.index);
+        // 阿拉丁埋点
+        wx.aldSendEvent('游戏推广',{'页面' : '游戏宝箱_游戏轮播'});
 
         if (CC_WECHATGAME) {
             wx.navigateToMiniProgram({

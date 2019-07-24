@@ -27,7 +27,6 @@ cc.Class({
     // onLoad () {},
 
     start() {
-        console.log("start");
         // if (Global.jumpinfo_callback == null) {
         //     console.log("set callback");
         //     Global.jumpinfo_callback = this.JumpCallBack.bind(this);

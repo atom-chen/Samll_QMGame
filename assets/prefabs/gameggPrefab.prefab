@@ -21,7 +21,7 @@
       }
     ],
     "_active": true,
-    "_level": 4,
+    "_level": 1,
     "_components": [
       {
         "__id__": 13
@@ -272,8 +272,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 49,
-      "height": 10
+      "width": 68,
+      "height": 15
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",

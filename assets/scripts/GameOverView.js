@@ -55,7 +55,11 @@ cc.Class({
         smallGamePrefab:{
             default:null,
             type:cc.Prefab,
-        }
+        },
+        gglunbo:{
+            default:null,
+            type:cc.Node,
+        },
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -63,15 +67,12 @@ cc.Class({
     // onLoad () {},
 
     start () {
-        //广告位置
-        Global.banner.show();
-        Global.banner.style.left = (Global.ScreenWidth-Global.banner.style.realWidth)/2;
         //阿拉丁埋点
-        wx.aldSendEvent("游戏进行页面停留时间",{
+        wx.aldSendEvent("游戏进行_页面停留时间",{
             "耗时" : (Date.now()-Global.startTime)/1000
           }); 
         // 阿拉丁埋点
-        wx.aldSendEvent("游戏结束",{"dmx_finishPage_pv/uv":"页面访问数"});
+        wx.aldSendEvent("游戏结算_页面访问数");
         this.startTime = Date.now();
 
         let self =this;
@@ -133,22 +134,15 @@ cc.Class({
             }
         });
         this.ChangeJumpAppSelectSprite();
+        this.ChangeLunBoSelectSprite();
     },
     GameAgain(){
-        //隐藏广告
-        Global.banner.hide();
         //再来一局按钮线跳到首页出现推广窗口
         Global.is_Again = true;
-        wx.aldSendEvent("游戏结束页面停留时间",{
-            "耗时" : (Date.now()-this.startTime)/1000
-          });
         cc.director.loadScene("GameStart.fire");
     },
     OnFenxiang() {
         if (CC_WECHATGAME) {
-            // 阿拉丁埋点
-            wx.aldSendEvent('分享',{'dmx_share_click()' : '游戏结束'});
-
             wx.shareAppMessage({
                 title: '这是我的战绩可敢一战',
                 imageUrl: Global.shareimg,
@@ -279,11 +273,9 @@ cc.Class({
     },
 
     TouchEnd(event) {
-        // 上线前注释console.log("event == ", event.target);
-       
         event.stopPropagation();
-        // 上线前注释console.log("this.index == ", event.target.index);
-
+        // 阿拉丁埋点
+        wx.aldSendEvent('游戏推广',{'页面' : '游戏结算_图片推广'});
         if (CC_WECHATGAME) {
             wx.navigateToMiniProgram({
                 appId: Global.jumpappObject[event.target.index].apid,
@@ -298,9 +290,13 @@ cc.Class({
         }
     },
     showAdVedio(){
+        // 阿拉丁埋点
+        wx.aldSendEvent('视频广告',{'页面' : '游戏结算_双倍领取'});
         Global.showAdVedio(this.Success.bind(this),this.Failed.bind(this));
     },
     Success(){
+        // 阿拉丁埋点
+        wx.aldSendEvent('视频广告',{'是否有效' : '是'});
         this.page_1.active = false;
         this.page_2.active = false;
         this.curgold = this.curgold*2;
@@ -309,18 +305,62 @@ cc.Class({
         this.node.addChild(tanchuang);
     },
     Failed(){
+        // 阿拉丁埋点
+        wx.aldSendEvent('视频广告',{'是否有效' : '否'});
         Global.ShowTip(this.node,"观看完整视频才能获的双倍奖励");
     },
     //点点小游戏
     SmallGame(){
+        wx.aldSendEvent("游戏结算_直接领取");
+        wx.aldSendEvent("游戏结算_页面停留时间",{
+            "耗时" : (Date.now()-this.startTime)/1000
+          });
         var small = cc.instantiate(this.smallGamePrefab);
         //增加金币
-        Global.UserChange(2,1,"结算奖励",this.coinNum,(res)=>{
+        Global.UserChange(2,1,"结算奖励",this.curgold,(res)=>{
             if(res.state ==1){
-                Global.gold+= this.coinNum;
+                Global.gold+= this.curgold;
             }
         });
         this.node.parent.addChild(small);
-    }
+    },
+    /**
+     * 循环切换轮播广告图片的方法
+     */
+    ChangeLunBoSelectSprite() {
+        let sprite = this.gglunbo.getComponent(cc.Sprite);
+        this.gglunbo.index = 0;
+        this.gglunbo.on("touchend", this.TouchLunboEnd, this);
+       
+        this.schedule(() => {
+            if (this.gglunbo.index < Global.jumpappObject.length - 1) {
+                this.gglunbo.index++;
+            } else {
+                this.gglunbo.index = 0;
+            }
+            if(Global.jumpappObject[this.gglunbo.index].lunbo!=null){
+                sprite.spriteFrame = Global.jumpappObject[this.gglunbo.index].lunbo;
+            }else{
+                sprite.spriteFrame = Global.jumpappObject[this.gglunbo.index].sprite;
+            }
+        }, 3.0, cc.macro.REPEAT_FOREVER, 0.1);
+    },
+    TouchLunboEnd(event) {
+        event.stopPropagation();
+        // 阿拉丁埋点
+        wx.aldSendEvent('游戏推广',{'页面' : '游戏结算_游戏轮播'});
+        if (CC_WECHATGAME) {
+            wx.navigateToMiniProgram({
+                appId: Global.jumpappObject[event.target.index].apid,
+                path: Global.jumpappObject[event.target.index].path,
+                success: function (res) {
+                    // 上线前注释console.log(res);
+                },
+                fail: function (res) {
+                    // 上线前注释console.log(res);
+                },
+            });
+        }
+    },
     // update (dt) {},
 });

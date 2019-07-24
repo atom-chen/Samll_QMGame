@@ -16,9 +16,6 @@ cc.Class({
         userImg:cc.Sprite,
         duantext:cc.Label,
         duanImg:cc.Sprite,
-        text:cc.Label,
-        content:cc.Node,
-        hook:cc.Node,
         prefab_tip: {
             default: null,
             type: cc.Prefab
@@ -40,10 +37,6 @@ cc.Class({
             default: null,
             type: cc.Prefab,
         },
-        boxViewPrefab:{
-            default: null,
-            type: cc.Prefab,
-        },
         boxjiangliPrefab:{
             default: null,
             type: cc.Prefab,
@@ -59,14 +52,16 @@ cc.Class({
     // onLoad () {},
 
     start () {
+        this.onCreateGameLoop();
         // 阿拉丁埋点
-        wx.aldSendEvent("游戏大厅",{"dmx_homePage_pv/uv":"页面的访问数"});
+        wx.aldSendEvent("游戏大厅_页面访问数");
+        
         Global.prefab_tip = this.prefab_tip;
         this.startTime = Date.now();
         //换一批按钮的翻页所需页面index
         this.guangGaoIndex = Global.GetGuangGaoIndex();
 
-        this.ChangeJumpAppSelectSprite()
+        this.ChangeJumpAppSelectSprite();
         // //广告位置
         // Global.banner.show();
         // Global.banner.style.left = Global.ScreenWidth-(Global.banner.style.realWidth);
@@ -84,6 +79,7 @@ cc.Class({
         })
         if (CC_WECHATGAME) {
             if(Global.is_Again){
+                Global.showGameLoop = false;
                 cc.find("Canvas/DOYouLikeView").active =true;
                 Global.is_Again = false;
             }
@@ -121,19 +117,18 @@ cc.Class({
                     },
                 };
             });
-            this.HaveBoxChest();
+            
         }
+        this.HaveBoxChest();
     },
     //判断是否有宝箱
     HaveBoxChest(){
         this.isOpenBox = false;
-        if(Global.boxChest){
+        if(Global.boxChest){  //进去游戏时自己有宝箱
             //宝箱消失时间(一个小时没领取宝箱消失)
-            var closeboxtime = Global.boxChest.closetime - Math.round(Date.now() / 1000);
+            var closeboxtime = Math.round(Global.boxChest.closetime/1000) - Math.round(Date.now() / 1000);
             if(closeboxtime>0){
-                this.boxImg.active = true;
-                this.boxImg_yi.active = false;
-                this.timeStamp = Global.boxChest.canopentime -Math.round(Date.now() / 1000);
+                this.timeStamp = Math.round(Global.boxChest.canopentime/1000) -Math.round(Date.now() / 1000);
                 if(this.timeStamp>0){
                     var minute  = Math.floor((this.timeStamp%3600)/60);
                     var second = this.timeStamp %3600%60;
@@ -144,25 +139,31 @@ cc.Class({
                     this.boxtime.string = minute+":"+second;
                     //倒计时
                     this.schedule(this.doCountdownTime,1);
+                    this.boxImg.active = false;
+                    this.boxImg_yi.active = true;
                 }else{
                     this.boxmsglabe.node.active = true;
                     this.boxtime.node.active = false;
-                    this.boxmsglabe.string = "可领取";
-                    this.BOXAnim();
+                    this.boxmsglabe.string = "已开启";
                     this.isOpenBox = true;
+                    this.boxImg.active = true;
+                    this.boxImg_yi.active = false;
+                    this.BOXAnim();
                 }
             }
         }
+        
     },
     //宝箱按钮方法
     onClickBox(){
         if(this.isOpenBox){
             this.boxmsglabe.node.active = true;
             this.boxtime.node.active = false;
-            this.boxmsglabe.string = "已开启";
+            this.boxmsglabe.string = "暂未开启";
             this.stopGiftAnim();
             this.boxImg.active = false;
             this.boxImg_yi.active = true;
+            wx.aldSendEvent("游戏大厅_惊喜宝箱");
             var tanchuangbox = cc.instantiate(this.boxjiangliPrefab);
             this.node.parent.addChild(tanchuangbox);
         }
@@ -185,9 +186,11 @@ cc.Class({
             this.unschedule(this.doCountdownTime);
             this.boxmsglabe.node.active = true;
             this.boxtime.node.active = false;
-            this.boxmsglabe.string = "可领取";
-            this.BOXAnim();
+            this.boxmsglabe.string = "已开启";
             this.isOpenBox = true;
+            this.boxImg.active = true;
+            this.boxImg_yi.active = false;
+            this.BOXAnim();
         }
     },
     //礼盒可领取时动画
@@ -206,43 +209,39 @@ cc.Class({
     },
     onShowAppMsg(){
         // 阿拉丁埋点
-        wx.aldSendEvent('分享',{'dmx_share_click()' : '游戏大厅'});
+        wx.aldSendEvent('分享',{'页面' : '游戏大厅_分享游戏'});
         
         Global.TiaoZhanFriend();
     },
     onPlayBtn(){
+        Global.showGameLoop = false;
         //隐藏广告
         Global.banner.hide();
         let self = this;
         cc.find("Canvas/PiPeiView").active = true;
-        //2s显示匹配成功
-        this.scheduleOnce(function() {
-            self.text.string = "匹配成功";
-            self.content.active = false;
-            self.hook.active =true;
-            cc.director.loadScene("Game.fire");
-        }, 6)
+        
         // 阿拉丁埋点（快速开始）
-        wx.aldSendEvent("游戏大厅",{"dmx_homePage_quickStart_click":"点击快速开始"});
-        wx.aldSendEvent("游戏大厅页面停留时间",{
-            "耗时" : (Date.now()-this.startTime)/1000
-          });
+        wx.aldSendEvent("游戏大厅_快速开始");
+        wx.aldSendEvent("游戏大厅_页面停留时间",{
+            "耗时" : (Date.now()-this.startTime)/1000+6
+        });
     },
     onGameReadyBtn(){
+        this.clubButton.hide();
         //隐藏广告
         Global.banner.hide();
-        // 阿拉丁埋点（荒漠战场）
-        wx.aldSendEvent("游戏大厅",{"dmx_homePage_battlefield_click":"点击荒漠战场"});
-        wx.aldSendEvent("游戏大厅页面停留时间",{
+
+        wx.aldSendEvent("游戏大厅_页面停留时间",{
             "耗时" : (Date.now()-this.startTime)/1000
-          });
+        });
         cc.director.loadScene("GameReady.fire");
     },
     onOpenSignView() {
+        Global.showGameLoop = false;
         //隐藏广告
         Global.banner.hide();
         // 阿拉丁埋点（累计签到）
-        wx.aldSendEvent("游戏大厅",{"dmx_homePage_SignIn_click":"点击累计签到"});
+        wx.aldSendEvent("游戏大厅_累计签到");
         cc.find("Canvas/SignView").active =true;
     },
     SmallDuanWei(){
@@ -311,29 +310,49 @@ cc.Class({
     },
     update (dt) {
         if (Global.whetherShowSign == true && Global.onAddSignCount == 0) {
-            // 上线前注释console.log("Global.onAddSignCount == ", Global.onAddSignCount);
             Global.onAddSignCount++;
-            //Global.whetherShowSign = false;
             this.onOpenSignView();
         }else if (Global.whetherShowLucky == true && Global.onAddLuckyCount == 0&&!Global.whetherShowSign) {
             Global.onAddLuckyCount++;
-            Global.whetherShowLucky = false;
-            // 上线前注释console.log("是不是显示抽奖那个界面了", Global.whetherShowLucky);
             this.onClickLucky();
+        }else if (Global.whetherShowFriend&& Global.onAddFriendCount == 0&&!Global.whetherShowLucky) {
+            Global.onAddFriendCount++;
+            Global.whetherShowFriend = false;
+            this.onOpenFriendView();
+        }
+        if(Global.showGameLoop&&this.node.parent.getChildByName("btn_2").active){
+            this.clubButton.show();
+            this.node.parent.getChildByName("btn_2").active = false;
+        }else if(!Global.showGameLoop){
+            this.onHideGameLoop();
         }
     },
     onClickLucky(){
+        Global.showGameLoop = false;
+        wx.aldSendEvent("游戏大厅_幸运转盘");
         let lucky = cc.instantiate(this.luckyLayer);
         this.node.parent.addChild(lucky);
     },
     onClickExplain(){
+        wx.aldSendEvent("游戏大厅_游戏说明");
         let explain = cc.instantiate(this.explainPrefab);
         this.node.parent.addChild(explain);
     },
     /**
      * 图片的试玩游戏跳转
      */
-    OnClickTryNewGame() {
+    OnClickTryNewGame(event, customEventData) {
+        if(customEventData == "tuiguang"){
+            // 阿拉丁埋点
+            wx.aldSendEvent('游戏推广',{'页面' : '游戏大厅_推广小游戏'});
+        }else if(customEventData == "jingpin"){
+            // 阿拉丁埋点
+            wx.aldSendEvent('游戏推广',{'页面' : '游戏大厅_精品游戏'});
+        }
+        else if(customEventData == "sign"){
+            // 阿拉丁埋点
+            wx.aldSendEvent('游戏推广',{'页面' : '累计签到_逗趣推广'});
+        }
         this.appid = Global.jumpappObject[this.guangGaoIndex].apid;
         this.path = Global.jumpappObject[this.guangGaoIndex].path;
         // 上线前注释console.log("this.appid==", this.appid);
@@ -377,11 +396,9 @@ cc.Class({
         }, 3.0, cc.macro.REPEAT_FOREVER, 0.1);
     },
     TouchEnd(event) {
-        // 上线前注释console.log("event == ", event.target);
-       
         event.stopPropagation();
-        // 上线前注释console.log("this.index == ", event.target.index);
-
+        // 阿拉丁埋点
+        wx.aldSendEvent('游戏推广',{'页面' : '游戏大厅_游戏轮播'});
         if (CC_WECHATGAME) {
             wx.navigateToMiniProgram({
                 appId: Global.jumpappObject[event.target.index].apid,
@@ -397,7 +414,66 @@ cc.Class({
     },
     //好友助力页面
     onOpenFriendView(){
+        Global.showGameLoop = false;
+        wx.aldSendEvent("游戏大厅_好友助力");
         let firend = cc.instantiate(this.friendPrefab);
         this.node.parent.addChild(firend);
+    },
+    /**
+     * 创建游戏圈按钮
+     */
+    onCreateGameLoop() {
+
+        this.gameQuan = this.node.parent.getChildByName("btn_2");
+        //console.log("gameQuan=="+this.gameQuan.position);
+        this.x = 320+this.gameQuan.x;
+        this.y = 360+this.gameQuan.y;
+
+        //上线前注释console.log("xxxxxxxyyyyyy==", this.x, this.y);
+        //获取逻辑屏幕宽高
+        let windowSize = cc.view.getVisibleSize();
+        // 上线前注释console.log("windowSize =获取逻辑屏幕宽高= ", windowSize.width, windowSize.height);
+
+        //得出该位置对应于左上的比例
+        var leftRatio = this.x / windowSize.width;  
+        var topRatio = this.y / windowSize.height;
+
+        //获得实际手机的屏幕宽高
+        let sysInfo = wx.getSystemInfoSync();
+        // 上线前注释console.log("sysInfo =获得实际手机的屏幕宽高= ", sysInfo.windowWidth, sysInfo.windowHeight);
+
+        //得出应该放置的对应于left和top的距离
+        this.leftPos = sysInfo.windowWidth * leftRatio;
+        this.topPos = sysInfo.windowHeight * topRatio;
+        // 上线前注释console.log("leftPos == ", this.leftPos, "topPos==", this.topPos);
+
+        this.realWidth = ((this.gameQuan.width / 2) / windowSize.width) * sysInfo.windowWidth;
+        this.shijigaodu = Math.abs((this.gameQuan.y / windowSize.height) * sysInfo.windowHeight) + (sysInfo.windowHeight / 2) - this.realWidth / 2;
+        //创建游戏圈按钮
+        let self = this;
+        if (Global.TheGameLoop == null) {
+            Global.TheGameLoop = this.clubButton = wx.createGameClubButton({
+                //icon: 'white',
+                type:"image",
+                image:"https://img.zaohegame.com/staticfile/wx039e71b55cba9869/lift_icon2.png",
+                style: {
+                    left:self.leftPos - (self.gameQuan.width / 2),
+                    top: self.shijigaodu - self.gameQuan.height,
+                    width: self.gameQuan.width,
+                    height: self.gameQuan.height,
+                }
+            });
+            //self.clubButton.show();
+        } else {
+            Global.showGameLoop = true;
+            this.clubButton = Global.TheGameLoop;
+            // this.clubButton.style.left = this.leftPos - (this.gameQuan.width / 2);
+            // this.clubButton.style.top = this.shijigaodu - this.gameQuan.height;
+            this.clubButton.show();
+        }
+    },
+    onHideGameLoop(){
+        this.node.parent.getChildByName("btn_2").active = true;
+        this.clubButton.hide();
     },
 });

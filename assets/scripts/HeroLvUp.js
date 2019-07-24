@@ -66,13 +66,12 @@ cc.Class({
         });
     },
     BuyHerosLvl(){
-        // 阿拉丁埋点（快速匹配）
-        wx.aldSendEvent("游戏准备",{"dmx_preparePage_upgrade_click":"技能升级"});
         if(Global.gold<this.costgold){
             this.ShowTip("金币余额不足，请参与游戏获得~");
         }else if(Global.diamond<this.costdimo){
             this.ShowTip("拥有能量不足，请参与游戏获得~");
         }else if(Global.gold>this.costgold&&Global.diamond>this.costdimo){
+            wx.aldSendEvent("游戏准备_金币升级");
             Global.BuyHerosLvl(this.isvideo,(res)=>{
                 if(res.state ==1){
                     this.GetUserHeros();
@@ -88,15 +87,14 @@ cc.Class({
         if(Global.diamond<this.costdimo){
             this.ShowTip("拥有能量不足，请参与游戏获得~");
         }else{
-            // this.ShowTip("观看视频成功");
             // 阿拉丁埋点
-            wx.aldSendEvent('广告',{'page' : '游戏准备'});
+            wx.aldSendEvent('视频广告',{'页面' : '游戏准备_视频升级'});
             Global.showAdVedio(this.Success.bind(this),this.Failed.bind(this));
         }
     },
     Success(){
         // 阿拉丁埋点
-        wx.aldSendEvent('广告',{'valid' : '成功观看完'});
+        wx.aldSendEvent('视频广告',{'是否有效' : '是'});
         Global.BuyHerosLvl(this.isvideo,(res)=>{
             if(res.state ==1){
                 this.GetUserHeros();
@@ -109,7 +107,7 @@ cc.Class({
     },
     Failed(){
         // 阿拉丁埋点
-        wx.aldSendEvent('广告',{'valid' : '未成功观看完'});
+        wx.aldSendEvent('视频广告',{'是否有效' : '否'});
         this.ShowTip("观看完整视频才能获取奖励");
     },
     ShowTip(text){

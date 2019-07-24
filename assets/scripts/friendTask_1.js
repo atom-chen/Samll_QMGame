@@ -35,7 +35,8 @@ cc.Class({
      * 去邀请按钮方法
      */
     onClickInviteFriend: function (event) {
-        // 上线前注释console.log("Global.Introuid=去邀请=", Global.Introuid);
+        // 阿拉丁埋点
+        wx.aldSendEvent('邀请',{'页面' : '好友助力_邀请模块'});
 
         if (CC_WECHATGAME) {
             // 上线前注释console.log(Global.shareimg);

@@ -12,10 +12,11 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
-        text:cc.Label,
-        content:cc.Node,
-        hook:cc.Node,
         gglunbo:{
+            default:null,
+            type:cc.Node,
+        },
+        gglunbo_2:{
             default:null,
             type:cc.Node,
         },
@@ -28,31 +29,19 @@ cc.Class({
     start () {
         cc.find("MusicBGM").getComponent("MusicControl").PlayBGM();
         // 阿拉丁埋点
-        wx.aldSendEvent("游戏准备",{"dmx_preparePage_pv/uv":"页面访问数"});
+        wx.aldSendEvent("游戏准备_页面访问数");
         this.startTime = Date.now();
         
-        //广告位置
-        Global.banner.show();
-        Global.banner.style.left = 15;
         this.ChangeJumpAppSelectSprite();
+        this.ChangeJumpAppSelectSprite_2();
     },
     onPlayBtn(){
-        //隐藏广告
-        Global.banner.hide();
         // 阿拉丁埋点（快速匹配）
-        wx.aldSendEvent("游戏准备",{"dmx_preparePage_matching_click":"快速匹配"});
-        wx.aldSendEvent("游戏准备页面停留时间",{
-            "耗时" : (Date.now()-this.startTime)/1000
-          });
-        let self = this;
+        wx.aldSendEvent("游戏准备_快速匹配");
+        wx.aldSendEvent("游戏准备_页面停留时间",{
+            "耗时" : (Date.now()-this.startTime)/1000+6
+        });
         cc.find("Canvas/PiPeiView").active = true;
-        //2s显示匹配成功
-        this.scheduleOnce(function() {
-            self.text.string = "匹配成功";
-            self.content.active = false;
-            self.hook.active =true;
-            cc.director.loadScene("Game.fire");
-        }, 6)
     },
     /**
      * 循环切换广告图片的方法
@@ -95,7 +84,8 @@ cc.Class({
     },
     TouchEnd(event) {
         // 上线前注释console.log("event == ", event.target);
-       
+        // 阿拉丁埋点
+        wx.aldSendEvent('游戏推广',{'页面' : '战前准备_图片推广'});
         event.stopPropagation();
         // 上线前注释console.log("this.index == ", event.target.index);
 
@@ -113,9 +103,51 @@ cc.Class({
         }
     },
     GtoScene(){
-        //隐藏广告
-        Global.banner.hide();
+        wx.aldSendEvent("游戏准备_页面停留时间",{
+            "耗时" : (Date.now()-this.startTime)/1000
+          });
         cc.director.loadScene("GameStart.fire");
+    },
+    /**
+     * 循环切换广告图片的方法
+     */
+    ChangeJumpAppSelectSprite_2() {
+        let sprite = this.gglunbo_2.getComponent(cc.Sprite);
+        this.gglunbo_2.index = 0;
+        this.gglunbo_2.on("touchend", this.Touchlunbo, this);
+       
+        this.schedule(() => {
+            if (this.gglunbo_2.index < Global.jumpappObject.length - 1) {
+                this.gglunbo_2.index++;
+            } else {
+                this.gglunbo_2.index = 0;
+            }
+            if(Global.jumpappObject[this.gglunbo_2.index].lunbo!=null){
+                sprite.spriteFrame = Global.jumpappObject[this.gglunbo_2.index].lunbo;
+            }else{
+                sprite.spriteFrame = Global.jumpappObject[this.gglunbo_2.index].sprite;
+            }
+        }, 3.0, cc.macro.REPEAT_FOREVER, 0.1);
+    },
+    Touchlunbo(event) {
+        // 上线前注释console.log("event == ", event.target);
+        // 阿拉丁埋点
+        wx.aldSendEvent('游戏推广',{'页面' : '战前准备_游戏轮播'});
+        event.stopPropagation();
+        // 上线前注释console.log("this.index == ", event.target.index);
+
+        if (CC_WECHATGAME) {
+            wx.navigateToMiniProgram({
+                appId: Global.jumpappObject[event.target.index].apid,
+                path: Global.jumpappObject[event.target.index].path,
+                success: function (res) {
+                    // 上线前注释console.log(res);
+                },
+                fail: function (res) {
+                    // 上线前注释console.log(res);
+                },
+            });
+        }
     },
     // update (dt) {},
 });

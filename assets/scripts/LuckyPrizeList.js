@@ -27,6 +27,7 @@ cc.Class({
             default: null,
             type: cc.ScrollView
         },
+        gglunbo:cc.Node,
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -72,7 +73,7 @@ cc.Class({
     },
 
     start () {
-        
+        this.ChangeJumpAppSelectSprite();
     },
 
     // update (dt) {},
@@ -81,7 +82,8 @@ cc.Class({
      * 关闭界面
      */
     onClickClose: function () {
-        // 上线前注释console.log("奖励列表关闭界面");
+        //广告位置
+        Global.banner.show();
         this.node.destroy();
     },
 
@@ -93,6 +95,46 @@ cc.Class({
             this.btn_canyuhuojiang.active = true;
         } else {
             this.btn_canyuhuojiang.active = false;
+        }
+    },
+    /**
+     * 循环切换广告图片的方法
+     */
+    ChangeJumpAppSelectSprite() {
+        let sprite = this.gglunbo.getComponent(cc.Sprite);
+        this.gglunbo.index = 0;
+        this.gglunbo.on("touchend", this.TouchEnd, this);
+       
+        this.schedule(() => {
+            if (this.gglunbo.index < Global.jumpappObject.length - 1) {
+                this.gglunbo.index++;
+            } else {
+                this.gglunbo.index = 0;
+            }
+            if(Global.jumpappObject[this.gglunbo.index].lunbo!=null){
+                sprite.spriteFrame = Global.jumpappObject[this.gglunbo.index].lunbo;
+            }else{
+                sprite.spriteFrame = Global.jumpappObject[this.gglunbo.index].sprite;
+            }
+        }, 3.0, cc.macro.REPEAT_FOREVER, 0.1);
+    },
+    TouchEnd(event) {
+        // 上线前注释console.log("event == ", event.target);
+       
+        event.stopPropagation();
+        // 上线前注释console.log("this.index == ", event.target.index);
+
+        if (CC_WECHATGAME) {
+            wx.navigateToMiniProgram({
+                appId: Global.jumpappObject[event.target.index].apid,
+                path: Global.jumpappObject[event.target.index].path,
+                success: function (res) {
+                    // 上线前注释console.log(res);
+                },
+                fail: function (res) {
+                    // 上线前注释console.log(res);
+                },
+            });
         }
     },
 });

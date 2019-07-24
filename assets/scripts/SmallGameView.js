@@ -23,6 +23,10 @@ cc.Class({
             default: [],
             type: cc.Node,
         },
+        gglunbo:{
+            default:null,
+            type:cc.Node,
+        },
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -30,17 +34,25 @@ cc.Class({
     // onLoad () {},
 
     start () {
+        wx.aldSendEvent("点点小游戏_页面访问数");
+        this.startTime = Date.now();
+
         this.isClick = false;
+        this.iswin = false;
         this.clicktime = 1;
-        this.OpenGameView();
         this.ChangeJumpAppSelectSprite();
-        Global.banner.show();
-        Global.banner.style.left = (Global.ScreenWidth-Global.banner.style.realWidth)/2;
-        Global.banner.style.top = Global.ScreenWidth;
+        this.ChangeLunBoSelectSprite();
+
+        this.gameview.active = true;
+        this.gglunbo.y = -223;
+        this.time =20;
+        this.schedule(this.doCountdownTime,1);
     },
     OpenGameView(){
+        wx.aldSendEvent("点点小游戏_再来一次");
         this.gameview.active = true;
         this.loseview.active = false;
+        this.gglunbo.y = -223;
         this.time =20;
         this.schedule(this.doCountdownTime,1);
     },
@@ -51,9 +63,9 @@ cc.Class({
             this.isClick =false;
         },1);
         if(this.probar.progress >=1){
+            this.iswin = true;
             this.gameview.active = false;
             this.OpenWinView();
-            Global.banner.style.top = Global.ScreenHeight - Global.banner.style.realHeight;
         }
     },
     //倒计时
@@ -70,46 +82,63 @@ cc.Class({
     countDownShow(temp){
         if(temp<=0){
             this.unschedule(this.doCountdownTime);
-            this.gameview.active = false;
-            this.loseview.active = true;
+            if(!this.iswin){
+                this.gameview.active = false;
+                this.loseview.active = true;
+                this.gglunbo.y = -137;
+            }
         }
     },
     GameAgain(){
-        //隐藏广告
-        Global.banner.hide();
         //再来一局按钮线跳到首页出现推广窗口
+        wx.aldSendEvent("点点小游戏_不了,谢谢");
+        wx.aldSendEvent("点点小游戏_页面停留时间",{
+            "耗时" : (Date.now()-this.startTime)/1000
+          });
         Global.is_Again = true;
         cc.director.loadScene("GameStart.fire");
     },
     OpenWinView(){
+        wx.aldSendEvent("点点小游戏_双倍领取页面访问数");
         this.winview.active = true;
+        this.gglunbo.y = -137;
         this.glodnum = Math.round(Math.random()*20) +30;
         this.winview.getChildByName("goldnum").getComponent(cc.Label).string = "x"+this.glodnum;
     },
     showAdVedio(){
+        // 阿拉丁埋点
+        wx.aldSendEvent('视频广告',{'页面' : '点点小游戏_双倍领取'});
+
         Global.showAdVedio(this.Success.bind(this),this.Failed.bind(this));
     },
     Success(){
+        // 阿拉丁埋点
+        wx.aldSendEvent('视频广告',{'是否有效' : '是'});
+
        this.winview.active = false;
        this.windoubleview.active = true;
        this.glodnum = this.glodnum *2;
        this.windoubleview.getChildByName("goldnum").getComponent(cc.Label).string = "x"+this.glodnum;
     },
     Failed(){
+        // 阿拉丁埋点
+        wx.aldSendEvent('视频广告',{'是否有效' : '否'});
         Global.ShowTip(this.node,"观看完整视频才能获的双倍奖励");
     },
     HaveGlobBtn(){
+        wx.aldSendEvent("点点小游戏_直接领取");
         //增加金币
         Global.UserChange(2,1,"点点小游戏",this.glodnum,(res)=>{
             if(res.state ==1){
                 Global.gold+= this.glodnum;
             }
         });
-        //隐藏广告
-        Global.banner.hide();
         //再来一局按钮线跳到首页出现推广窗口
         Global.is_Again = true;
         cc.director.loadScene("GameStart.fire");
+        wx.aldSendEvent("点点小游戏_页面停留时间",{
+            "耗时" : (Date.now()-this.startTime)/1000
+        });
     },
 
     /**
@@ -161,10 +190,9 @@ cc.Class({
     },
 
     TouchEnd(event) {
-        // 上线前注释console.log("event == ", event.target);
-       
         event.stopPropagation();
-        // 上线前注释console.log("this.index == ", event.target.index);
+        // 阿拉丁埋点
+        wx.aldSendEvent('游戏推广',{'页面' : '点点小游戏_图片推广'});
 
         if (CC_WECHATGAME) {
             wx.navigateToMiniProgram({
@@ -193,5 +221,43 @@ cc.Class({
             }
         }
         
+    },
+    /**
+     * 循环切换轮播广告图片的方法
+     */
+    ChangeLunBoSelectSprite() {
+        let sprite = this.gglunbo.getComponent(cc.Sprite);
+        this.gglunbo.index = 0;
+        this.gglunbo.on("touchend", this.TouchLunboEnd, this);
+       
+        this.schedule(() => {
+            if (this.gglunbo.index < Global.jumpappObject.length - 1) {
+                this.gglunbo.index++;
+            } else {
+                this.gglunbo.index = 0;
+            }
+            if(Global.jumpappObject[this.gglunbo.index].lunbo!=null){
+                sprite.spriteFrame = Global.jumpappObject[this.gglunbo.index].lunbo;
+            }else{
+                sprite.spriteFrame = Global.jumpappObject[this.gglunbo.index].sprite;
+            }
+        }, 3.0, cc.macro.REPEAT_FOREVER, 0.1);
+    },
+    TouchLunboEnd(event) {
+        event.stopPropagation();
+        // 阿拉丁埋点
+        wx.aldSendEvent('游戏推广',{'页面' : '点点小游戏_游戏轮播'});
+        if (CC_WECHATGAME) {
+            wx.navigateToMiniProgram({
+                appId: Global.jumpappObject[event.target.index].apid,
+                path: Global.jumpappObject[event.target.index].path,
+                success: function (res) {
+                    // 上线前注释console.log(res);
+                },
+                fail: function (res) {
+                    // 上线前注释console.log(res);
+                },
+            });
+        }
     },
 });

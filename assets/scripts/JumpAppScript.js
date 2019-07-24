@@ -31,9 +31,6 @@ cc.Class({
 
     start () {
         this.node.on("touchend",this.TouchEnd,this );
-        //广告位置
-        Global.banner.show();
-        Global.banner.style.left = (Global.ScreenWidth-Global.banner.style.realWidth)/2;
     },
 
     TouchEnd(event){
@@ -42,10 +39,18 @@ cc.Class({
         {
             if(this.node.name =="gameggPrefab"){
                 // 阿拉丁埋点
-                wx.aldSendEvent('游戏推广',{'dmx_flowGame_click()' : '猜你喜欢'});
-            }else{
+                wx.aldSendEvent('游戏推广',{'页面' : '猜你喜欢_游戏列表'});
+            }else if(this.node.name =="jumpappPrefab"){
                 // 阿拉丁埋点
-                wx.aldSendEvent('游戏推广',{'dmx_flowGame_click()' : '游戏大厅'});
+                wx.aldSendEvent('游戏推广',{'页面' : '游戏大厅_游戏列表'});
+            }
+            else if(this.node.name =="jumpappPrefab_2"){
+                // 阿拉丁埋点
+                wx.aldSendEvent('游戏推广',{'页面' : '游戏大厅_精品推荐'});
+            }
+            if(this.node.parent.name == "lucky"){
+                // 阿拉丁埋点
+                wx.aldSendEvent('游戏推广',{'页面' : '幸运转盘_游戏列表'});
             }
             wx.navigateToMiniProgram({
                 appId:Global.jumpappObject[this.index].apid,

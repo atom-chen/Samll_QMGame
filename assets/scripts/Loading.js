@@ -52,36 +52,37 @@ cc.Class({
  
     start () {
         // 阿拉丁埋点
-        wx.aldSendEvent("登录页",{"dmx_loginPage_pv/uv":"页面的访问数"});
+        wx.aldSendEvent("游戏登录_页面访问数");
         this.startTime = Date.now();
-
-        
+        Global.showBanner();
     },
  
  
     // update (dt) {},
     onTouchBtn(){
         // 阿拉丁埋点
-        wx.aldSendEvent("登录页",{"dmx_loginPage_start_click":"点击开始游戏按钮"});
-        wx.aldSendEvent("登录页页面停留时间",{
+        wx.aldSendEvent("游戏登录_开始游戏");
+        wx.aldSendEvent("游戏登录_页面停留时间",{
             "耗时" : (Date.now()-this.startTime)/1000
           });
-          this.LaunchData = JSON.stringify(wx.getLaunchOptionsSync());
-            // // 上线前注释console.log("LaunchData=====", this.LaunchData);
+        this.LaunchData = JSON.stringify(wx.getLaunchOptionsSync());
+        // // 上线前注释console.log("LaunchData=====", this.LaunchData);
 
-            this.LaunchData_json = JSON.parse(this.LaunchData);
-            // // 上线前注释console.log("LaunchData_json=====", this.LaunchData_json);
+        this.LaunchData_json = JSON.parse(this.LaunchData);
+        // // 上线前注释console.log("LaunchData_json=====", this.LaunchData_json);
 
-            this.sceneValue = this.LaunchData_json.scene;
-            // // 上线前注释console.log("sceneValue=====", this.sceneValue);
+        this.sceneValue = this.LaunchData_json.scene;
+        // // 上线前注释console.log("sceneValue=====", this.sceneValue);
 
-            this.queryValue =  this.LaunchData_json.query;
-            // 上线前注释console.log("queryValue===分享ID==", this.queryValue);
+        this.queryValue =  this.LaunchData_json.query;
+        // 上线前注释console.log("queryValue===分享ID==", this.queryValue);
 
         if (this.queryValue) {
             // // 上线前注释console.log("ceshi-1: "+this.LaunchData_json['query']['introuid']);
             if (this.LaunchData_json['query']['introuid']) {
                 Global.GetUesrInfo(this.LaunchData_json['query']['introuid']);
+                // 阿拉丁埋点
+                wx.aldSendEvent('邀请',{'是否有效' : '是'});
             }else{
                 Global.GetUesrInfo();
             }
@@ -129,10 +130,10 @@ cc.Class({
                             self.jumpAppPrefab[i].active = true;
                         }
                         self.ChangeJumpAppSelectSprite();
-                        Global.showBanner();
                         self.scheduleOnce(function() {
                             var action = cc.moveTo(0.2, 0, 56);
                             self.startBtn.node.runAction(action);
+                            Global.banner.style.top = Global.ScreenHeight - Global.banner.style.realHeight;
                             //self.startBtn.node.y=52;
                         },2);
                     }
@@ -205,7 +206,8 @@ cc.Class({
         // 上线前注释console.log("event == ", event.target);
        
         event.stopPropagation();
-        // 上线前注释console.log("this.index == ", event.target.index);
+        // 阿拉丁埋点
+        wx.aldSendEvent('游戏推广',{'页面' : '游戏登陆_图片推广'});
 
         if (CC_WECHATGAME) {
             wx.navigateToMiniProgram({

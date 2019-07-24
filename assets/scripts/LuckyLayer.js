@@ -36,15 +36,14 @@ cc.Class({
             default: null,
             type: cc.Prefab
         },
+        myPrize:cc.Node,
     },
 
     // LIFE-CYCLE CALLBACKS:
 
     onLoad() {
-        // 上线前注释console.log("刚进来的时候打印==", Global.whetherShowLucky);
-
         //奖励列表的数字
-        this.Arr_AwardList = [100, 3, 50, 100, 1000, 400, 1, 200];
+        this.Arr_AwardList = [50, 0, 300, 3, 200, 1, 100, 0.2];
         this.txt_ChouJiangCount = this.node.getChildByName("jinrishengyucishu").getChildByName("txt_ChouJiangCount");
         this.txt_ChouJiangCount_label = this.txt_ChouJiangCount.getComponent(cc.Label);
 
@@ -58,11 +57,16 @@ cc.Class({
         } else {
             this.btn_queding_fen.interactable = true;
         }
-
+        this.myPrize.getComponent(cc.Widget).target = this.myPrize.parent.parent;
+        this.myPrize.getComponent(cc.Widget).left = -40;
+        this.myPrize.getComponent(cc.Widget).updateAlignment();
     },
 
     start() {
         Global.GetZhuanPanLog();
+        //页面停留开始时间
+        this.startTime = Date.now();
+
         this.txt_ChouJiangCount_label.string = Global.Zcount;
 
         this.cha = this.node.getChildByName("btn_close");
@@ -78,6 +82,10 @@ cc.Class({
             // 上线前注释console.log("action == ", action);
             this.lightEffect[i].runAction(action);
         }
+        //广告位置
+        Global.banner.show();
+        Global.banner.style.left = Global.ScreenWidth-(Global.banner.style.realWidth);
+        Global.banner.style.top = Global.ScreenHeight - Global.banner.style.realHeight;
     },
 
     // update (dt) {},
@@ -86,12 +94,20 @@ cc.Class({
      * 点击关闭界面按钮
      */
     onClickComeback() {
-        // 上线前注释console.log("点击关闭界面按钮", Global.whetherShowLucky, Global.onAddLuckyCount);
-        if (Global.whetherShowLucky == false && Global.onAddLuckyCount == 1) {
+        //隐藏广告
+        Global.banner.hide();
+
+        Global.showGameLoop = true;
+        wx.aldSendEvent("游戏大厅_幸运转盘关闭按钮");
+        wx.aldSendEvent("游戏大厅_幸运转盘页面停留时间",{
+            "耗时" : (Date.now()-this.startTime)/1000
+        });
+
+        if (Global.onAddLuckyCount == 1) {
             this.node.destroy();
             //this.cha.destroy();
             this.img_zhezhao.destroy();
-            Global.whetherShowLucky = true;
+            Global.whetherShowLucky = false;
         } else {
             this.scheduleOnce(() => {
                 this.node.destroy();
@@ -107,7 +123,7 @@ cc.Class({
     onClickCoin() {
         if (Global.gold >= 500) {
             this.img_zhezhao.active = true;
-            // 上线前注释console.log("可以抽奖");
+            wx.aldSendEvent("游戏大厅_幸运转盘金币抽奖");
             this.onRequestChouJiang();
             Global.UserChange(2,1, "金币抽奖扣除",-500,(res)=>{
                 if(res.state ==1){
@@ -127,6 +143,8 @@ cc.Class({
     onClickVedio() {
         // 上线前注释console.log("视频抽奖方法");
         this.img_zhezhao.active = true;
+        // 阿拉丁埋点
+        wx.aldSendEvent('视频广告',{'页面' : '幸运转盘_视频抽奖'});
         Global.showAdVedio(this.VedioPlaySuccess.bind(this), this.VedioPlayFailed.bind(this));
     },
 
@@ -134,7 +152,8 @@ cc.Class({
      * 视频观看成功
      */
     VedioPlaySuccess() {
-        // 上线前注释console.log("视频观看成功");
+        // 阿拉丁埋点
+        wx.aldSendEvent('视频广告',{'是否有效' : '是'});
         this.onRequestChouJiang();
         this.txt_ChouJiangCount_label.string = Global.Zcount - 1;
         if (Global.Zcount >= 1) {
@@ -150,7 +169,8 @@ cc.Class({
      * 视频观看失败
      */
     VedioPlayFailed() {
-        // 上线前注释console.log("视频观看失败");
+        // 阿拉丁埋点
+        wx.aldSendEvent('视频广告',{'是否有效' : '否'});
         this.img_zhezhao.active = false;
         this.ShowTip(this.node, "观看完视频才能获得奖励哦");
     },
@@ -159,7 +179,9 @@ cc.Class({
      * 点击奖励列表按钮
      */
     onClickPrizeList() {
-        // 上线前注释console.log("点击奖励列表按钮");
+        wx.aldSendEvent("游戏大厅_幸运转盘我的奖品");
+        //隐藏广告
+        Global.banner.hide();
         if (this.HuoJiangListPrefab) {
             var huoJiangListPrefab = cc.instantiate(this.HuoJiangListPrefab);
             this.node.addChild(huoJiangListPrefab);
@@ -204,9 +226,9 @@ cc.Class({
             var jiangliPrefab = cc.instantiate(self.JiangLiPrefab);
             console.log("转盘："+num);
             switch (num) {
-                case 1:
                 case 3:
-                case 6:
+                case 5:
+                case 7:
                     // jiangliPrefab.getComponent("LuckyAward").init(0, self.Arr_AwardList[num]);
                     // 上线前注释console.log("111111111111111111111111", jiangliPrefab, self.Arr_AwardList[self.index]);
                     // 上线前注释console.log("jiangliPrefab.getComponent1111", jiangliPrefab.getComponent("MessageBoxLayer"));
@@ -216,8 +238,7 @@ cc.Class({
                 case 0:
                 case 2:
                 case 4:
-                case 5:
-                case 7:
+                case 6:
                     // jiangliPrefab.getComponent("LuckyAward").init(1, self.Arr_AwardList[num]);
 
                     // 上线前注释console.log("33333333333333333333", jiangliPrefab, self.Arr_AwardList[self.index]);

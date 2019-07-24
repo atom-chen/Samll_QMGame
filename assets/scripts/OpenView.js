@@ -30,7 +30,7 @@ cc.Class({
         cc.find("Canvas/"+customEventData).active =true;
         if(customEventData == "PopupView"){
             // 阿拉丁埋点
-            wx.aldSendEvent("游戏进行",{"dmx_marchPage_quitGame_click":"退出游戏"});
+            wx.aldSendEvent("游戏进行_退出游戏");
         }
         
     },
@@ -55,14 +55,14 @@ cc.Class({
     },
     OnFengxiang(){
         // 阿拉丁埋点
-        wx.aldSendEvent('分享',{'dmx_share_click()' : '游戏准备'});
+        wx.aldSendEvent('分享',{'页面' : '游戏准备_分享好友'});
         Global.TiaoZhanFriend();
     },
     PopupGotoGameStart(){
         // 阿拉丁埋点
-        wx.aldSendEvent("游戏进行",{"dmx_marchPage_confirmQuit_click":"确定退出"});
+        wx.aldSendEvent("游戏进行_确定退出");
 
-        wx.aldSendEvent("游戏进行页面停留时间",{
+        wx.aldSendEvent("游戏进行_页面停留时间",{
             "耗时" : (Date.now()-Global.startTime)/1000
           }); 
         cc.director.loadScene("GameStart.fire");

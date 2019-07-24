@@ -25,15 +25,17 @@ cc.Class({
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
-        if (typeof (wx) !== "undefined") {
-            var self = this;
-            wx.onShow(function () {
-                self.ShowTip("分享成功");
-            })
-        }
+        // if (typeof (wx) !== "undefined") {
+        //     var self = this;
+        //     wx.onShow(function () {
+        //         self.ShowTip("分享成功");
+        //     })
+        // }
     },
     onEnable(){
         this.GetUserSignInfo();
+        //页面停留开始时间
+        this.startTime = Date.now();
     },
     start () {
         Global.banner.hide();
@@ -71,12 +73,12 @@ cc.Class({
     //看视频领取
     OnVideoBtn(){
         // 阿拉丁埋点
-        wx.aldSendEvent('广告',{'page' : '累计签到弹窗'});
+        wx.aldSendEvent('视频广告',{'页面' : '累计签到_视频领取'});
         Global.showAdVedio(this.Success.bind(this),this.Failed.bind(this));
     },
     Success(){
         // 阿拉丁埋点
-        wx.aldSendEvent('广告',{'valid' : '成功观看完'});
+        wx.aldSendEvent('视频广告',{'是否有效' : '是'});
         this.ShowTip("观看视频成功");
         this.scheduleOnce(function() {
             var receive = cc.instantiate(this.receivePrefab);
@@ -89,7 +91,7 @@ cc.Class({
     },
     Failed(){
         // 阿拉丁埋点
-        wx.aldSendEvent('广告',{'valid' : '未成功观看完'});
+        wx.aldSendEvent('视频广告',{'是否有效' : '否'});
         this.ShowTip("观看完整视频才能获取奖励");
     },
     ShowTip(text){
@@ -105,7 +107,7 @@ cc.Class({
     onShowApp(){
         if (CC_WECHATGAME) {
             // 阿拉丁埋点
-            wx.aldSendEvent('分享',{'dmx_share_click()' : '累计签到弹窗'});
+            wx.aldSendEvent('分享',{'页面' : '累计签到_炫耀一下'});
 
             wx.shareAppMessage({
                 title: '被这游戏分分钟虐的怀疑人生，我就问问：还有谁？',
@@ -125,6 +127,11 @@ cc.Class({
         // Global.banner.style.left = Global.ScreenWidth-(Global.banner.style.realWidth);
         Global.whetherShowSign = false;
         cc.find("Canvas/SignView").active =false;
+        Global.showGameLoop = true;
+        wx.aldSendEvent("游戏大厅_累计签到稍后领取");
+        wx.aldSendEvent("游戏大厅_累计签到页面停留时间",{
+            "耗时" : (Date.now()-this.startTime)/1000
+        });
     }
     // update (dt) {},
 });
