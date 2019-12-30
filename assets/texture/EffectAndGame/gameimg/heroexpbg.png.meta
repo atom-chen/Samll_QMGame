@@ -1,13 +1,14 @@
 {
-  "ver": "2.2.0",
+  "ver": "2.3.1",
   "uuid": "7b0b5782-6436-4255-ba74-e399d5fd9d51",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
   "premultiplyAlpha": false,
+  "platformSettings": {},
   "subMetas": {
     "heroexpbg": {
-      "ver": "1.0.3",
+      "ver": "1.0.4",
       "uuid": "b8f8a0a9-2c3a-4608-bda7-221ee11ef89c",
       "rawTextureUuid": "7b0b5782-6436-4255-ba74-e399d5fd9d51",
       "trimType": "auto",

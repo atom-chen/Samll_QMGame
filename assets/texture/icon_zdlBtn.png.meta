@@ -1,13 +1,14 @@
 {
-  "ver": "2.2.0",
+  "ver": "2.3.1",
   "uuid": "bd198a33-50ef-4c3d-92a0-e2584aef79d4",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
   "premultiplyAlpha": false,
+  "platformSettings": {},
   "subMetas": {
     "icon_zdlBtn": {
-      "ver": "1.0.3",
+      "ver": "1.0.4",
       "uuid": "c2bc5736-a709-4890-bae9-212f0dacea63",
       "rawTextureUuid": "bd198a33-50ef-4c3d-92a0-e2584aef79d4",
       "trimType": "auto",

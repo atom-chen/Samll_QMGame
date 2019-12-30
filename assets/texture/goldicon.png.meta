@@ -1,13 +1,14 @@
 {
-  "ver": "2.2.0",
+  "ver": "2.3.1",
   "uuid": "6999fcef-c30c-4aaa-9232-058660d51419",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
   "premultiplyAlpha": false,
+  "platformSettings": {},
   "subMetas": {
     "goldicon": {
-      "ver": "1.0.3",
+      "ver": "1.0.4",
       "uuid": "a1316677-cb24-406a-8e72-102606ecd3d1",
       "rawTextureUuid": "6999fcef-c30c-4aaa-9232-058660d51419",
       "trimType": "auto",

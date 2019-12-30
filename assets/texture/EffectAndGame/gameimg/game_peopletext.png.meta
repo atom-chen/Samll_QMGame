@@ -1,13 +1,14 @@
 {
-  "ver": "2.2.0",
+  "ver": "2.3.1",
   "uuid": "a5eb1f63-ac3c-4f9f-8f93-29ce26746561",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
   "premultiplyAlpha": false,
+  "platformSettings": {},
   "subMetas": {
     "game_peopletext": {
-      "ver": "1.0.3",
+      "ver": "1.0.4",
       "uuid": "f62b99ff-aefa-44d9-8184-a30c37bab20f",
       "rawTextureUuid": "a5eb1f63-ac3c-4f9f-8f93-29ce26746561",
       "trimType": "auto",

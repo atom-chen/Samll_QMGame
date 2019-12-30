@@ -45,13 +45,40 @@ cc.Class({
         boxtime:cc.Label,
         boxImg:cc.Node,
         boxImg_yi:cc.Node,
+        btn_2:cc.Node,
+        lift_bg:cc.Node,
     },
 
     // LIFE-CYCLE CALLBACKS:
 
-    // onLoad () {},
-
+    onLoad () {
+        // iphoneX 刘海适配问题
+        //if(cc.sys.isNative && cc.sys.platform == cc.sys.IPHONE){
+            var size = cc.view.getFrameSize();
+            var isIphoneX = (size.width == 812 && size.height == 375) 
+                   ||(size.width == 375 && size.height == 812)
+                   ||(size.width == 896 && size.height == 414);
+            if(isIphoneX){
+                // var cvs = this.node.parent.getComponent(cc.Canvas);
+                // cvs.fitHeight = true;
+                // cvs.fitWidth = true;
+                this.lift_bg.getComponent(cc.Widget).left +=35;
+                this.lift_bg.getComponent(cc.Widget).updateAlignment();
+                this.node.parent.getChildByName("btn_2").x += 35;
+                
+            }
+         //}
+    },
     start () {
+        wx.onAudioInterruptionEnd(function(){
+            //强行暂停音乐 如果不暂停，调用resumeMusic是无效的，因为是微信让声音消失了
+            cc.audioEngine.pauseMusic();
+            //恢复音乐播放，比如调用 cc.audioEngine.resumeMusic();
+            cc.find("MusicBGM").getComponent("MusicControl").PlayBGM();
+            //self.refreshBG();
+            console.log('refreshBG');
+        });
+        cc.find("MusicBGM").getComponent("MusicControl").PlayBGM();
         this.onCreateGameLoop();
         // 阿拉丁埋点
         wx.aldSendEvent("游戏大厅_页面访问数");
@@ -69,7 +96,6 @@ cc.Class({
         Global.banner.hide();
 
         let self = this;
-        cc.find("MusicBGM").getComponent("MusicControl").PlayBGM();
         Global.GetUserHeros((res)=>{
             if(res.state ==1){
                 Global.hp = res.result[0].Health;
@@ -320,9 +346,9 @@ cc.Class({
             Global.whetherShowFriend = false;
             this.onOpenFriendView();
         }
-        if(Global.showGameLoop&&this.node.parent.getChildByName("btn_2").active){
+        if(Global.showGameLoop&&this.btn_2.active){
             this.clubButton.show();
-            this.node.parent.getChildByName("btn_2").active = false;
+            this.btn_2.active = false;
         }else if(!Global.showGameLoop){
             this.onHideGameLoop();
         }
@@ -426,6 +452,8 @@ cc.Class({
 
         this.gameQuan = this.node.parent.getChildByName("btn_2");
         //console.log("gameQuan=="+this.gameQuan.position);
+        // this.x = 320+(this.btn_2.parent.x+this.gameQuan.x);
+        // this.y = 360+(this.btn_2.parent.y+this.gameQuan.y);
         this.x = 320+this.gameQuan.x;
         this.y = 360+this.gameQuan.y;
 
@@ -435,7 +463,7 @@ cc.Class({
         // 上线前注释console.log("windowSize =获取逻辑屏幕宽高= ", windowSize.width, windowSize.height);
 
         //得出该位置对应于左上的比例
-        var leftRatio = this.x / windowSize.width;  
+        var leftRatio = this.x / windowSize.width;
         var topRatio = this.y / windowSize.height;
 
         //获得实际手机的屏幕宽高
@@ -473,7 +501,7 @@ cc.Class({
         }
     },
     onHideGameLoop(){
-        this.node.parent.getChildByName("btn_2").active = true;
+        this.btn_2.active = true;
         this.clubButton.hide();
     },
 });

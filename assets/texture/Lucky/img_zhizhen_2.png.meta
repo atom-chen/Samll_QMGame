@@ -1,13 +1,14 @@
 {
-  "ver": "2.2.0",
+  "ver": "2.3.1",
   "uuid": "8949280c-ddf2-4202-8cf0-57cc48fa6ba7",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
   "premultiplyAlpha": false,
+  "platformSettings": {},
   "subMetas": {
     "img_zhizhen_2": {
-      "ver": "1.0.3",
+      "ver": "1.0.4",
       "uuid": "e5951b3d-0428-4c80-8c22-1dae13b6b6c3",
       "rawTextureUuid": "8949280c-ddf2-4202-8cf0-57cc48fa6ba7",
       "trimType": "auto",

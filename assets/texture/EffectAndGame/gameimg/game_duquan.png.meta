@@ -1,13 +1,14 @@
 {
-  "ver": "2.2.0",
+  "ver": "2.3.1",
   "uuid": "12584a78-6864-4d00-8ab5-bb5bb21069b7",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
   "premultiplyAlpha": false,
+  "platformSettings": {},
   "subMetas": {
     "game_duquan": {
-      "ver": "1.0.3",
+      "ver": "1.0.4",
       "uuid": "22d89c55-ceb4-46b6-9e47-872d5353a667",
       "rawTextureUuid": "12584a78-6864-4d00-8ab5-bb5bb21069b7",
       "trimType": "auto",

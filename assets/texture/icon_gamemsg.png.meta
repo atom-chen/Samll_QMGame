@@ -1,13 +1,14 @@
 {
-  "ver": "2.2.0",
+  "ver": "2.3.1",
   "uuid": "211521ec-3ff4-43cd-9c26-a15ef9cb49d8",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
   "premultiplyAlpha": false,
+  "platformSettings": {},
   "subMetas": {
     "icon_gamemsg": {
-      "ver": "1.0.3",
+      "ver": "1.0.4",
       "uuid": "39f95153-135b-41e8-85ad-d366f635405f",
       "rawTextureUuid": "211521ec-3ff4-43cd-9c26-a15ef9cb49d8",
       "trimType": "auto",

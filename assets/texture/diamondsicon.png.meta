@@ -1,13 +1,14 @@
 {
-  "ver": "2.2.0",
+  "ver": "2.3.1",
   "uuid": "19951631-007d-4b93-9626-fa5e9644479f",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
   "premultiplyAlpha": false,
+  "platformSettings": {},
   "subMetas": {
     "diamondsicon": {
-      "ver": "1.0.3",
+      "ver": "1.0.4",
       "uuid": "2acb5185-1480-45e5-840f-6838ba6540e9",
       "rawTextureUuid": "19951631-007d-4b93-9626-fa5e9644479f",
       "trimType": "auto",

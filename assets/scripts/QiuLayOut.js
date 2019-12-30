@@ -42,14 +42,16 @@ cc.Class({
             self.text.string = "匹配成功";
             self.content.active = false;
             self.hook.active =true;
-            cc.director.loadScene("Game.fire");
+            cc.director.loadScene("NewGame.fire");
             wx.aldSendEvent("游戏匹配_页面停留时间",{
-                "耗时" : (Date.now()-this.startTime)/1000
+                "耗时" : (Date.now()-self.startTime)/1000
             });
-        }, 6)
+        }, 8)
     },
     //轮播引导
     GuidePage(){
+        // let first = this.pageView.getCurrentPageIndex();
+        // this.pageView.scrollToPage(first+1, 2);
         this.schedule(() => {
             //一共多少页
            let count = this.pageView.getPages().length;        
@@ -59,7 +61,7 @@ cc.Class({
            index = index >= count ? 0 : index + 1;
            //执行切换                
            this.pageView.scrollToPage(index, 2);
-       }, 1.5);
+       }, 2);
        
     },
     // update (dt) {

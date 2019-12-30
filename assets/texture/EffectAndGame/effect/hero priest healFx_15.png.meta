@@ -1,13 +1,14 @@
 {
-  "ver": "2.2.0",
+  "ver": "2.3.1",
   "uuid": "296406cb-3280-4683-b575-69ef48c49685",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
   "premultiplyAlpha": false,
+  "platformSettings": {},
   "subMetas": {
     "hero priest healFx_15": {
-      "ver": "1.0.3",
+      "ver": "1.0.4",
       "uuid": "8902cc8d-653d-4abe-b4ae-aa97b0fc6ffe",
       "rawTextureUuid": "296406cb-3280-4683-b575-69ef48c49685",
       "trimType": "auto",

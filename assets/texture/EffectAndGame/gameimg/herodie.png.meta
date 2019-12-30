@@ -1,13 +1,14 @@
 {
-  "ver": "2.2.0",
+  "ver": "2.3.1",
   "uuid": "d27d04cb-9996-46d7-8737-38d5daed653b",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
   "premultiplyAlpha": false,
+  "platformSettings": {},
   "subMetas": {
     "herodie": {
-      "ver": "1.0.3",
+      "ver": "1.0.4",
       "uuid": "beb7b5ca-7c8d-4f2b-9a37-7aa4dcfd0a97",
       "rawTextureUuid": "d27d04cb-9996-46d7-8737-38d5daed653b",
       "trimType": "auto",

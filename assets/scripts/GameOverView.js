@@ -299,7 +299,7 @@ cc.Class({
         wx.aldSendEvent('视频广告',{'是否有效' : '是'});
         this.page_1.active = false;
         this.page_2.active = false;
-        this.curgold = this.curgold*2;
+        this.curgold = this.curgold*10;
         var tanchuang = cc.instantiate(this.tanchuangprefab);
         tanchuang.getComponent("GameOver_TanChuang").init(this.curgold);
         this.node.addChild(tanchuang);

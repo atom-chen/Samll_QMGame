@@ -1,7 +1,7 @@
 {
   "ver": "1.0.1",
   "uuid": "2af67149-7e5a-473e-bf16-0e3c59ddf598",
-  "isSubpackage": false,
-  "subpackageName": "",
+  "isSubpackage": true,
+  "subpackageName": "texture",
   "subMetas": {}
 }

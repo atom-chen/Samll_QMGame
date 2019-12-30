@@ -1,13 +1,14 @@
 {
-  "ver": "2.2.0",
+  "ver": "2.3.1",
   "uuid": "b7e72a74-8182-4b37-ae2b-8c51529d2a83",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
   "premultiplyAlpha": false,
+  "platformSettings": {},
   "subMetas": {
     "tanchuang_text": {
-      "ver": "1.0.3",
+      "ver": "1.0.4",
       "uuid": "e22913cb-a9c5-489d-a87d-2bf50e19bb39",
       "rawTextureUuid": "b7e72a74-8182-4b37-ae2b-8c51529d2a83",
       "trimType": "auto",

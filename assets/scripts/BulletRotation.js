@@ -23,22 +23,22 @@ cc.Class({
     // onLoad () {},
 
     start () {
-        this.player = cc.find("Canvas/player/hero");
+        // this.player = cc.find("Canvas/player/hero");
     },
 
      update (dt) {
-        if(this.Rocker.dir.mag()<0.5){
-            return;
-        }
-         //方向计算
-         var r = Math.atan2(this.Rocker.dir.y,this.Rocker.dir.x);
-         var degree = r * 180/(Math.PI);
-        //  degree = 360 - degree + 90;
-        if(this.player.scaleX==-1){
-            this.node.rotation = degree+180;
-        }else{
-            this.node.rotation = -degree;
-        }
+        // if(this.Rocker.dir.mag()<0.5){
+        //     return;
+        // }
+        //  //方向计算
+        //  var r = Math.atan2(this.Rocker.dir.y,this.Rocker.dir.x);
+        //  var degree = r * 180/(Math.PI);
+        // //  degree = 360 - degree + 90;
+        // if(this.player.scaleX==-1){
+        //     this.node.rotation = degree+180;
+        // }else{
+        //     this.node.rotation = -degree;
+        // }
         //this.node.rotation = -degree;
      },
 });

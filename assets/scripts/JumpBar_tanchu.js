@@ -36,6 +36,15 @@ cc.Class({
     // LIFE-CYCLE CALLBACKS:
     onLoad() {
         this.zhezhao = this.node.parent.getChildByName("zhezhao");
+        var size = cc.view.getFrameSize();
+        var isIphoneX = (size.width == 812 && size.height == 375) 
+               ||(size.width == 375 && size.height == 812)
+               ||(size.width == 896 && size.height == 414);
+        if(isIphoneX){
+           this.btn.width = 125;
+           this.btn.getChildByName("btn_jiantou1").x +=20;
+            
+        }
     },
 
     start() {

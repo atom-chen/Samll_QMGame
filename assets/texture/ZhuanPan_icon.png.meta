@@ -1,13 +1,14 @@
 {
-  "ver": "2.2.0",
+  "ver": "2.3.1",
   "uuid": "bf867131-93d8-4ec0-9fcd-0c4e38003cc6",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
   "premultiplyAlpha": false,
+  "platformSettings": {},
   "subMetas": {
     "ZhuanPan_icon": {
-      "ver": "1.0.3",
+      "ver": "1.0.4",
       "uuid": "d096647d-0eee-48e5-9dfb-6b652b9b8665",
       "rawTextureUuid": "bf867131-93d8-4ec0-9fcd-0c4e38003cc6",
       "trimType": "auto",

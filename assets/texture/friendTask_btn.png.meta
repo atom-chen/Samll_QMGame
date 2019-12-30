@@ -1,13 +1,14 @@
 {
-  "ver": "2.2.0",
+  "ver": "2.3.1",
   "uuid": "b3c50f5c-8e98-409c-8362-6fee80ab0eba",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
   "premultiplyAlpha": false,
+  "platformSettings": {},
   "subMetas": {
     "friendTask_btn": {
-      "ver": "1.0.3",
+      "ver": "1.0.4",
       "uuid": "75112892-18d7-486e-b2b3-232d9c386cae",
       "rawTextureUuid": "b3c50f5c-8e98-409c-8362-6fee80ab0eba",
       "trimType": "auto",

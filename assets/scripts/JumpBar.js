@@ -39,7 +39,7 @@ cc.Class({
     JumpCallBack() {
         if (Global.jumpappObject == null)
             return;
-            this.content.width = Global.jumpappObject.length*51+(Global.jumpappObject.length-1)*5;
+            //this.content.width = Global.jumpappObject.length*54+(Global.jumpappObject.length-1)*5;
         for (let i = 0; i < Global.jumpappObject.length; i++) {
             let app = cc.instantiate(this.jumpappPrefab);
             if (app) {

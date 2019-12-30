@@ -57,9 +57,20 @@ cc.Class({
         } else {
             this.btn_queding_fen.interactable = true;
         }
-        this.myPrize.getComponent(cc.Widget).target = this.myPrize.parent.parent;
-        this.myPrize.getComponent(cc.Widget).left = -40;
-        this.myPrize.getComponent(cc.Widget).updateAlignment();
+        var size = cc.view.getFrameSize();
+        var isIphoneX = (size.width == 812 && size.height == 375) 
+               ||(size.width == 375 && size.height == 812)
+               ||(size.width == 896 && size.height == 414);
+        if(isIphoneX){
+            this.myPrize.getComponent(cc.Widget).target = this.myPrize.parent.parent;
+            this.myPrize.getComponent(cc.Widget).left = 30;
+            this.myPrize.getComponent(cc.Widget).updateAlignment();
+        }else{
+            this.myPrize.getComponent(cc.Widget).target = this.myPrize.parent.parent;
+            this.myPrize.getComponent(cc.Widget).left = 0;
+            this.myPrize.getComponent(cc.Widget).updateAlignment();
+        }
+       
     },
 
     start() {

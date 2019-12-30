@@ -1,13 +1,14 @@
 {
-  "ver": "2.2.0",
+  "ver": "2.3.1",
   "uuid": "9f9f078b-f7a5-4726-92a0-8a1ed708f315",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
   "premultiplyAlpha": false,
+  "platformSettings": {},
   "subMetas": {
     "smallgame_nobtn": {
-      "ver": "1.0.3",
+      "ver": "1.0.4",
       "uuid": "5e0ce9c3-436b-4aac-8acb-a00413ea41f5",
       "rawTextureUuid": "9f9f078b-f7a5-4726-92a0-8a1ed708f315",
       "trimType": "auto",

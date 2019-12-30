@@ -1,13 +1,14 @@
 {
-  "ver": "2.2.0",
+  "ver": "2.3.1",
   "uuid": "b7d1ce53-9298-44a2-a9e9-d10c76f07ef2",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
   "premultiplyAlpha": false,
+  "platformSettings": {},
   "subMetas": {
     "skillstick": {
-      "ver": "1.0.3",
+      "ver": "1.0.4",
       "uuid": "c8d8d89c-7aad-44f5-bc1e-0aa4fa9665c5",
       "rawTextureUuid": "b7d1ce53-9298-44a2-a9e9-d10c76f07ef2",
       "trimType": "auto",

@@ -95,7 +95,7 @@ cc.Class({
         this.stonepos = null;               //石头的位置
         this.map =  cc.find("Canvas/gamebg");
         this.player.getComponent(cc.Animation).play('heromove');
-        var speedran = Math.random();
+        var speedran = Math.random()*3;
         this.speed=70+speedran;                  //初始速度
         
         //开局3秒无敌防止给机器人包围直接打死

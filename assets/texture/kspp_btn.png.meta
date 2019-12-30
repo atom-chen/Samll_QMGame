@@ -1,13 +1,14 @@
 {
-  "ver": "2.2.0",
+  "ver": "2.3.1",
   "uuid": "f923c0b3-0e60-4c76-be2d-f9dc12447635",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
   "premultiplyAlpha": false,
+  "platformSettings": {},
   "subMetas": {
     "kspp_btn": {
-      "ver": "1.0.3",
+      "ver": "1.0.4",
       "uuid": "d434f5a3-1a74-4874-a1b5-e988901b2ee9",
       "rawTextureUuid": "f923c0b3-0e60-4c76-be2d-f9dc12447635",
       "trimType": "auto",

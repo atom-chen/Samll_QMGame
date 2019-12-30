@@ -1,13 +1,14 @@
 {
-  "ver": "2.2.0",
+  "ver": "2.3.1",
   "uuid": "2f9b4203-5192-4167-ac12-a3b8037ceac7",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
   "premultiplyAlpha": false,
+  "platformSettings": {},
   "subMetas": {
     "duquanbg": {
-      "ver": "1.0.3",
+      "ver": "1.0.4",
       "uuid": "bd1b96ac-4b38-4179-ade2-22a0e632907f",
       "rawTextureUuid": "2f9b4203-5192-4167-ac12-a3b8037ceac7",
       "trimType": "auto",

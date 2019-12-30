@@ -1,13 +1,14 @@
 {
-  "ver": "2.2.0",
+  "ver": "2.3.1",
   "uuid": "25721d28-7557-41de-ac33-b815ffdc3a79",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
   "premultiplyAlpha": false,
+  "platformSettings": {},
   "subMetas": {
     "Myprize_btn": {
-      "ver": "1.0.3",
+      "ver": "1.0.4",
       "uuid": "c705bdc5-2309-4e7f-8b29-99dd19f91227",
       "rawTextureUuid": "25721d28-7557-41de-ac33-b815ffdc3a79",
       "trimType": "auto",

@@ -1,13 +1,14 @@
 {
-  "ver": "2.2.0",
+  "ver": "2.3.1",
   "uuid": "2d2ea56a-2b09-4a95-ac0d-05d83fd2fdae",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
   "premultiplyAlpha": false,
+  "platformSettings": {},
   "subMetas": {
     "Effect_heromove1": {
-      "ver": "1.0.3",
+      "ver": "1.0.4",
       "uuid": "2a611ac8-5431-46b1-9aca-7e9df79550ab",
       "rawTextureUuid": "2d2ea56a-2b09-4a95-ac0d-05d83fd2fdae",
       "trimType": "auto",

@@ -137,7 +137,7 @@ cc.Class({
         item.y = pos.y;
         this.node.addChild(item);
     },
-    //创建石头
+    //创建
     CreateGrass(){
         var ran = Math.floor(Math.random()*(this.arrPos.length));
         let pos = this.arrPos[ran];

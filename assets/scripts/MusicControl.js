@@ -22,10 +22,20 @@ cc.Class({
 
     onLoad () {
         cc.game.addPersistRootNode(this.node);
+        this.PlayBGM();
+        if (CC_WECHATGAME) {
+            wx.onAudioInterruptionEnd(function(){
+                //强行暂停音乐 如果不暂停，调用resumeMusic是无效的，因为是微信让声音消失了
+                cc.audioEngine.pauseMusic();
+                //恢复音乐播放，比如调用 
+                cc.audioEngine.resumeMusic();
+                //self.refreshBG();
+                //console.log('refreshBG');
+            });
+        }
     },
 
     start () {
-        this.PlayBGM();
     },
     PlayBGM(){
         if(cc.audioEngine.isMusicPlaying()){
@@ -36,7 +46,7 @@ cc.Class({
     StopBGM(){
         cc.audioEngine.stopMusic(this.current);
     },
-    update (dt) {
+    // update (dt) {
         
-    },
+    // },
 });

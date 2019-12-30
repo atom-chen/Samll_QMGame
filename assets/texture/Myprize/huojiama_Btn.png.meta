@@ -1,13 +1,14 @@
 {
-  "ver": "2.2.0",
+  "ver": "2.3.1",
   "uuid": "7569a9d3-4619-47fb-9b8e-430a02eeecdc",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
   "premultiplyAlpha": false,
+  "platformSettings": {},
   "subMetas": {
     "huojiama_Btn": {
-      "ver": "1.0.3",
+      "ver": "1.0.4",
       "uuid": "fbb2dd79-1564-4b70-9a12-2d3ef72113de",
       "rawTextureUuid": "7569a9d3-4619-47fb-9b8e-430a02eeecdc",
       "trimType": "auto",

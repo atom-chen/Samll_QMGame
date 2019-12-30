@@ -1,13 +1,14 @@
 {
-  "ver": "2.2.0",
+  "ver": "2.3.1",
   "uuid": "b06b932e-596d-47aa-b2ca-cdde0ca71bf4",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
   "premultiplyAlpha": false,
+  "platformSettings": {},
   "subMetas": {
     "tishi ": {
-      "ver": "1.0.3",
+      "ver": "1.0.4",
       "uuid": "360f9b27-8e67-406d-940d-a60efc68ecdf",
       "rawTextureUuid": "b06b932e-596d-47aa-b2ca-cdde0ca71bf4",
       "trimType": "auto",

@@ -25,6 +25,7 @@ window.Global = {
     endHaveBox:false,   //结束是否出现宝箱
     boxChest:null,      //宝箱信息
     Crit:0,             //暴击率
+    map_obj:new Map(),  //纪录游戏内分数排名
 
 
     prefab_tip: null,            //错误提示
@@ -52,11 +53,7 @@ window.Global = {
     //linkUrl:"http://wx.zaohegame.com:8099/",//测试地址
     url_UserLogin: "game/UserLogin",
     url_UserAuth: "game/UserAuth",
-    data: {
-        level_current: 1,
-        tip_current: 0,
-        
-    },
+
     //获取广告下表
     GetGuangGaoIndex() {
         if (this.jumpappObject) {
@@ -382,7 +379,7 @@ window.Global = {
                                         Global.GetUesrInfo();
                                     }
                                 }else{
-                                    Global.GetUesrInfo();
+                                     Global.GetUesrInfo();
                                 }
                             }else {
                                 console.log("用户拒绝授权:", res);

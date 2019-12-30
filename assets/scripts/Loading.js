@@ -27,7 +27,6 @@ cc.Class({
             default:null,
             type:cc.Button,
         },
-        //2个循环播放的广告
         jumpAppPrefab: {
             default: [],
             type: cc.Node,
@@ -38,60 +37,117 @@ cc.Class({
     // LIFE-CYCLE CALLBACKS:
 
     // onLoad () {},
-    onLoad () {
-        this.progressBar.progress = 0;
- 
-        
-        if (CC_WECHATGAME) {
-            Global.Login();
-            Global.Getinfo();
-            Global.GetJumpInfo();
-            this.loadRemoteAssets();
-        }
-    },
  
     start () {
+        let self = this;
+        Global.showBanner();
         // 阿拉丁埋点
         wx.aldSendEvent("游戏登录_页面访问数");
         this.startTime = Date.now();
-        Global.showBanner();
+        this.progressBar.progress = 0;
+        Global.Login();
+        Global.Getinfo();
+        Global.GetJumpInfo();
+
+        // this.loadRemoteAssets();
+        //下载子包
+        wx.loadSubpackage({
+
+            name:'music', // name可以填为name或者root
+        
+            success: function(res){
+        
+                //分包加载完成后通过success回调
+                console.log("回调成功",res);
+            },
+        
+            fail: function(res){
+        
+                //分包加载失败通过fail回调
+                console.log("回调失败",res);
+            }
+        
+        })
+    
+        const loadTask = wx.loadSubpackage({
+
+            name: 'texture', // name可以填为name或者root
+        
+            success: function(res){
+        
+                //分包加载完成后通过success回调
+                console.log("回调成功1",res);
+                self.progressBar.node.active = false;
+                self.loadtext.node.active =false;
+                self.text.node.active =false;
+                self.startBtn.node.active =true;
+                self.enabled = false;
+                for (let i = 0; i < self.jumpAppPrefab.length; i++) {
+                    self.jumpAppPrefab[i].active = true;
+                }
+                self.ChangeJumpAppSelectSprite();
+                self.scheduleOnce(function() {
+                    var action = cc.moveTo(0.2, 0, 56);
+                    self.startBtn.node.runAction(action);
+                    Global.banner.style.top = Global.ScreenHeight - Global.banner.style.realHeight;
+                    //self.startBtn.node.y=52;
+                },2);
+            },
+        
+            fail: function(res){
+        
+                //分包加载失败通过fail回调
+                console.log("回调失败1",res);
+            }
+        
+        })
+        loadTask.onProgressUpdate(res => {
+            self.progressBar.progress = res.progress;
+            self.loadtext.string = Math.floor(res.progress*100) + '%';
+        })
+    
     },
  
  
     // update (dt) {},
     onTouchBtn(){
+        
+        //隐藏广告
+        Global.banner.hide();
+
         // 阿拉丁埋点
         wx.aldSendEvent("游戏登录_开始游戏");
         wx.aldSendEvent("游戏登录_页面停留时间",{
             "耗时" : (Date.now()-this.startTime)/1000
           });
-        this.LaunchData = JSON.stringify(wx.getLaunchOptionsSync());
-        // // 上线前注释console.log("LaunchData=====", this.LaunchData);
-
-        this.LaunchData_json = JSON.parse(this.LaunchData);
-        // // 上线前注释console.log("LaunchData_json=====", this.LaunchData_json);
-
-        this.sceneValue = this.LaunchData_json.scene;
-        // // 上线前注释console.log("sceneValue=====", this.sceneValue);
-
-        this.queryValue =  this.LaunchData_json.query;
-        // 上线前注释console.log("queryValue===分享ID==", this.queryValue);
-
-        if (this.queryValue) {
-            // // 上线前注释console.log("ceshi-1: "+this.LaunchData_json['query']['introuid']);
-            if (this.LaunchData_json['query']['introuid']) {
-                Global.GetUesrInfo(this.LaunchData_json['query']['introuid']);
-                // 阿拉丁埋点
-                wx.aldSendEvent('邀请',{'是否有效' : '是'});
+        if(wx.getLaunchOptionsSync()){
+            this.LaunchData = JSON.stringify(wx.getLaunchOptionsSync());
+            // // 上线前注释console.log("LaunchData=====", this.LaunchData);
+    
+            this.LaunchData_json = JSON.parse(this.LaunchData);
+            // // 上线前注释console.log("LaunchData_json=====", this.LaunchData_json);
+    
+            this.sceneValue = this.LaunchData_json.scene;
+            // // 上线前注释console.log("sceneValue=====", this.sceneValue);
+    
+            this.queryValue =  this.LaunchData_json.query;
+            // 上线前注释console.log("queryValue===分享ID==", this.queryValue);
+    
+            if (this.queryValue) {
+                // // 上线前注释
+                console.log("ceshi-1: "+this.LaunchData_json['query']['introuid']);
+                if (this.LaunchData_json['query']['introuid']) {
+                    Global.GetUesrInfo(this.LaunchData_json['query']['introuid']);
+                    // 阿拉丁埋点
+                    wx.aldSendEvent('邀请',{'是否有效' : '是'});
+                }else{
+                    Global.GetUesrInfo();
+                }
             }else{
                 Global.GetUesrInfo();
             }
-        }else{
-            Global.GetUesrInfo();
         }
         
-        //隐藏广告
-        Global.banner.hide();
     },
     
     /**

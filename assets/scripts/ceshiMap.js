@@ -28,7 +28,7 @@ cc.Class({
 
     start () {
         let texture = new cc.RenderTexture();
-        texture.initWithSize(100, 100);
+        texture.initWithSize(3000, 2400);
 
         let spriteFrame = new cc.SpriteFrame();
         spriteFrame.setTexture(texture)
